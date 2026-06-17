@@ -1,79 +1,34 @@
-# ARIAGUMA GROUP Google認証機能 基本設計書
+2. 基本設計書
 
-## システム構成
+2.1 システム構成概要
+構成
+フロント：React / Vite / TypeScript
+認証基盤：Firebase Authentication
+バックエンド：Rails（API）
+ホスティング：Firebase Hosting or AWS S3 + CloudFront
 
-ユーザー
-↓
-React Frontend
-↓
-Firebase Authentication
-↓
-Google OAuth
-↓
-Rails API
-↓
-MySQL
+2.2 認証フロー設計
+Googleログイン
+ユーザーが「Googleログイン」押下
+Firebase SDKがGoogle OAuthポップアップ起動
+Google認証成功
+FirebaseがIDトークン発行
+フロントがトークンをRails APIへ送信
+Rails側で検証（Firebase Admin SDK）
 
----
+メール認証ログイン（不具合→未対応可）
+ユーザー登録（email/password）
+Firebaseが認証情報作成
+ログイン時にIDトークン発行
+同様にAPIへ送信
 
-## ログイン処理
+2.3 状態管理設計
+Firebase onAuthStateChangedで監視
+user状態をReact Context or Reduxで保持
 
-① ユーザーがGoogleログインボタンを押下
-
-② Firebase AuthenticationがGoogle認証を実行
-
-③ Firebase ID Token取得
-
-④ ReactからRailsへ送信
-
-POST /google_login
-
-⑤ RailsがFirebase公開鍵で検証
-
-⑥ Usersテーブル検索
-
-⑦ Rails Session生成
-
-⑧ ログイン完了
-
----
-
-## ログアウト処理
-
-Firebase signOut()
-
-↓
-
-Rails Session削除
-
-↓
-
-トップページへ遷移
-
----
-
-## 認証方式
-
-Firebase Authentication
-
-認証プロバイダ
-
-* Google
-
-トークン形式
-
-* JWT
-
-セッション形式
-
-* Cookie Session
-
-Cookie名
-
-_ariaguma_session
-
-属性
-
-* Secure
-* HttpOnly
-* SameSite=None
+2.4 エラーハンドリング設計
+エラー	対応
+auth/user-not-found	登録誘導
+auth/wrong-password	再入力
+auth/popup-closed-by-user	再試行
+auth/unauthorized-domain	Firebaseコンソール修正
