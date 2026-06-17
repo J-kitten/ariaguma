@@ -1,4 +1,3 @@
-````md id="m9qv1k"
 # AWS構成図（ユーザー画面 + 管理画面）
 
 ```mermaid
@@ -26,3 +25,6 @@ U --> AUTH
 ADMIN --> DEV --> PUMA
 
 PUMA --> DB
+```
+
+https://github.com/J-kitten/ariaguma/blob/main/architecture.md
