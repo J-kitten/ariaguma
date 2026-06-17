@@ -1,0 +1,79 @@
+# ARIAGUMA GROUP Google認証機能 基本設計書
+
+## システム構成
+
+ユーザー
+↓
+React Frontend
+↓
+Firebase Authentication
+↓
+Google OAuth
+↓
+Rails API
+↓
+MySQL
+
+---
+
+## ログイン処理
+
+① ユーザーがGoogleログインボタンを押下
+
+② Firebase AuthenticationがGoogle認証を実行
+
+③ Firebase ID Token取得
+
+④ ReactからRailsへ送信
+
+POST /google_login
+
+⑤ RailsがFirebase公開鍵で検証
+
+⑥ Usersテーブル検索
+
+⑦ Rails Session生成
+
+⑧ ログイン完了
+
+---
+
+## ログアウト処理
+
+Firebase signOut()
+
+↓
+
+Rails Session削除
+
+↓
+
+トップページへ遷移
+
+---
+
+## 認証方式
+
+Firebase Authentication
+
+認証プロバイダ
+
+* Google
+
+トークン形式
+
+* JWT
+
+セッション形式
+
+* Cookie Session
+
+Cookie名
+
+_ariaguma_session
+
+属性
+
+* Secure
+* HttpOnly
+* SameSite=None

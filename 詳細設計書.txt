@@ -1,0 +1,115 @@
+# ARIAGUMA GROUP Google認証機能 詳細設計書
+
+## React
+
+### Googleログイン
+
+使用ライブラリ
+
+firebase/auth
+
+処理
+
+signInWithPopup()
+
+↓
+
+getIdToken()
+
+↓
+
+fetch("/google_login")
+
+---
+
+### ログアウト
+
+signOut(auth)
+
+---
+
+## Rails
+
+### URL
+
+POST /google_login
+
+---
+
+### Controller
+
+GoogleAuthController
+
+処理内容
+
+1. Firebase Token受信
+2. Token検証
+3. User検索
+4. Session作成
+5. JSON返却
+
+---
+
+### Session保存項目
+
+session[:user_id]
+
+session[:email_hash]
+
+---
+
+### Response
+
+成功
+
+{
+"success": true,
+"user": {
+"id": 2,
+"email": "[sample@example.com](mailto:sample@example.com)"
+}
+}
+
+失敗
+
+{
+"success": false,
+"error": "Authentication failed"
+}
+
+---
+
+## Usersテーブル
+
+| 項目                 | 型        |
+| ------------------ | -------- |
+| id                 | bigint   |
+| email              | string   |
+| name               | string   |
+| encrypted_password | string   |
+| created_at         | datetime |
+| updated_at         | datetime |
+
+---
+
+## セキュリティ
+
+### Firebase
+
+JWT署名検証
+
+### Rails
+
+Session Cookie
+
+### Nginx
+
+HTTPS強制
+
+### Cookie
+
+Secure=true
+
+HttpOnly=true
+
+SameSite=None

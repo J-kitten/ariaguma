@@ -1,0 +1,22 @@
+                    Internet
+                        │
+                        ▼
+                 ariaguma.jp
+                        │
+                        ▼
+                  Nginx (EC2)
+                        │
+          ┌─────────────┴─────────────┐
+          ▼                           ▼
+     React SPA                  Rails 8
+   (/react 配下)            (Puma :3000)
+                                      │
+                                      ▼
+                                   MySQL
+
+                        ▲
+                        │
+                 Firebase Auth
+                        │
+                        ▼
+                  Google OAuth
