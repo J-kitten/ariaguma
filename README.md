@@ -227,11 +227,13 @@ React + Firebase Authentication による Google ログイン機能を実装。
   
 ◆ユーザー画面  
 <p align="left">
-  <img src="https://github.com/J-kitten/ariaguma/blob/main/images/2026-06-08 093952.png">
+  <img src="https://github.com/J-kitten/ariaguma/blob/main/%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E7%94%BB%E9%9D%A2_2026-06-18%20015420.png">
 </p>
 ◆管理画面  
 <p align="center">
-  <img src="https://github.com/J-kitten/ariaguma/blob/main/images/2026-06-08 095157.png">
+  <img src="https://github.com/J-kitten/ariaguma/blob/main/%E7%AE%A1%E7%90%86%E7%94%BB%E9%9D%A2_2026-06-18%20015358.png">
 </p>
-
-
+◆AWS構成図
+<p align="center">
+<img src="https://github.com/J-kitten/ariaguma/blob/main/AWS%E6%A7%8B%E6%88%90%E5%9B%B3_2026-06-18%20020231.png">
+</p>
