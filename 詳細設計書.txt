@@ -1,115 +1,38 @@
-# ARIAGUMA GROUP Google認証機能 詳細設計書
+3. 詳細設計書
 
-## React
+3.1 フロント実装（React）
+Googleログイン
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "./firebase";
 
-### Googleログイン
+const provider = new GoogleAuthProvider();
 
-使用ライブラリ
+export const loginWithGoogle = async () => {
+  const result = await signInWithPopup(auth, provider);
+  const user = result.user;
+  const token = await user.getIdToken();
 
-firebase/auth
+  return token;
+};
 
-処理
+メールログイン
+import { signInWithEmailAndPassword } from "firebase/auth";
 
-signInWithPopup()
+export const loginWithEmail = async (email: string, password: string) => {
+  const result = await signInWithEmailAndPassword(auth, email, password);
+  return await result.user.getIdToken();
+};
 
-↓
+3.2 トークン検証（Rails）
+# Firebase Admin SDK
+decoded_token = FirebaseAuth.verify_id_token(id_token)
+uid = decoded_token["uid"]
 
-getIdToken()
+3.3 セッション設計
+JWT（Firebase ID Token）ベース
+Railsはセッションを持たない（Stateless）
 
-↓
-
-fetch("/google_login")
-
----
-
-### ログアウト
-
-signOut(auth)
-
----
-
-## Rails
-
-### URL
-
-POST /google_login
-
----
-
-### Controller
-
-GoogleAuthController
-
-処理内容
-
-1. Firebase Token受信
-2. Token検証
-3. User検索
-4. Session作成
-5. JSON返却
-
----
-
-### Session保存項目
-
-session[:user_id]
-
-session[:email_hash]
-
----
-
-### Response
-
-成功
-
-{
-"success": true,
-"user": {
-"id": 2,
-"email": "[sample@example.com](mailto:sample@example.com)"
-}
-}
-
-失敗
-
-{
-"success": false,
-"error": "Authentication failed"
-}
-
----
-
-## Usersテーブル
-
-| 項目                 | 型        |
-| ------------------ | -------- |
-| id                 | bigint   |
-| email              | string   |
-| name               | string   |
-| encrypted_password | string   |
-| created_at         | datetime |
-| updated_at         | datetime |
-
----
-
-## セキュリティ
-
-### Firebase
-
-JWT署名検証
-
-### Rails
-
-Session Cookie
-
-### Nginx
-
-HTTPS強制
-
-### Cookie
-
-Secure=true
-
-HttpOnly=true
-
-SameSite=None
+3.4 セキュリティ設計
+Firebase Auth Token必須
+CORS制御
+allowedDomains制限（重要）
