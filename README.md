@@ -235,3 +235,75 @@ React + Firebase Authentication による Google ログイン機能を実装。
   <img src="https://github.com/J-kitten/ariaguma/blob/main/images/2026-06-08 095157.png">
 </p>
 
+
+flowchart LR
+
+%% =========================
+%% ユーザー
+%% =========================
+U[ユーザー（ブラウザ）]
+
+%% =========================
+%% フロント
+%% =========================
+subgraph FRONT["フロントエンド"]
+  VITE[Vite + React + TypeScript]
+end
+
+%% =========================
+%% 認証
+%% =========================
+subgraph AUTH["認証基盤"]
+  FB[Firebase Authentication<br/>Googleログイン中心]
+end
+
+%% =========================
+%% AWS（公開サイト）
+%% =========================
+subgraph AWS_PUBLIC["AWS（ユーザーサイト）"]
+  CF[CloudFront]
+  S3[S3（静的配信 or ビルド成果物）]
+
+  NGINX[Nginx]
+  PUMA[Puma（Rails App Server）]
+  RAILS[Rails API]
+
+  RDS[(MySQL)]
+end
+
+%% =========================
+%% 管理画面
+%% =========================
+subgraph ADMIN["管理画面"]
+  DEVISE[Devise認証（Rails）]
+  ADMIN_RAILS[Rails Admin]
+end
+
+%% =========================
+%% 外部連携
+%% =========================
+MAIL[メール送信（SMTP / SendGrid等）]
+
+%% =========================
+%% フロー
+%% =========================
+
+U --> VITE
+VITE --> CF
+CF --> S3
+
+U --> FB
+FB --> VITE
+
+VITE --> RAILS
+RAILS --> PUMA
+PUMA --> NGINX
+NGINX --> RAILS
+
+RAILS --> RDS
+
+ADMIN_RAILS --> DEVISE
+ADMIN_RAILS --> RDS
+
+RAILS --> MAIL
+ADMIN_RAILS --> MAIL
