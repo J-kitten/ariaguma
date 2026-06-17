@@ -1,0 +1,59 @@
+<%# app/views/management_screen/regists/reply.html.erb %>
+
+<div class="bg-wrapper"></div>
+
+<br><br><br><br>
+
+<div class="container w-50">
+
+  <h5 class="noto-serif-jp-extra-light rounded rounded-pill d-inline-block py-4 px-4" style="color: #47127d; background-color: #eaeaf9;">予約希望者 一覧 > 返信</h5>
+
+  <p class="noto-serif-jp-extra-light" style="margin-top: 5px;">TO: <%= @regist.email %></p>
+
+  <%= form_with model: @regist, url: sent_reply_management_screen_regist_path(@regist), method: :post, local: true, data: { turbo: false } do |f| %>
+
+    <div class="mb-3">
+      <%= f.label :reply_subject, "件名", class: "form-label noto-serif-jp-extra-light", style: "font-size: 11px;" %>
+
+      <% if @regist.errors[:reply_subject].any? %>
+        <div class="invalid-feedback d-block" style="font-size: 9px;">
+          <%= @regist.errors[:reply_subject].first %>
+        </div>
+      <% end %>
+
+      <%= f.text_field :reply_subject, 
+            value: @regist.reply_subject, 
+            class: "form-control noto-serif-jp-extra-light #{'is-invalid' if @regist.errors[:reply_subject].any?}", 
+            style: "font-size: 11px;" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :body, "本文", class: "noto-serif-jp-extra-light" %>
+
+      <% if @regist.errors[:reply_body].any? %>
+        <div class="invalid-feedback d-block text-danger" style="font-size: 9px; flex-grow: 1;">
+          <%= @regist.errors[:reply_body].first %>
+        </div>
+      <% end %>
+
+      <%= f.text_area :reply_body, 
+            value: @regist.reply_body,
+            class: "form-control noto-serif-jp-extra-light #{'is-invalid' if @regist.errors[:reply_body].any?}", 
+            rows: 14, 
+            style: "font-size: 11px;" %>
+    </div>
+
+    <div class="text-end noto-serif-jp-extra-light">
+      <%= f.submit "送信", 
+          class: "btn shadow rounded-pill btn-primary action-btn" %>
+
+      <%= link_to 'キャンセル', 
+          readed_management_screen_regists_path(query: @query, page: params[:page]), 
+          class: "btn btn-mail shadow my-button-blue action-btn",
+          style: "background-color:#c9f5f6;",
+          onclick: "history.back(); return false;" %>
+    </div>
+  <% end %>
+</div>
+
+<br><br>

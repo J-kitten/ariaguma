@@ -1,0 +1,67 @@
+import { useState } from "react";
+import "./Modal.css";
+import GoogleLoginButton from "./GoogleLoginButton";
+
+type Props = {
+  onClose: () => void;
+};
+
+export default function LoginModal({ onClose }: Props) {
+  const [mode, setMode] =
+    useState<"menu" | "login" | "register" | "reset">("menu");
+
+  return (
+    <div className="modal-backdrop">
+      <div className="modal-box">
+
+        <h3>ログイン!!!</h3>
+
+        {mode === "menu" && (
+          <>
+            <button
+              onClick={() => setMode("register")}
+            >
+              新規作成
+            </button>
+
+            <button
+              onClick={() => setMode("login")}
+            >
+              ログイン
+            </button>
+
+            <button
+              onClick={() => setMode("reset")}
+            >
+              パスワード再設定
+            </button>
+
+            <GoogleLoginButton />
+          </>
+        )}
+
+        {mode === "register" && (
+          <div>
+            RegisterForm
+          </div>
+        )}
+
+        {mode === "login" && (
+          <div>
+            LoginForm
+          </div>
+        )}
+
+        {mode === "reset" && (
+          <div>
+            ResetPasswordForm
+          </div>
+        )}
+
+        <button onClick={onClose}>
+          閉じる
+        </button>
+      </div>
+    </div>
+  );
+}

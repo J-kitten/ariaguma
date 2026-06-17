@@ -1,0 +1,98 @@
+<%# app/views/management_screen/contacts/not_replying.html.erb %>
+<!--お問合せに未返信となっている場合に表示-->
+
+<style>
+  @media (max-width: 768px) {
+    .responsive-container {
+      width: 100% !important;
+      padding: 0 1rem !important; /* 左右の余白を約0.5cmに抑える */
+    }
+  }
+
+  @media (min-width: 769px) {
+    .responsive-container {
+      width: 50% !important;     /* PCでは元の幅 */
+      margin: 0 auto;
+    }
+  }
+
+  .action-btn {
+    line-height: 1.2 !important;
+    padding: 12px 25px !important;
+    font-size: 0.8rem !important;
+  }
+
+</style>
+
+<div class="bg-wrapper"></div>
+
+<br><br><br><br>
+
+<div class="container responsive-container noto-serif-jp-extra-light" style="font-size: 0.8rem;">
+
+  <br>
+
+  <div class="ms-6 mb-4 shadow bg-light rounded-pill p-5 px-5 py-5" style="font-size: 12px; padding-left: 70px;">
+    <table border=0>
+      <tr>
+        <td colspan=3>
+          <div class="d-flex gap-2">
+            <h5 class="rounded rounded-pill d-inline-block py-4 px-4" style="color: #47127d; background-color: #eaeaf9; font-size: 11px !important;">お問合せ一覧 > 受信メール</h5>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: right; font-size: 11px !important;"><span style="padding-left: 35px;">お名前</span></td>
+        <td width="10px;"></td>
+        <td style="white-space: pre-wrap; font-size: 11px; !important;"><%= @contacts.name %></td>
+      </tr>
+      <tr>
+        <td style="text-align: right; font-size: 11px !important;"><span style="padding-left: 35px;">Mail</span></td>
+        <td width="10px;"></td>
+        <td style="white-space: pre-wrap; font-size: 11px; !important;"><%= @contacts.email %></td>
+      </tr>
+      <tr>
+        <td style="text-align: right; font-size: 11px !important;"><span style="padding-left: 35px;">件名</span></td>
+        <td width="10px;"></td>
+        <td style="white-space: pre-wrap; font-size: 11px; !important;"><%= @contacts.subject %></td>
+      </tr>
+      <tr>
+        <td style="text-align: right; font-size: 11px !important;"><span style="padding-left: 35px;">受信日時</span></td>
+        <td width="10px;"></td>
+        <td style="white-space: pre-wrap; font-size: 11px; !important;"><%= l(@contacts.created_at, format: :long) %></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="ms-6 mb-4 shadow mt-1 rounded-5 px-5 py-5 p-5" style="font-size: 12px; padding-left: 70px; background-color: #f8f9fa !important;">
+    <table>
+      <tr>
+        <td colspan=3>
+          <span class="d-flex gap-2">
+            <h5 class="rounded rounded-pill d-inline-block py-4 px-4" style="color: #47127d; background-color: #eaeaf9; font-size: 11px !important;">本文</h5>
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p style="white-space: pre-wrap; font-size: 11px; !important;"><%= @contacts.message %></p>
+        </td>
+      </tr>
+    <table>
+  </div>
+
+</div>
+
+<br><br><br><br>
+
+<div class="text-end noto-serif-jp-extra-light">
+  <%= link_to "返信", reply_management_screen_contact_path(@contacts),
+      class: "btn shadow rounded-pill px-4 py-2 btn-blue-hover action-btn",
+      style: "background-color:#0d6efd; font-size: 0.8rem; line-height: 2; color: #ffffff" %>
+
+  <%= link_to "戻る",
+      management_screen_contacts_path(page: params[:page]),
+      class: "btn shadow rounded-pill px-4 py-2 btn-hover my-button-blue action-btn",
+      style: "background-color:#dcf8f9; font-size: 0.8rem; line-height: 2;",
+      onclick: "history.back(); return false;" %>
+</div>

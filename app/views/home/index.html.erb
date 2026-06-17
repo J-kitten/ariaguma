@@ -1,0 +1,91 @@
+<% content_for :title, "Present[死闘の使命] ARIAGUMA" %>
+
+<br><br>
+
+<div class="bg-wrapper"></div>
+
+<div class="container px-4"><!-- container -->
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px;">
+      <div id="reserve_regist" class="noto-serif-jp-extra-light" style="font-size:16px; color: #000f33;">
+        <img src="<%= asset_path('diamond.png') %>" style="height: 30px; width: 30px; margin-bottom: 5px; opacity: 0.7;"> 電子書籍『死闘の使命』無料ダウンロード予約登録</div>
+        <br>
+        <div class="noto-serif-jp-extra-light">
+          本書、著者: ARIAGUMA警察隊（警察ではない）は悪魔法に近い魔の神通力との闘いの一生を執筆中でおります。<br>
+          人生・困難・再生をテーマにした実体験ベースの電子書籍です。<br>
+          いつ完成するか、全く未定です。<br>
+          <br>
+          お名前とメールアドレスをご入力された方に、本が完成次第、ダウンロードをするURLをお送りいたします。<br>
+        </div>
+        <br>
+
+        <div style="text-align: center">
+        <% if flash[:admin_notice] %>
+          <div class="noto-serif-jp-extra-light alert alert-info mb-0"><%= flash[:admin_notice].html_safe %></div>
+        <% end %>
+
+        <% if flash[:admin_alert] %>
+          <div class="noto-serif-jp-extra-light alert alert-danger mb-0"><%= flash[:admin_alert].html_safe %></div>
+        <% end %>
+        </div>
+
+        <div class="container mt-4 noto-serif-jp-extra-light">
+          <%= form_with model: @regist, url: home_create_path, local: true, data: { turbo: false } do |form| %>
+            
+            <div class="row mb-3 align-items-center">
+              <div class="col-md-4 text-md-end">
+                <%= form.label :name, "お名前（必須）", class: "form-label small-font mb-0", style: "font-size:11px;" %>
+              </div>
+              <div class="col-md-6">
+                <%= form.text_field :name, class: "form-control shadow #{'is-invalid' if @regist.errors[:name].any?}", placeholder: "如月 まよ" %>
+                <% if @regist.errors[:name].any? %>
+                  <div class="text-danger small"><%= @regist.errors.full_messages_for(:name).first %></div>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="row mb-3 align-items-center">
+              <div class="col-md-4 text-md-end">
+                <%= form.label :email, "メールアドレス（必須）", class: "form-label mb-0", style: "font-size:11px;" %>
+              </div>
+              <div class="col-md-6">
+                <%= form.email_field :email, class: "form-control shadow #{'is-invalid' if @regist.errors[:email].any?}", placeholder: "contact@ariaguma.jp" %>
+                <% if @regist.errors[:email].any? %>
+                  <div class="text-danger small"><%= @regist.errors.full_messages_for(:email).first %></div>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="row mb-4 align-items-center">
+              <div class="col-md-4 text-md-end">
+                <%= form.label :email_confirmation, "メールアドレス 確認用（必須）", class: "form-label mb-0", style: "font-size:11px;" %>
+              </div>
+              <div class="col-md-6">
+                <%= form.email_field :email_confirmation, class: "form-control shadow #{'is-invalid' if @regist.errors[:email_confirmation].any?}", placeholder: "contact@ariaguma.jp" %>
+                <% if @regist.errors[:email_confirmation].any? %>
+                  <div class="text-danger small"><%= @regist.errors.full_messages_for(:email_confirmation).first %></div>
+                <% end %>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 text-end noto-serif-jp-extra-light">
+                <%= form.submit "予約登録送信", 
+                    id: "toggleButton", 
+                    class: "btn btn-sm shadow noto-serif-jp-extra-light btn-hover rounded-pill px-4 py-2 my-button-blue", 
+                    style: "background-color: #dcf8f9; font-size: 11px !important; line-height: 2; color: #000000 !important;" %>
+              </div>
+              <br>
+              <br>
+              <br>
+            </div>
+          <% end %>
+        </div>
+    </div><!-- div col-md-8 col-lg-6 -->
+  </div><!-- div container content px-4 -->
+</div>
+
+
+<br>
+
+<%= render "layouts/footer" %>
+

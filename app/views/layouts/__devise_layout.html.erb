@@ -1,0 +1,188 @@
+<!-- app/views/layouts/devise_layout.html.erb -->
+<!-- https://ariaguma.jp/users/sign_in で使用している -->
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta chatset="UTF-8">
+    <meta http-equiv="content-language" content="ja">
+    <title>ARIAGUMA GROUP 管理画面ログイン</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js', defer: true %>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <%# FONT %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet">
+
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+    <%= javascript_include_tag "application", type: "module" %> 
+
+    <style>
+      .navbar {
+        opacity: 0.8;
+        transition: opacity 0.5s ease;
+      }
+      .navbar.navbar-visible {
+        opacity: 1;
+      }
+      input::placeholder,
+      textarea::placeholder {
+        color: #999999 !important;
+      }
+
+      /* Font tags can be found here */
+      .noto-serif-jp {
+        font-family: "Noto Serif JP", serif;
+        font-optical-sizing: auto;
+        font-weight: 200;
+        font-style: normal;
+      }
+
+      .cactus-classical-serif {
+        font-family: "Cactus Classical Serif", serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      .big-text {
+        font-size: 20pt;
+      }
+      /* End of font tag */
+
+      /* メインで使う PDFのフォントに近い START */
+      .noto-serif-jp-extra-light {
+        font-family: "Noto Serif JP", serif;
+        font-optical-sizing: auto;
+        font-weight: 200; /* ExtraLight */
+        font-style: normal;
+      }
+      /* メインで使う PDFのフォントに近い END */
+
+      /* Devise and Rails START */
+      .modal {
+        position: fixed;
+        z-index: 1000;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.4);
+      }
+      .modal-content {
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 8px;
+        width: 300px;
+      }
+      .close {
+        float: right;
+        font-size: 24px;
+        cursor: pointer;
+      }
+      /* Devise and Rails END */
+
+      /* 国ごとのファイルのダウンロード　cssのリンクボタンの色の変更 START */
+       * https://ariaguma.jp/download/***** */
+      .btn.btn-download {
+        background-color: #913494 !important;  /* 紫 */
+        color: white !important;
+        transition: background-color 0.3s ease;
+        border: none;
+      }
+
+      .btn.btn-download:hover,
+      .btn.btn-download:focus,
+      .btn.btn-download:active {
+        background-color: #17c9e4 !important;  /* 水色 */
+        color: white !important;
+      }
+      /* 国ごとのcss リンク END */
+
+    </style>
+
+  </head>
+<body class="noto-serif-jp-extra-light">
+<table style="text-align:center;">
+  <tr>
+    <td>
+      <div style="align:right">
+        <button class="btn btn-download shadow rounded-pill d-inline-block px-4 py-2" style="background-color:#b2edf7; color:black !important;" onclick="openModal()">ARIAGUMA GROUP ログイン</button>
+      </div>
+    </td>
+  </tr>
+</table>
+
+  <main>
+    <%= yield %>
+  </main>
+
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const path = window.location.pathname;
+        const loginModal = document.getElementById("loginModal");
+        const signupModal = document.getElementById("signupModal");
+
+        if (path === "/users/sign_in" && loginModal) {
+          loginModal.style.display = "block";
+        }
+
+        if (path === "/users/sign_up" && signupModal) {
+          signupModal.style.display = "block";
+        }
+      });
+
+      // モーダルを開く関数（他から呼び出す用）
+      function openSignupModal() {
+        closeModal(); // 他のモーダルを閉じる
+        const modal = document.getElementById("signupModal");
+        if (modal) modal.style.display = "block";
+      }
+
+      function openModal() {
+        closeModal(); // 他のモーダルを閉じる
+        const modal = document.getElementById("loginModal");
+        if (modal) modal.style.display = "block";
+      }
+
+      // モーダルを閉じる関数（全モーダルを閉じる）
+      function closeModal() {
+        document.querySelectorAll('.modal').forEach(modal => {
+          modal.style.display = 'none';
+        });
+      }
+
+      // モーダルの外側をクリックしたら閉じる
+      window.onclick = function(event) {
+        document.querySelectorAll(".modal").forEach(modal => {
+          if (event.target === modal) {
+            modal.style.display = "none";
+          }
+        });
+      };
+    </script>
+
+</body>
+</html>
+

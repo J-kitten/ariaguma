@@ -1,0 +1,56 @@
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ログイン中...</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const button = document.getElementById("loginButton");
+        if (button) {
+          button.addEventListener("click", function () {
+            alert("ログインボタンがクリックされました");
+          });
+        } else {
+          console.warn("loginButton not found");
+        }
+      });
+    </script>
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
+
+    if (code) {
+      fetch("/login/auth/cognito/callback", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ code })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Token request failed");
+        return res.json();
+      })
+      .then(data => {
+        console.log("✅ Token response:", data);
+        window.location.href = "https://ariaguma.jp/management_screen";  // 成功後の画面遷移
+      })
+      .catch(err => {
+        console.error("❌ Error sending code:", err);
+        alert("ログインに失敗しました。");
+      });
+    } else {
+      console.warn("No code found in URL");
+      alert("認証コードが見つかりませんでした。");
+    }
+    </script>
+</head>
+
+<body>
+  <h1>ログイン画面</h1>
+  <button id="loginButton">ログイン</button>
+    KYOKO SATO.....
+  <p>ログイン処理中です。しばらくお待ちください...</p>
+
+</body>
+</html>

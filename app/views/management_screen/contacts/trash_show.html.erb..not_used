@@ -1,0 +1,44 @@
+<%# app/views/management_screen/contacts/trash_show.html.erb %>
+
+<div class="bg-wrapper"></div>
+
+<br><br><br><br>
+
+<!-- センター用のラッパー -->
+<div style="display: flex; justify-content: center;" class="table-responsive">
+  <!-- 中央に寄せるボックス -->
+  <div style="max-width: 900px; width: 100%; font-size: 12px;">
+    
+    <table class="table" style="width: 550px; margin: 0 auto;">
+      <tr>
+        <th colspan=2><h6 class="noto-serif-jp-extra-light">お問合せ > ゴミ箱一覧 > 詳細</h6></th>
+      </tr>
+      <tr>
+        <th style="width: 80px"><span class="noto-serif-jp-extra-light">名前</span></th>
+        <td><%= @contact.name %></td>
+      </tr>
+      <tr>
+        <th><span class="noto-serif-jp-extra-light">件名</span></th>
+        <td><%= @contact.subject %></td>
+      </tr>
+      <tr>
+        <th><span class="noto-serif-jp-extra-light">メッセージ</span></th>
+        <td><%= simple_format(@contact.message) %></td>
+      </tr>
+      <tr>
+        <th><span class="noto-serif-jp-extra-light">送信日時</span></th>
+        <td><%= l(@contact.created_at, format: :long) %></td>
+      </tr>
+      <tr>
+        <th colspan=2>
+          <br>
+          <%= link_to '元に戻す', restore_management_screen_contact_path(@contact), method: :patch, class: 'btn btn-success' %>
+
+          <%= link_to "一覧へ戻る", trash_search_management_screen_contacts_path(query: params[:query], page: params[:page]), class: "btn btn-secondary" %>
+        </th>
+      </tr>
+    </table>
+
+  </div>
+</div>
+

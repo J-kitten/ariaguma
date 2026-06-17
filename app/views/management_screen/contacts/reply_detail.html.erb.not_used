@@ -1,0 +1,63 @@
+<%# app/views/management_screen/contacts/reply_detail.html.erb %>
+
+<div class="bg-wrapper"></div>
+
+<br><br><br><br>
+
+<div class="container w-50 noto-serif-jp-extra-light" style="font-siz: 0.8rem"><!--mt-5 -->
+
+  <br>
+  <!--px-2 左右に余白をつくる-->
+  <!--py-2 上下（縦方向）にパディング（内側の余白）を付ける-->
+  <!--mb-4 要素の 下（bottom）に外側の余白（margin）を加える-->
+
+  <% if @replies.any? %>
+    <% @replies.each do |reply| %>
+
+      <div class="mt-2">
+        <h4 class="noto-serif-jp-extra-light rounded d-inline-block" style="color: #47127d; background-color: rgba(255, 255, 255, 0.7)">お問合せ一覧 > 返信済 > 返信詳細</h4>
+      </div>
+
+      <div class="card mb-4 shadow" style="font-size: 12px;">
+        <div class="card-header bg-light card-body p-4"">
+          <strong>件名:</strong> <%= reply.subject %><br>
+          返信日時: <%= l(reply.created_at, format: :long) %><br>
+          <p class="mb-1"><strong>宛先:</strong> <%= @contact.email %></p>
+        </div>
+        <div class="card-body p-4" >
+          <p style="white-space: pre-wrap;"><%= reply.message %></p>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="alert alert-warning">
+      このお問合せへの返信履歴はありません。
+    </div>
+  <% end %>
+
+
+<br><br>
+
+  <h4 class="noto-serif-jp-extra-light rounded d-inline-block" style="color: #47127d; background-color: rgba(255, 255, 255, 0.5)">お問合せ一覧 > 返信済  > 受信メール</h4>
+
+  <div class="card mb-4 shadow" style="font-size: 12px;">
+    <div class="card-header bg-light card-body p-4">
+      <strong>件名:</strong> <%= @contact.subject %><br>
+      返信日時: <%= l(@contact.created_at, format: :long) %>
+    </div>
+    <div class="card-body p-4">
+      <p style="white-space: pre-wrap;"><%= @contact.message %></p>
+    </div>
+  </div>
+
+  <div class="text-end">
+    <%= link_to "戻る", 
+        management_screen_contacts_path(page: params[:page]), 
+        class: "btn shadow rounded-pill px-4 py-2 btn-hover noto-serif-jp-extra-light", 
+        style: "background-color:#c9f5f6; font-size: 0.8rem !important; line-height: 2;",
+        onclick: "history.back(); return false;" %>
+    </div>
+
+</div>
+
+<br><br>

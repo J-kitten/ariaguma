@@ -1,0 +1,46 @@
+<!-- app/regists/index.html.erb -->
+<br /><br /><br />
+
+<!-- 
+  Google Fonts
+  Noto Serif Japanese
+  ExtraLight 200 フォントを使用しているので、[class="noto-serif-jp-extra-light"]を指定している
+-->
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+      app/views/regists/index.html.erb 
+      <% if flash[:notice] %>
+        <div class="noto-serif-jp-extra-light" style="color: green;"><%= flash[:notice] %></div>
+      <% end %>
+
+      <!-- app/views/regists/index.html.erb -->
+      <form method="get" action="/regists">
+        <input type="text" name="email" placeholder="メールで検索">
+        <label>
+          <input type="checkbox" name="unsent" value="1">
+          未送信のみ表示
+        </label>
+        <label>
+          <input type="checkbox" name="subscribed" value="1">
+          登録者のみ表示
+        </label>
+        <button type="submit">検索</button>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- 
+  使用しているファイル
+  [jsx]
+  app/javascript/components/ArticlePreview.jsx
+  [js]
+  app/javascript/application.js
+  app/assets/javascripts/application.js
+
+
+-->

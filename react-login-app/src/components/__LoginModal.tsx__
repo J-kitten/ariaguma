@@ -1,0 +1,54 @@
+import LoginForm from "./NewLoginForm"
+import RegisterForm from "./NewRegisterForm"
+import ResetPasswordForm from "./NewResetPasswordForm"
+
+type Props = {
+  open: boolean
+  onClose: () => void
+}
+
+export default function LoginModal({ open, onClose }: Props) {
+
+console.log("LOGIN MODAL ACTIVE");
+
+  return (
+    <div className="modal show d-block">
+      <div className="modal-dialog">
+        <div className="modal-content">
+
+          <div className="modal-header">
+            <h1>ログイン</h1>
+            <button onClick={onClose}>閉じる!!!</button>
+          </div>
+
+          <div className="modal-body">
+            <LoginForm />
+            <RegisterForm />
+            <ResetPasswordForm />
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const styles: any = {
+  overlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0,0,0,0.5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modal: {
+    background: "#fff",
+    padding: 20,
+    width: 400,
+    borderRadius: 8,
+  }
+}

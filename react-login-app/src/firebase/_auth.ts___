@@ -1,0 +1,16 @@
+import { auth } from "./config";
+
+export async function sendTokenToRails() {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const token = await user.getIdToken();
+
+  await fetch("/google_auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  });
+}

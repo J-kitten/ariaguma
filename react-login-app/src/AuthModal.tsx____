@@ -1,0 +1,185 @@
+import { useState } from "react";
+import type { User } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signInWithRedirect, 
+  GoogleAuthProvider
+} from "firebase/auth";
+import { auth } from "../firebase/config";
+
+type Props = {
+  open: boolean;
+  onClose: () => void;
+  setUser: (user: User | null) => void;
+};
+
+export default function AuthModal({ open, onClose, setUser }: Props) {
+  console.log("AUTHMODAL VERSION 2026-06-12-01");
+
+  if (!open) return null;
+  console.log("AuthModal render");
+  console.log("open =", open);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const loginWithGoogle = async () => {
+    console.log("BEFORE REDIRECT");
+
+    const provider = new GoogleAuthProvider();
+
+    try {
+      await signInWithRedirect(auth, provider);
+      console.log("AFTER REDIRECT");
+    } catch (e) {
+      console.error("REDIRECT FAILED", e);
+    }
+  };
+
+/*
+  useEffect(() => {
+    const checkLogin = async () => {
+      const result = await getRedirectResult(auth);
+
+      if (result?.user) {
+        console.log("LOGIN SUCCESS:", result.user);
+        setUser(result.user);
+      }
+    };
+
+    checkLogin();
+  }, []);
+*/
+/*
+  // --- Googleログイン（popup版）---
+  const googleLogin = async () => {
+    console.log("CLICK LOGIN");
+
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: "select_account",
+    });
+
+    await signInWithRedirect(auth, provider);
+  };
+*/
+/*
+  export const googleLogin = () => {
+    const provider = new GoogleAuthProvider();
+
+    signInWithRedirect(auth, provider);
+  };
+*/
+
+  // --- 新規登録 ---
+  const register = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      setUser(userCredential.user);
+      onClose();
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
+
+  // --- ログイン ---
+  const login = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      setUser(userCredential.user);
+      onClose();
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
+
+  // --- パスワードリセット ---
+  const resetPassword = async () => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert("メールを送信しました");
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: "rgba(0,0,0,0.5)",
+        zIndex: 9999
+      }}
+    >
+      <div
+        style={{
+          background: "#fff",
+          padding: 20,
+          width: 300,
+          margin: "100px auto",
+          borderRadius: 8,
+          boxShadow: "0 4px 8px rgba(0,0,0,0.2)"
+        }}
+      >
+        <h3>ログイン / 新規登録</h3>
+
+        <input
+          placeholder="メールアドレス"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={{ width: "100%", marginBottom: 8, padding: 6 }}
+        />
+
+        <input
+          placeholder="パスワード"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          style={{ width: "100%", marginBottom: 8, padding: 6 }}
+        />
+
+        <button onClick={login} style={{ width: "100%", marginBottom: 4 }}>
+          ログイン
+        </button>
+
+        <button onClick={register} style={{ width: "100%", marginBottom: 4 }}>
+          新規登録
+        </button>
+
+        <button
+          onClick={resetPassword}
+          style={{ width: "100%", marginBottom: 4 }}
+        >
+          パスワード再設定
+        </button>
+
+        <button
+          onClick={loginWithGoogle}
+          style={{ width: "100%", marginBottom: 4 }}
+        >
+          Googleログイン
+        </button>
+
+        <button onClick={onClose} style={{ width: "100%" }}>
+          閉じる
+        </button>
+      </div>
+    </div>
+  );
+}

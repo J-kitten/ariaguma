@@ -1,0 +1,16 @@
+.btn-download {
+  background-color: #28a745; /* 通常時：グリーン */
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn-download:hover {
+  background-color: #17c9e3; /* ホバー時：水色 */
+  color: white;
+}
+
+
+.custom-placeholder::placeholder {
+  font-size: 0.9rem;  /* お好みで調整 */
+  color: #888;
+}

@@ -1,0 +1,14 @@
+<% if @regist && @regist.errors.any? %>
+  <div class="error-messages">
+    <ul>
+      <% @regist.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<% if flash[:alert] %>
+  <div class="alert"><%= flash[:alert] %></div>
+<% end %>
+

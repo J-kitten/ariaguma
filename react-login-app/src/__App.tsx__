@@ -1,0 +1,48 @@
+import { useEffect, useState } from "Newreact";
+import { onAuthStateChanged } from "Newfirebase/auth";
+import type { User } from "Newfirebase/auth";
+import { auth } from "./Newfirebase";
+
+export default function App() {
+  const [user, setUser] = useState<User | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [mode, setMode] = useState<"login" | "register" | "reset">("login");
+
+  console.log("MODE =", mode);
+  
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+    });
+    return () => unsub();
+  }, []);
+
+  console.log("modalOpen START=", modalOpen);
+
+  // Railsボタンから呼べるようにする
+  useEffect(() => {
+    const open = () => {
+      console.log("EVENT RECEIVED");
+      setModalOpen(true);
+    };
+
+    window.addEventListener("open-login-modal", open);
+
+    return () => window.removeEventListener("open-login-modal", open);
+  }, []);
+
+  console.log("modalOpen END=", modalOpen);
+
+  return (
+    <div>
+      <Header user={user} setModalOpen={setModalOpen} />
+
+      {modalOpen && (
+        <AuthModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
+    </div>
+  );
+}

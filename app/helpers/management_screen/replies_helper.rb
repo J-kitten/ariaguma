@@ -1,0 +1,2 @@
+module ManagementScreen::RepliesHelper
+end

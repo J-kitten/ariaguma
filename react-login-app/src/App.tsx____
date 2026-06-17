@@ -1,0 +1,88 @@
+//src/App.tsx
+import { useState, useEffect } from "react";
+import { auth } from "./firebase";
+import AuthModal from "./AuthModal";
+import { getRedirectResult } from "firebase";
+import {
+  signOut,
+  onAuthStateChanged
+} from "firebase/auth";
+
+export default function App() {
+  console.log("AUTH INSTANCE:", auth);
+  console.log("AUTH DOMAIN:", auth.config.authDomain);
+
+  const [user, setUser] = useState<any>(null);
+  const [open, setOpen] = useState(false);
+
+  // Firebaseログイン状態を常に同期
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        console.log("REDIRECT RESULT:", result);
+      })
+      .catch((error) => {
+        console.error("REDIRECT ERROR:", error);
+      });
+
+    const unsub = onAuthStateChanged(auth, (user) => {
+      console.log("AUTH STATE:", user);
+      setUser(user);
+    });
+
+    return () => unsub();
+  }, []);
+
+  const logout = async () => {
+    await signOut(auth);
+    setUser(null);
+  };
+
+  return (
+    <div style={{ padding: "20px" }}>
+      {!user ? (
+        <>
+          <button
+            onClick={() => setOpen(true)}
+            className="btn shadow rounded-pill px-4 py-2"
+            style={{
+              backgroundColor: "#001a59",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "999px",
+              border: "none",
+              cursor: "pointer"
+            }}
+          >
+            ログイン
+          </button>
+
+          <AuthModal
+            open={open}
+            onClose={() => setOpen(false)}
+            setUser={setUser}
+          />
+        </>
+      ) : (
+        <>
+          <p>ログイン中: {user.email}</p>
+
+          <button
+            onClick={logout}
+            className="btn shadow rounded-pill px-4 py-2"
+            style={{
+              backgroundColor: "#001a59",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "999px",
+              border: "none",
+              cursor: "pointer"
+            }}
+          >
+            ログアウト
+          </button>
+        </>
+      )}
+    </div>
+  );
+}

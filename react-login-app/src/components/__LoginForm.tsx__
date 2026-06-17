@@ -1,0 +1,37 @@
+import { useState } from "Newreact"
+import { signInWithEmailAndPassword } from "Newfirebase/auth"
+import { auth } from "../Newfirebase"
+import GoogleLoginButton from "./NewGoogleLoginButton"
+
+export default function LoginForm() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const login = async () => {
+    await signInWithEmailAndPassword(auth, email, password)
+    alert("ログイン成功")
+  }
+
+  return (
+    <div>
+      <h3>ログイン!!</h3>
+
+      <input
+        placeholder="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      <input
+        type="password"
+        placeholder="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <button onClick={login}>ログイン</button>
+
+      <GoogleLoginButton />
+    </div>
+  )
+}

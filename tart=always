@@ -1,0 +1,94 @@
+[0;1;34m# ]8;;file://ip-172-31-80-29/etc/systemd/system/rails_app.service/etc/systemd/system/rails_app.service]8;;[0m
+[0;1;36m[Unit][0m
+Description=Rails Puma Server for Ariaguma
+After=network.target
+[0;1;38;5;245m[0m
+[0;1;36m[Service][0m
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/projects/ariaguma
+Environment="GOOGLE_CLIENT_ID=166892170081-dos84viakrn085mf7p9381ibmp4seug5.apps.googleusercontent.com"
+[0;1;38;5;245m#WorkingDirectory=/home/ubuntu/projects/ariaguma_20260307[0m
+[0;1;38;5;245m[0m
+[0;1;38;5;245m# Pumaの設定ファイルを参照して起動[0m
+ExecStart=/usr/bin/bash -lc 'bundle exec puma -C config/puma.rb'
+[0;1;38;5;245m[0m
+[0;1;38;5;245m# 常に再起動[0m
+Restart=always
+RestartSec=5
+[0;1;38;5;245m[0m
+[0;1;38;5;245m# Rails 環境[0m
+Environment="RAILS_ENV=production"
+Environment="RAILS_MASTER_KEY=959AsdimIGOSw1U9WSiZV/HyVQgq38ja"
+Environment="DB_PASSWORD=RacooNariaGuMa122839/."
+[0;1;38;5;245m[0m
+Environment="ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=8AJKzrbHrroGHKLikwsO1n6LaJVasyhB"
+Environment="ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=pUIxt7Q3cAqxzsTdblBe0ZeSgpikqW8w"
+Environment="ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=dPmi6BDhnxbitA8H"
+[0;1;38;5;245m[0m
+[0;1;38;5;245m# ログファイル出力（systemdジャーナルではなくファイルへ）[0m
+StandardOutput=append:/home/ubuntu/projects/ariaguma/log/puma.stdout.log
+StandardError=append:/home/ubuntu/projects/ariaguma/log/puma.stderr.log
+[0;1;38;5;245m[0m
+[0;1;38;5;245m# 制御端末なしでも起動可能[0m
+KillMode=process
+TimeoutSec=30
+[0;1;38;5;245m[0m
+[0;1;36m[Install][0m
+WantedBy=multi-user.target
+[0;1;38;5;245m[0m
+
+[0;1;34m# ]8;;file://ip-172-31-80-29/etc/systemd/system/rails_app.service.d/override.conf/etc/systemd/system/rails_app.service.d/override.conf]8;;[0m
+[0;1;36m[Service][0m
+Environment="RAILS_ENV=production"
+Environment="RAILS_MASTER_KEY=959AsdimIGOSw1U9WSiZV/HyVQgq38ja"
+Environment="ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=8AJKzrbHrroGHKLikwsO1n6LaJVasyhB"
+Environment="ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=pUIxt7Q3cAqxzsTdblBe0ZeSgpikqW8w"
+Environment="ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=dPmi6BDhnxbitA8H"
+[0;1;34m# ]8;;file://ip-172-31-80-29/etc/systemd/system/rails_app.service/etc/systemd/system/rails_app.service]8;;[0m
+[0;1;36m[Unit][0m
+Description=Rails Puma Server for Ariaguma
+After=network.target
+[0;1;38;5;245m[0m
+[0;1;36m[Service][0m
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/projects/ariaguma
+Environment="GOOGLE_CLIENT_ID=166892170081-dos84viakrn085mf7p9381ibmp4seug5.apps.googleusercontent.com"
+[0;1;38;5;245m#WorkingDirectory=/home/ubuntu/projects/ariaguma_20260307[0m
+[0;1;38;5;245m[0m
+[0;1;38;5;245m# Pumaの設定ファイルを参照して起動[0m
+ExecStart=/usr/bin/bash -lc 'bundle exec puma -C config/puma.rb'
+[0;1;38;5;245m[0m
+[0;1;38;5;245m# 常に再起動[0m
+Restart=always
+RestartSec=5
+[0;1;38;5;245m[0m
+[0;1;38;5;245m# Rails 環境[0m
+Environment="RAILS_ENV=production"
+Environment="RAILS_MASTER_KEY=959AsdimIGOSw1U9WSiZV/HyVQgq38ja"
+Environment="DB_PASSWORD=RacooNariaGuMa122839/."
+[0;1;38;5;245m[0m
+Environment="ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=8AJKzrbHrroGHKLikwsO1n6LaJVasyhB"
+Environment="ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=pUIxt7Q3cAqxzsTdblBe0ZeSgpikqW8w"
+Environment="ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=dPmi6BDhnxbitA8H"
+[0;1;38;5;245m[0m
+[0;1;38;5;245m# ログファイル出力（systemdジャーナルではなくファイルへ）[0m
+StandardOutput=append:/home/ubuntu/projects/ariaguma/log/puma.stdout.log
+StandardError=append:/home/ubuntu/projects/ariaguma/log/puma.stderr.log
+[0;1;38;5;245m[0m
+[0;1;38;5;245m# 制御端末なしでも起動可能[0m
+KillMode=process
+TimeoutSec=30
+[0;1;38;5;245m[0m
+[0;1;36m[Install][0m
+WantedBy=multi-user.target
+[0;1;38;5;245m[0m
+
+[0;1;34m# ]8;;file://ip-172-31-80-29/etc/systemd/system/rails_app.service.d/override.conf/etc/systemd/system/rails_app.service.d/override.conf]8;;[0m
+[0;1;36m[Service][0m
+Environment="RAILS_ENV=production"
+Environment="RAILS_MASTER_KEY=959AsdimIGOSw1U9WSiZV/HyVQgq38ja"
+Environment="ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=8AJKzrbHrroGHKLikwsO1n6LaJVasyhB"
+Environment="ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=pUIxt7Q3cAqxzsTdblBe0ZeSgpikqW8w"
+Environment="ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=dPmi6BDhnxbitA8H"

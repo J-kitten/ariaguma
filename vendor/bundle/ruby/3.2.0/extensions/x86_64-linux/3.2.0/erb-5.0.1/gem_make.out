@@ -1,0 +1,18 @@
+current directory: /home/ubuntu/projects/ariaguma/vendor/bundle/ruby/3.2.0/gems/erb-5.0.1/ext/erb/escape
+/home/ubuntu/.rvm/rubies/ruby-3.2.2/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /home/ubuntu/projects/ariaguma/vendor/bundle/ruby/3.2.0/gems/erb-5.0.1/ext/erb/escape
+make DESTDIR\= sitearchdir\=./.gem.20251120-1115442-nz1lom sitelibdir\=./.gem.20251120-1115442-nz1lom clean
+
+current directory: /home/ubuntu/projects/ariaguma/vendor/bundle/ruby/3.2.0/gems/erb-5.0.1/ext/erb/escape
+make DESTDIR\= sitearchdir\=./.gem.20251120-1115442-nz1lom sitelibdir\=./.gem.20251120-1115442-nz1lom
+compiling escape.c
+linking shared-object erb/escape.so
+
+current directory: /home/ubuntu/projects/ariaguma/vendor/bundle/ruby/3.2.0/gems/erb-5.0.1/ext/erb/escape
+make DESTDIR\= sitearchdir\=./.gem.20251120-1115442-nz1lom sitelibdir\=./.gem.20251120-1115442-nz1lom install
+/usr/bin/install -c -m 0755 escape.so ./.gem.20251120-1115442-nz1lom/erb
+
+current directory: /home/ubuntu/projects/ariaguma/vendor/bundle/ruby/3.2.0/gems/erb-5.0.1/ext/erb/escape
+make DESTDIR\= sitearchdir\=./.gem.20251120-1115442-nz1lom sitelibdir\=./.gem.20251120-1115442-nz1lom clean

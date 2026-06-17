@@ -1,0 +1,25 @@
+import type { User } from "Newfirebase/auth";
+
+type Props = {
+  user: User | null;
+  setModalOpen: (open: boolean) => void;
+};
+
+export default function Header({ user, setModalOpen }: Props) {
+  return (
+    <header style={{ display: "flex", gap: 10 }}>
+      
+      <button onClick={() => setModalOpen(true)}>
+        Modalログイン
+      </button>
+
+      {!user ? (
+        <GoogleLoginButton />
+      ) : (
+        <GoogleLogoutButton />
+      )}
+
+      {user && <span>ログイン中</span>}
+    </header>
+  );
+}

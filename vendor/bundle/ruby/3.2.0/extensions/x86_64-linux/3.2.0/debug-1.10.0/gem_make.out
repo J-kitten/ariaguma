@@ -1,0 +1,19 @@
+current directory: /home/ubuntu/projects/ariaguma/vendor/bundle/ruby/3.2.0/gems/debug-1.10.0/ext/debug
+/home/ubuntu/.rvm/rubies/ruby-3.2.2/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /home/ubuntu/projects/ariaguma/vendor/bundle/ruby/3.2.0/gems/debug-1.10.0/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20251120-1115442-91osd1 sitelibdir\=./.gem.20251120-1115442-91osd1 clean
+
+current directory: /home/ubuntu/projects/ariaguma/vendor/bundle/ruby/3.2.0/gems/debug-1.10.0/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20251120-1115442-91osd1 sitelibdir\=./.gem.20251120-1115442-91osd1
+compiling debug.c
+compiling iseq_collector.c
+linking shared-object debug/debug.so
+
+current directory: /home/ubuntu/projects/ariaguma/vendor/bundle/ruby/3.2.0/gems/debug-1.10.0/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20251120-1115442-91osd1 sitelibdir\=./.gem.20251120-1115442-91osd1 install
+/usr/bin/install -c -m 0755 debug.so ./.gem.20251120-1115442-91osd1/debug
+
+current directory: /home/ubuntu/projects/ariaguma/vendor/bundle/ruby/3.2.0/gems/debug-1.10.0/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20251120-1115442-91osd1 sitelibdir\=./.gem.20251120-1115442-91osd1 clean

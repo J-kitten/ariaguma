@@ -1,0 +1,12 @@
+import { signInWithPopup, GoogleAuthProvider } from "Newfirebase/auth";
+import { auth } from "../Newfirebase";
+
+const provider = new GoogleAuthProvider();
+
+export default function GoogleLoginButton() {
+  const login = async () => {
+    await signInWithPopup(auth, provider);
+  };
+
+  return <button onClick={login}>Googleログイン</button>;
+}

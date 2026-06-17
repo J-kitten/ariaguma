@@ -1,0 +1,30 @@
+<h1>Users#new</h1>
+<p>Find me in app/views/users/new.html.erb</p>
+
+<!-- app/views/users/new.html.erb -->
+<h1>ユーザー登録</h1>
+
+<%= form_with url: users_path, local: true do |f| %>
+  <div class="mb-3">
+    <%= f.label :name, "お名前" %><br>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :email, "メールアドレス" %><br>
+    <%= f.email_field :email, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :password, "パスワード" %><br>
+    <%= f.password_field :password, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :password_confirmation, "パスワード確認" %><br>
+    <%= f.password_field :password_confirmation, class: "form-control" %>
+  </div>
+
+  <%= f.submit "登録", class: "btn btn-info" %>
+<% end %>
+

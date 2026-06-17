@@ -1,0 +1,10 @@
+import { signOut } from "Newfirebase/auth";
+import { auth } from "./Newfirebase";
+
+export default function GoogleLogoutButton() {
+  const logout = async () => {
+    await signOut(auth);
+  };
+
+  return <button onClick={handleLogout}>Googleログアウト</button>;
+}

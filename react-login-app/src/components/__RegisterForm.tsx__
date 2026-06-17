@@ -1,0 +1,24 @@
+import { useState } from "Newreact"
+import { createUserWithEmailAndPassword } from "Newfirebase/auth"
+import { auth } from "../Newfirebase"
+
+export default function RegisterForm() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const register = async () => {
+    await createUserWithEmailAndPassword(auth, email, password)
+    alert("登録成功")
+  }
+
+  return (
+    <div>
+      <h3>新規登録</h3>
+
+      <input value={email} onChange={(e) => setEmail(e.target.value)} />
+      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+
+x      <button onClick={register}>登録</button>
+    </div>
+  )
+}
