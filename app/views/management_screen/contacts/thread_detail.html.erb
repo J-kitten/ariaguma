@@ -1,0 +1,38 @@
+<%# app/views/management_screen/contacts/thread_detail.html.erb %>
+
+<div class="bg-wrapper"></div>
+
+<div class="container my-4">
+  <h6 class="noto-serif-jp-extra-light rounded rounded-pill d-inline-block py-3 px-3 p-3 mb-2 font-custom" style="background-color: #eaeaf9;">管理画面 > お問合せ 詳細</h6>
+
+  <table class="table">
+    <tr>
+      <th>ID</th>
+      <td><%= @contact.id %></td>
+    </tr>
+    <tr>
+      <th>名前</th>
+      <td><%= @contact.name %></td>
+    </tr>
+    <tr>
+      <th>メールアドレス</th>
+      <td><%= @contact.email %></td>
+    </tr>
+    <tr>
+      <th>件名</th>
+      <td><%= @contact.subject %></td>
+    </tr>
+    <tr>
+      <th>メッセージ</th>
+      <td><%= simple_format(@contact.message) %></td>
+    </tr>
+    <tr>
+      <th>送信日時</th>
+      <td><%= l(@contact.created_at, format: :long) %></td>
+    </tr>
+  </table>
+
+  <%= link_to '返信', reply_management_screen_contact_path(@contact), class: "btn btn-primary" %>
+  <%= link_to "戻る", thread_management_screen_regists_path(query: @back_query), class: "btn btn-secondary" %>
+
+</div>

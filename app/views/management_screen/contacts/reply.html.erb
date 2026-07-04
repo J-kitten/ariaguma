@@ -1,0 +1,79 @@
+<%# app/views/management_screen/contacts/reply.html.erb %>
+
+<div class="bg-wrapper"></div>
+
+<br><br><br><br>
+
+<div class="container px-4"><!-- container -->
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px;">
+
+      <div class="d-flex align-items-center mb-3">
+        <h6 class="noto-serif-jp-extra-light rounded rounded-pill d-inline-block py-3 px-3 p-3 mb-2" style="background-color: #eaeaf9;">お問合せ一覧 > 全件表示 > 詳細 > 返信フォーム</h6>
+      </div>
+
+      <p class="noto-serif-jp-extra-light">お名前　<%= @contact.name %></p>
+      <p class="noto-serif-jp-extra-light">宛先　<%= @contact.email %></p>
+      <p class="noto-serif-jp-extra-light">受信日時　<%= l(@contact.created_at, format: :long) %></p>
+
+      <%= form_with model: @contact, url: sent_reply_management_screen_contact_path(@contact, target: params[:target]), method: :post, local: true, data: { turbo: false } do |f| %>
+
+        <div class="mb-3">
+          <%= f.label :reply_subject, "件名", class: "form-label noto-serif-jp-extra-light", style: "font-size: 11px;" %>
+
+          <% if @contact.errors[:reply_subject].any? %>
+            <div class="invalid-feedback d-block" style="font-size: 9px;">
+              <%= @contact.errors[:reply_subject].first %>
+            </div>
+          <% end %>
+
+          <%= f.text_field :reply_subject,
+                value: @contact.reply_subject,
+                class: "form-control noto-serif-jp-extra-light #{'is-invalid' if @contact.errors[:reply_subject].any?}",
+                style: "font-size: 11px;" %>
+        </div>
+
+        <div class="mb-3" style="font-size: 11px;">
+          <%= f.label :body, "本文", class: "noto-serif-jp-extra-light" %>
+
+          <% if @contact.errors[:reply_body].any? %>
+            <div class="invalid-feedback d-block text-danger" style="font-size: 9px; flex-grow: 1;">
+              <%= @contact.errors[:reply_body].first %>
+            </div>
+          <% end %>
+
+          <%= f.text_area :reply_body,
+                value: @contact.reply_body,
+                class: "form-control noto-serif-jp-extra-light #{'is-invalid' if @contact.errors[:reply_body].any?}",
+                rows: 14,
+                style: "font-size: 11px;" %>
+        </div>
+
+        <div class="text-end">
+          <%= f.submit "送 信", 
+              class: "btn shadow rounded-pill px-4 py-2 btn-blue-hover noto-serif-jp-extra-light", 
+              style: "background-color:#001a59; color: #f0eee0; border:none; font-size: 0.8rem !important; line-height: 2;" %>
+
+          <% case params[:target] %>
+          <% when 'trash' %>
+            <%= link_to "キャンセル", trash_management_screen_contacts_path(page: params[:page]), class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover noto-serif-jp-extra-light", style: "background-color:#c9f5f6; font-size: 0.8rem !important; line-height: 2; color: #ffffff;" %>
+          <% when 'unread' %>
+            <%= link_to "キャンセル", unread_management_screen_contacts_path(page: params[:page]), class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover noto-serif-jp-extra-light", style: "background-color:#c9f5f6; font-size: 0.8rem !important; line-height: 2;" %>
+          <% when 'readed' %>
+            <%= link_to "キャンセル", readed_management_screen_contacts_path(page: params[:page]), class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover noto-serif-jp-extra-light", style: "background-color:#c9f5f6; font-size: 0.8rem !important; line-height: 2;" %>
+          <% when 'all_contacts' %>
+            <%= link_to "戻る", 
+                management_screen_contacts_path(page: params[:page]), 
+                class: "btn shadow rounded-pill px-4 py-2 btn-hover noto-serif-jp-extra-light", 
+                style: "background-color:#c9f5f6; font-size: 0.8rem !important; line-height: 2;",
+                onclick: "history.back(); return false;" %>
+          <% else %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+</div>
+
+<br><br>

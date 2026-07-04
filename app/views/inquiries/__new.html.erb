@@ -1,0 +1,120 @@
+<h1>Inquiries#new</h1>
+<p>Find me in app/views/inquiries/new.html.erb</p>
+
+<!-- app/views/inquiries/new.html.erb -->
+<h1>お問合せフォーム</h1>
+
+
+
+<br /><br /><br /><br />
+
+
+<!-- 
+  Google Fonts
+  Noto Serif Japanese
+  ExtraLight 200 フォントを使用しているので、[class="noto-serif-jp-extra-light"]を指定している
+-->
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="noto-serif-jp-extra-light" style="font-size:22pt">お問合せ</div>
+      <br>
+      <div class="noto-serif-jp-extra-light" align="left">白蓮ゆりGROUP　ARIAGUMA GROUP　宛</div>
+
+      <br><br><br>
+
+      お問合せ app/views/home/inquiry.html.erb<br>
+      <% if flash[:notice] %>
+        <div class="noto-serif-jp-extra-light alert alert-info" style="color: green;">Notice: <%= flash[:notice].html_safe %></div>
+      <% end %>
+
+      <% if flash[:alert] %>
+        <div class="noto-serif-jp-extra-light alert alert-info" style="color: green;">Alert: <%= flash[:alert] %></div>
+      <% end %>
+
+      <div class="noto-serif-jp-extra-light">
+        <%= form_with model: @inquiry, local: true, data: { turbo: false } do |form| %><!--url: contacts_path, -->
+
+          <!-- お名前 -->
+          <% if @inquiry.errors[:name].any? %>
+            <div class="text-danger">
+              <%= @inquiry.errors.full_messages_for(:name).first %>
+            </div>
+          <% end %>
+          <div class="mb-3">
+            <%= form.label :name, "お名前（必須）" %>
+            <%= form.text_field :name, class: "shadow form-control #{'is-invalid' if @inquiry.errors[:name].any?}", placeholder: "佐藤 まよ" %>
+          </div>
+
+          <!-- メールアドレス -->
+          <% if @inquiry.errors[:email].any? %>
+            <div class="text-danger">
+              <%= @inquiry.errors.full_messages_for(:email).first %>
+            </div>
+          <% end %>
+          <div class="mb-3">
+            <%= form.label :email, "メールアドレス（必須）" %>
+            <%= form.email_field :email, class: "shadow form-control #{'is-invalid' if @inquiry.errors[:email].any?}", placeholder: "contact@ariaguma.jp" %>
+          </div>
+
+          <!-- メールアドレス（必須 確認用） -->
+          <% if @inquiry.errors[:email_confirmation].any? %>
+            <div class="text-danger">
+              <%= @inquiry.errors.full_messages_for(:email_confirmation).first %>
+            </div>
+          <% end %>
+          <div class="mb-3">
+            <%= form.label :email_confirmation, "メールアドレス（必須 確認用）", class: "form-label" %>
+            <%= form.email_field :email_confirmation, class: "form-control shadow #{'is-invalid' if @inquiry.errors[:email_confirmation].any?}", placeholder: "contact@ariaguma.jp"  %>
+          </div>
+
+          <!-- 件名 -->
+          <% if @inquiry.errors[:subject].any? %>
+            <div class="text-danger">
+              <%= @inquiry.errors.full_messages_for(:subject).first %>
+            </div>
+          <% end %>
+          <div class="mb-3">
+            <%= form.label :subject, "件名（必須）" %>
+            <%= form.text_field :subject, class: "shadow form-control #{'is-invalid' if @inquiry.errors[:subject].any?}", placeholder: "「幻魔との死闘」について など" %>
+          </div>
+
+          <!-- メッセージ -->
+          <% if @inquiry.errors[:message].any? %>
+            <div class="text-danger">
+              <%= @inquiry.errors.full_messages_for(:message).first %>
+            </div>
+          <% end %>
+          <div class="mb-3">
+            <%= form.label :message, "メッセージ（必須）", class: "form-label" %>
+            <%= form.text_area :message, class: "form-control shadow #{'is-invalid' if @inquiry.errors[:message].any?}", rows: 5, placeholder: "メッセージはこちらからお願いいたします。"  %>
+          </div>
+
+          <div class="d-grid">
+            <%= form.submit "送　信", class: "btn btn-info shadow noto-serif-jp-extra-light" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br /><br />
+
+
+
+<!-- 
+  使用しているファイル
+  [html.erb]
+  app/views/layouts/application.html.erb
+  [jsx]
+  app/javascript/components/ArticlePreview.jsx
+  [js]
+  app/javascript/application.js
+  app/assets/javascripts/application.js
+
+
+-->
+
+

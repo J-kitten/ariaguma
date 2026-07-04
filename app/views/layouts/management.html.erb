@@ -1,0 +1,533 @@
+<!-- app/views/layouts/management.html.erb 共通UI -->
+<!-- https://ariaguma.jp/management_screen 使用してる -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-language" content="ja">
+    <!--<meta name="robots" content="noindex,nofollow">-->
+    <title><%= content_for(:title) || "ARIAGUMA GROUP 管理画面" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="<%= asset_path 'diamond_square_circle_wh1024.png' %>">
+    <link rel="apple-touch-icon" href="<%= asset_path 'diamond_square_circle_wh1024.png' %>">
+
+    <!-- CSS -->
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload", media: "all" %>
+
+    <!-- Javascript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" data-turbo="false" defer></script>
+    <%# javascript_include_tag 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js' data-turbo="false" defer: true %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+
+    <%# FONT %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet">
+
+    <!--◆ フォントの読み込みを早くする noto-serif-jp-extra-light START ◆-->
+    <%= tag.link href: "https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200&display=swap", as: "style", onload: "this.onload=null;this.rel='stylesheet'" %>
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet">
+    </noscript>
+    <!--◆ フォントの読み込みを早くする noto-serif-jp-extra-light END ◆-->
+
+    <style>
+      .navbar {
+        /*opacity: 0.8; 透明度*/
+        transition: opacity 0.5s ease;
+        padding-top: 0px !important;
+        padding-bottom: 5px !important;
+      }
+      .navbar.navbar-visible {
+        opacity: 1;
+      }
+      input::placeholder,
+      textarea::placeholder {
+        color: #999999 !important;
+      }
+
+      /* Font tags can be found here */
+      .noto-serif-jp {
+        font-family: "Noto Serif JP", serif;
+        font-optical-sizing: auto;
+        font-weight: 200;
+        font-style: normal;
+      }
+
+      .cactus-classical-serif {
+        font-family: "Cactus Classical Serif", serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      .big-text {
+        font-size: 20pt;
+      }
+      /* End of font tag */
+
+      /* メインで使う PDFのフォントに近い START */
+      .noto-serif-jp-extra-light {
+        font-family: "Noto Serif JP", serif;
+        font-optical-sizing: auto;
+        font-weight: 200; /* ExtraLight */
+        font-style: normal;
+      }
+      /* メインで使う PDFのフォントに近い END */
+
+      /* チェックボックスを拡大表示 START */
+      .form-check-input {
+        transform: scale(1.5);
+        margin-right: 10px; /* ラベルとの間に余白が欲しい場合 */
+      }
+      /* チェックボックスを拡大表示 END */
+
+      /* 背景画像を画面全体に固定 */
+      .bg-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-image: url('<%= asset_path("Lily-wh4132.jpg") %>');
+        background-repeat: repeat;
+        background-size: 20%;
+        background-position: -0.5cm;
+        padding-left: 3cm;
+        padding-right: 3cm;
+        z-index: -1;
+      }
+
+      /* 中央に重ねる文字（マージン不要） */
+      .content {
+        position: relative;
+        z-index: 1;
+        color: white;
+        padding: 2rem;
+        height: 100vh; /* 画面いっぱいに配置 */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* 上下中央寄せ */
+        align-items: center;     /* 左右中央寄せ */
+        margin: 0;               /* ← 重要！余白でスクロールさせない */
+        margin-top: 35vh;
+      }
+
+      /* タブレット用（769px～1024px） */
+      @media screen and (min-width: 769px) and (max-width: 1024px) {
+        .bg-wrapper {
+          background-image: url('<%= asset_path("Lily-wh4132.jpg") %>');
+          background-size: cover; /*NG→contain*/
+          /*background-size: 100% auto;*/         /* 横幅100%、縦は自動調整 */
+          background-position: center top;    /* 中央上に合わせる */
+          background-repeat: no-repeat;
+
+          position: fixed;        /* または absolute：用途に応じて調整 */
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          /*padding-left: 5cm;*/
+          /*padding-right: 5cm;*/
+
+          z-index: -1; /* 背景として表示（文字の下） */
+        }
+      }
+
+      /* スマホ（幅768px以下）用に調整 */
+      @media screen and (max-width: 768px) {
+        .bg-wrapper {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background-image: url('<%= asset_path("Lily-wh1294.jpg") %>');
+          background-size: cover;
+          background-position: top center;
+          background-repeat: no-repeat;
+          background-attachment: fixed;            /* スクロールしても固定 */
+          z-index: -1;
+        }
+
+        .content {
+          margin: 0;
+          padding: 1rem 1cm 0rem 1cm; /* 上:1rem 左 下:2rem 右:1cm */
+          height: 100%
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: center;
+        }
+      }
+
+    <!--背景の画像を、テーブルの白い背景色をなくして表示させる-->
+      table.table,
+      table.table thead,
+      table.table tbody,
+      table.table td,
+      table.table th,
+      table.table tr {
+      background-color: transparent !important;
+      background-image: none !important;
+    </style>
+
+    <!--画面の左右の余白を指定する -->
+    <style>
+      .custom-padding {
+        padding-left: 4cm;
+        padding-right: 4cm;
+      }
+
+      /* タブレット用（幅768px～1024px） */
+      @media screen and (max-width: 1024px) and (min-width: 768px) {
+
+        .custom-padding {
+          padding-left: 2cm;
+          padding-right: 2cm;
+          width: 100vw; 
+          height: 100vh; 
+          object-fit: cover;
+        }
+      }
+
+      /* スマホ用（幅768px未満） */
+      @media screen and (max-width: 767px) {
+        .custom-padding {
+          padding-left: 1cm;
+          padding-right: 1cm;
+        }
+      }
+    </style>
+
+    <!--マウスをのせた時、リンクボタンを水色にホバーし、背景色・文字色の変更をする-->
+    <style>
+      .btn-hover:hover {
+        background-color: #dcf8f9 !important; /* ホバー時の色 */
+        /*color: #000000 !important;*/
+      }
+    </style>
+
+    <!--マウスをのせた時、別の色でホバーし、背景色・文字色の変更をする-->
+    <style>
+      .btn-hover-pink:hover {
+        background-color: #cc1199 !important; /* ホバー時の色 */
+        color: #ffffff !important;
+      }
+
+      .btn-blue-hover:hover {
+        background-color: #0b5ed7 !important; /* ホバー時の色 */
+        color: #ffffff !important;
+      }
+
+      .btn-purple-hover:hover { /* パープル */
+        background-color: #eaeaf9 !important; /* #d7bdf4 ホバー時の色 */
+        color: #000000 !important;
+      }
+      
+      .btn-white-search-hover:hover { /* ラベンダーから白にする */
+        background-color: #cc0066 !important;
+        color: white !important;
+      }
+
+      .btn-pink-hover:hover {
+        background-color: #ad0057 !important;
+        color: #ffffff !important;
+      }
+
+    </style>
+
+    <!-- ハンバーガーボタンの「三」を押したら「✕」に変える Start-->
+    <style>
+      .navbar-toggler[aria-expanded="true"] .icon-hamburger {
+        display: none !important;
+      }
+
+      .navbar-toggler[aria-expanded="true"] .icon-close {
+        display: inline-block !important;
+      }
+
+      .navbar-toggler[aria-expanded="false"] .icon-close {
+        display: none !important;
+      }
+    </style>
+    <!-- ハンバーガーボタンの「三」を押したら「✕」に変える End -->
+
+    <!-- ハンバーガーボタンの四角い線が太くならないように調整 ここから-->
+    <style>
+      .navbar-toggler:focus,
+      .navbar-toggler:active,
+      .navbar-toggler:focus-visible {
+        box-shadow: none !important;
+        border: 1px solid rgba(0,0,0,0.2) !important;  /* 常に細い枠 */
+        outline: none !important;
+      }
+    </style>
+    <!-- ハンバーガーボタンの四角い線が太くならないように調整 ここまで-->
+
+    <!-- font 変更 Start -->
+    <style>
+      .font-custom {
+        font-size: 0.8rem !important;
+        font-family: 'Noto Serif JP', sans-serif;
+        font-weight: 200; /* Extra Light のウェイト（200） */
+        color: #333333 !important;
+      }
+      .font{
+        font-size: 12px !important;
+        font-family: 'Noto Serif JP', sans-serif;
+        font-weight: 200; /* Extra Light のウェイト（200） */
+        color: black !important;
+      }
+    </style>
+    <!-- font 変更 End -->
+
+    <!-- CSSボタンのhover時の背景色 ここから-->
+    <style>
+      /* ラベンダーのマウスが乗った時のスタイル */
+      .my-button:hover {
+        background-color: #cc0066 !important;
+        color: #ffffff !important;
+        /*cursor: pointer;*/ /* マウスカーソルをポインターにする */
+      }
+
+      /* 水色のマウスが乗った時のスタイル */
+      .my-button-blue:hover {
+        background-color: #dcf8f9 !important;
+        color: #000000 !important;
+      }
+    </style>
+    <!-- CSSボタンのhover時の背景色 ここまで-->
+
+    <style>
+      /* ボタンの縦横幅 */
+      .action-btn {
+        font-size: 0.8rem !important;
+        padding: 8px 22px !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50px !important;
+      }
+    </style>
+
+    <style>
+      .btn:focus,
+      .btn:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+    </style>
+
+    <!-- お問合せ・予約登録のリストのURL作成。既読・未読。 -->
+    <!-- 上記にこのmarkAsRead を使用するため <%# csrf_meta_tags %> がある -->
+    <script>
+      function markAsRead(id, resource = 'contacts', target = 'normal', query = '', page = '', unread = '') {
+console.log(`marking contact id=${id} as read`);
+
+        fetch(`/management_screen/${resource}/${id}/mark_read`, {
+          method: 'PATCH',
+          headers: {
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+            'Content-Type': 'application/json'
+          }
+        }).then(response => {
+          if (response.ok) {
+            const row = document.getElementById(`${resource.slice(0, -1)}-${id}`);
+            if (row) row.classList.remove("fw-bold");
+
+            //let url = (target === 'trash')
+            //  ? `/management_screen/${resource}/${id}/trash_show`
+            //  : `/management_screen/${resource}/${id}`;  // management_screen/regists/show.html.erb を表示させるため
+            let url = `/management_screen/${resource}/${id}`;
+
+            const params = [];
+            if (query) params.push(`query=${encodeURIComponent(query)}`);
+            if (page) params.push(`page=${page}`);
+            if (unread) params.push(`unread=${unread}`);
+            if (target && ['trash', 'unread', 'readed', 'all_contacts'].includes(target)) {
+              params.push(`target=${target}`);
+            }
+
+            if (params.length > 0) url += '?' + params.join('&');
+
+            window.location.href = url;
+          } else {
+            alert("既読にできませんでした " + response.status);
+          }
+        });
+      }
+
+      window.markAsRead = markAsRead;
+    </script>
+
+    <script>
+      // 検索のテキストボックスの背景色を変える
+      document.addEventListener("turbo:load", function () {
+        const input = document.getElementById("search_query");
+        const clearBtn = document.getElementById("clear_query");
+
+        if (!input || !clearBtn) return;
+
+        function updateInputStyle() {
+          if (input.value.trim() !== "") {
+            input.classList.add("query-active");
+            clearBtn.style.display = "inline-block";
+          } else {
+            input.classList.remove("query-active");
+            clearBtn.style.display = "none";
+          }
+        }
+
+        input.addEventListener("input", updateInputStyle);
+
+        clearBtn.addEventListener("click", function () {
+          input.value = "";
+          updateInputStyle();
+          input.focus();
+        });
+
+        // ページ読み込み後の初期化（検索結果ページでも反映）
+        updateInputStyle();
+      });
+    </script>
+
+    <!-- パスワードのキーファイルの表示切替 文字化・非文字化 START -->
+    <script>
+      // Turbo対応の代替案（必要なら戻す）
+      //document.addEventListener("turbo:load", setupPasswordToggle);
+      //document.addEventListener("turbo:frame-load", setupPasswordToggle); // Turbo Frame用（必要なら）
+      //document.addEventListener("turbo:load", () => {
+      //  document.querySelectorAll("#toggle-password").forEach(el => {
+      //    el.dataset.initialized = "";
+      //  });
+      //  setupPasswordToggle();
+      //});
+
+      document.addEventListener("DOMContentLoaded", function() {
+        setupPasswordToggle();
+      });
+
+      function setupPasswordToggle() {
+        const toggle = document.getElementById("toggle-password");
+        const passwordField = document.getElementById("password-field");
+
+        if (toggle && passwordField && !toggle.dataset.initialized) {
+          toggle.addEventListener("click", () => {
+            const isText = passwordField.type === "text";
+            passwordField.type = isText ? "password" : "text";
+
+            const showIcon = toggle.dataset.showIcon;
+            const hideIcon = toggle.dataset.hideIcon;
+            toggle.src = isText ? hideIcon : showIcon;
+          });
+
+          toggle.dataset.initialized = "true"; // 二重バインド防止
+        }
+      }
+    </script>
+    <!-- パスワードのキーファイルの表示切替 文字化・非文字化 END -->
+
+  </head>
+<body style="backgound-color: #f5f5f5 !important;"> <!--#f5f5f5-->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow fixed-top noto-serif-jp-extra-light">
+  <div class="container">
+
+    <a class="navbar-brand btn btn-white mt-3" 
+        href="https://ariaguma.jp/management_screen/" 
+        target="_self" 
+        rel="noopener noreferrer" 
+        style="font-size:18px; margin-left: 15px; display:flex; align-items:center; gap:8px;">
+        
+        <img src="<%= asset_path('diamond_square_circle_wh1024.png') %>" alt="" style="height: 60px; opacity: 0.8">
+        <img src="<%= asset_path('ARIAGUMA_logo.png') %>" style="height:45px;">
+      </a>
+
+    <!--add 2025-7-11 ハンバーガーボタンの「✕」Start-->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <svg class="icon icon-hamburger" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M1.5 12.5h13v-1h-13v1zm0-4h13v-1h-13v1zm0-4h13v-1h-13v1z"/>
+      </svg>
+      <svg class="icon icon-close d-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M4.646 4.646a.5.5 0 011 0L8 6.793l2.354-2.147a.5.5 0 11.707.707L8.707 7.5l2.354 2.354a.5.5 0 01-.707.707L8 8.207l-2.354 2.354a.5.5 0 01-.707-.707L7.293 7.5 4.939 5.146a.5.5 0 010-.707z"/>
+      </svg>
+    </button>
+    <!--add 2025-7-11 ハンバーガーボタンの「✕」End-->
+
+    <div class="collapse navbar-collapse noto-serif-jp-extra-light" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <ul class="navbar-nav ms-auto mt-1">
+          <li class="nav-item">
+            <div>
+            </div>
+          </li>&nbsp;
+          <li class="nav-item">
+            <div class="mb-2" style="text-align: right;">
+              <%= link_to "予約希望者 一覧", management_screen_regists_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover mt-1", style: "background-color:#dff7f7; font-size: 0.8rem !important; line-height: 2;" %>
+            </div>
+          </li>&nbsp;
+          <li class="nav-item">
+            <div class="mb-2" style="text-align: right">
+              <%= link_to "お問合せ 一覧", management_screen_contacts_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover mt-1", style: "background-color:#dff7f7; font-size: 0.8rem !important; line-height: 2;" %>
+            </div>
+          </li>&nbsp;
+          <li class="nav-item">
+            <div class="mb-2" style="text-align: right">
+              <%= link_to "ariaguma.jp", "/", 
+                  class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover mt-1", 
+                  style: "background-color:#dff7f7; font-size: 0.8rem !important; line-height: 2;",
+                  target: "_blank" %>
+            </div>
+          </li>&nbsp;
+          <li class="nav-item">
+            <div class="mb-2" style="text-align: right">
+              <%= link_to "ログアウト",
+                  management_screen_logout_path,
+                  method: :delete, 
+                  data: { turbo: false, confirm: "ログアウトしますか？" },
+                  class: "btn shadow btn-download rounded-pill px-4 py-2 mt-1", 
+                  style: "background-color:#001a59; color: #f0eee0; font-size: 0.8rem !important; line-height: 2;" %> <!--btn-hover -->
+            </div>
+          </li>&nbsp;&nbsp;
+          <li class="nav-item mt-2" style="font-size: 0.8rem">
+            <div class="mb-2" style="text-align: right">
+              <% if current_user %>
+                <p>ログイン中: <br><%= current_user.name %></p>
+              <% else %>
+                <p>ログアウト中</p>
+              <% end %>
+            </div>
+          </li>&nbsp;
+        </ul>
+    </div>
+  </div>
+</nav>
+
+<br><br>
+
+  <header>
+    <!-- ログアウトボタンなど共通UIもここに -->
+  </header>
+
+  <main>
+    <%= yield %>
+  </main>
+
+</body>
+</html>
+

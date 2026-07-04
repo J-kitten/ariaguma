@@ -1,0 +1,17 @@
+{
+  "name": "ariaguma-login",
+  "private": true,
+  "scripts": {
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets --loader:.js=jsx  --loader:.css=text",
+    "start": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets --loader:.js=jsx"
+  },
+  "dependencies": {
+    "@hotwired/turbo-rails": "^8.0.13",
+    "@rails/ujs": "^7.1.3-4",
+    "bootstrap-icons": "^1.13.1",
+    "esbuild": "^0.25.5",
+    "firebase": "^12.14.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}

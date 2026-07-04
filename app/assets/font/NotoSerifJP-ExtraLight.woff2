@@ -1,0 +1,7 @@
+@font-face {
+  font-family: 'Noto Serif JP Extra Light';
+  src: url('/assets/NotoSerifJP-ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: block;  /* Å© swap Å® block Ç…ÇµÇƒÇ›ÇÈ */
+}

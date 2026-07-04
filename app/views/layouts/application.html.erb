@@ -1,0 +1,675 @@
+  <!-- app/views/layouts/application.html.erb -->
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-language" content="ja">
+    <!--<meta name="robots" content="noindex,nofollow">-->
+
+    <title><%= content_for(:title) || "ARIAGUMA GROUP" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %><!--fetch | axoisなどで使う-->
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="<%= asset_path 'diamond_square_circle_wh1024.png' %>?v=2">
+    <link rel="apple-touch-icon" href="<%= asset_path 'diamond_square_circle_wh1024.png' %>">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+
+    <%= javascript_include_tag "application", defer: true %>
+
+    <%= javascript_include_tag 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js', defer: true %>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!-- FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&family=Noto+Serif+JP:wght@200&display=swap" rel="stylesheet">
+
+    <!-- 文字サイズ変更 start -->
+    <script>
+      function adjustFontSize(change) {
+        const input = document.getElementById("fontSizeInput");
+        let value = parseInt(input.value, 10) + change;
+
+        if (value < 10) value = 10;
+        if (value > 40) value = 40;
+
+        input.value = value;
+      }
+
+      function applyFontSize() {
+        const value = parseInt(document.getElementById("fontSizeInput").value, 10);
+        const adjustedValue = Math.max(10, Math.min(value, 40));
+
+        // ここをbodyではなくhtml要素に変更（優先度が高い）
+        //document.documentElement.style.fontSize = adjustedValue + "px";
+        document.getElementById("app-content").style.fontSize = adjustedValue + 'px';
+
+        // 保存して次回も適用できるようにする
+        sessionStorage.setItem('fontSize', adjustedValue);
+      }
+
+      /** フォントサイズパネルを、ナビゲーションバーに表示 **/
+      /**「文字サイズ」「✕」ボタンで消せる START **/
+      function toggleFontSizePanel() {
+        const panel = document.getElementById('fontSizePanel');
+        panel.style.display = panel.style.display === 'none' || panel.style.display === '' ? 'block' : 'none';
+      }
+
+      // ページ読み込み時にサイズ適用
+      window.addEventListener('DOMContentLoaded', () => {
+        const savedSize = sessionStorage.getItem('fontSize');
+        if (savedSize) {
+          document.getElementById("app-content").style.fontSize = savedSize + 'px';
+          const input = document.getElementById("fontSizeInput");
+          if (input) input.value = savedSize;
+        }
+      });
+    /** フォントサイズパネルを、ナビゲーションバーに表示 **/
+    /**「文字サイズ」「✕」ボタンで消せる END **/
+
+    </script>
+    <!-- 文字サイズ変更 End -->
+
+
+    <% if defined?(@regist) && @regist && @regist.errors.any? %>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const invalid = document.querySelector(".is-invalid");
+          if (invalid) {
+            invalid.scrollIntoView({ behavior: "smooth", block: "center" });
+            invalid.focus();
+          }
+        });
+      </script>
+    <% end %>
+
+    <!--全文表示・閉じる Top画面 Start -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const moreText = document.getElementById("moreText");
+        const button = document.getElementById("toggleButton");
+
+        let isOpen = false;
+
+        button.addEventListener("click", function () {
+          if (isOpen) {
+            /* 閉じるとき*/
+            moreText.style.maxHeight = 0;
+            button.textContent = "全文表示";
+          } else {
+            /* 開くときに高さを測って指定*/
+            moreText.style.maxHeight = moreText.scrollHeight + "px";
+            button.textContent = "閉じる";
+          }
+          isOpen = !isOpen;
+        });
+      });
+    </script>
+    <!--全文表示・閉じる Top画面 End -->
+
+    <!-- JavaScriptで判定 → bodyにclass付与 -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const ua = navigator.userAgent.toLowerCase();
+
+        if (ua.includes("fbav") || ua.includes("fban")) {
+          document.body.classList.add("from-facebook");
+        } else if (ua.includes("twitter")) {
+          document.body.classList.add("from-x");
+        } else if (ua.includes("instagram")) {
+          document.body.classList.add("from-instagram");
+        }
+      });
+    </script>
+
+    <style>
+      html {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+
+      .logout-btn {
+        font-size: 10px !important;
+        line-height: 1 !important;
+
+        /* root font-sizeの影響を受けにくくする */
+        font-size: 10px;
+      }
+
+      .more-text {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+      }
+
+      .read-more {
+        color: blue;
+        cursor: pointer;
+        display: inline-block;
+        margin-top: 10px;
+      }
+
+      .read-more:hover {
+        text-decoration: underline;
+      }
+
+      .navbar {
+        opacity: 1;
+        transform-origin: left top;
+        transition: opacity 0.5s ease;
+        padding-bottom: 0px !important;
+        font-size: 12px;
+      }
+      .navbar.navbar-visible {
+        opacity: 1;
+      }
+      input::placeholder,
+      textarea::placeholder {
+        color: #999999 !important;
+      }
+
+      #article-preview { /* id="article-preview"*/
+        white-space: pre-line;
+      }
+
+      /* Font tags can be found here */
+      .noto-serif-jp {
+        font-family: "Noto Serif JP", serif;
+        font-optical-sizing: auto;
+        font-weight: 200;
+        font-style: normal;
+      }
+
+      .cactus-classical-serif {
+        font-family: "Cactus Classical Serif", serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      .big-text {
+        font-size: 20pt;
+      }
+      /* End of font tag */
+
+      /* メインで使う PDFのフォントに近い START */
+      .noto-serif-jp-extra-light {
+        font-family: "Noto Serif JP", serif;
+        font-optical-sizing: auto;
+        font-weight: 200; /* ExtraLight */
+        font-style: normal;
+      }
+      /* メインで使う PDFのフォントに近い END */
+
+      /* 全画面のフォントサイズ変更画面 id="fontSizeInput" */
+      #fontSizeInput {
+        width: 60px;
+      }
+
+      /* 文字色「＋」「－」をフォーカス時 Add 2025/7/7 start */
+      .font-adjust-btn {
+        background-color: #280033;
+        color: white;
+        border: 1px solid white;
+      }
+
+      .font-adjust-btn:hover {
+        background-color: #280033; /* 背景そのまま */
+        color: white;              /* 文字も白のまま */
+      }
+      /* 文字色「＋」「－」をフォーカス時 Add 2025/7/7 end */
+
+
+      /* 国ごとのファイルのダウンロード　cssのリンクボタンの色の変更 START */
+      /* https://ariaguma.jp/download/***** */
+      .btn.btn-download {
+        background-color: #c9f5f6 !important;  /* 濃い水色⇒#acf0f1 */
+        color: white !important;
+        transition: background-color 0.3s ease;
+        border: none;
+      }
+
+      .btn.btn-download:hover,
+      .btn.btn-download:focus,
+      .btn.btn-download:active {
+        /*background-color: #17c9e4*/ !important;  /* 水色 */
+        color: white !important;
+      }
+      /* 国ごとのcss リンク END */
+
+      /* PC用 背景画像を画面全体に固定 */
+      .bg-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-image: url('<%= asset_path("Lily-wh4132.jpg") %>');
+        background-repeat: repeat;
+        background-size: 20%;
+        background-position: -0.5cm;
+        padding-left: 3cm;
+        padding-right: 3cm;
+        z-index: -1;
+      }
+
+      /* 中央に重ねる文字（マージン不要） */
+      .content {
+        position: relative;
+        z-index: 1;
+        padding: 2rem;
+        height: 100vh;           /* 画面いっぱいに配置 */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* 上下中央寄せ */
+        align-items: center;     /* 左右中央寄せ */
+        margin: 0;               /* ← 重要！余白でスクロールさせない */
+        margin-top: 35vh;
+      }
+
+      .footer-links {
+        font-size: 8pt;
+      }
+
+      .responsive-img {
+        height:40px;
+      }
+
+      /* <footer> */
+		  .footer {
+		    margin: 0;
+		    padding: 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+		  }
+
+      .white-bg {
+        background-color: rgba(255, 255, 255, 1);
+        padding: 10px;
+      }
+
+      /* <footer-square> */
+      .footer-square {
+        background-color: #000f33;
+        color: #fcfbf0;
+        width: 100%;
+        padding: 20px 0px 20px 0px; /* 上10, 右20, 下30, 左40 */
+        text-align: center;
+        flex-wrap: wrap;   /* ← これ追加 */
+      }
+      
+      /* ↓ 画面下リンク色をIvory */
+      a:link { color: #fcfbf0; }
+      a:visited { color: #fcfbf0; }
+      a:hover { color: #fcfbf0; }
+      a:active { color: #fcfbf0; }
+
+      /* 画面下にfooterを表示 */
+      html, body {
+        height: auto;
+        margin: 0;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 90vh;
+        /*height: 90vh;*/
+      }
+
+      main {
+        flex: 1;
+      }
+      /* ↑ 画面下にfooterを表示 */
+
+      /* タブレット用（769px～1024px） */
+      @media screen and (min-width: 769px) and (max-width: 1024px) {
+			  html, body {
+			    margin: 0;
+			    padding: 0;
+			    overflow-x: hidden;
+			    min-height: 100dvh;
+          -webkit-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+			  }
+
+			  body {
+			    display: flex;
+			    flex-direction: column;
+			  }
+
+			  .bg-wrapper {
+			    /*background-image: url('<%= asset_path("tab-w1600px-h1956-deleteC.jpg") %>');*/
+          background-image: url('<%= asset_path("Lily-wh4132.jpg") %>');
+
+			    background-size: cover;
+			    background-position: center top;
+			    background-repeat: repeat;
+
+			    position: fixed;
+			    top: 0;
+			    left: 0;
+			    width: 100vw;
+
+			    height: 100dvh;
+
+			    z-index: -1;
+			  }
+
+        .article-box {
+          background-color: rgba(255, 255, 255, 0.8);
+          padding: 50px !important;
+        }
+
+			  .content {
+			    flex: 1;
+			  }
+
+			  footer {
+			    margin: 0;
+			    padding: 0;
+			    margin-top: auto;
+			  }
+
+      }
+
+      /* スマホ（幅768px以下）用に調整 */
+      @media screen and (max-width: 768px) {
+        html, body {
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
+          max-width: 100vw;
+          height: auto;
+          -webkit-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+        }
+
+        body {
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+          /*height: 90vh;*/
+        }
+
+        body.from-facebook {
+          min-height: 100vh;
+        }
+
+        body.from-x {
+          min-height: 100vh;
+        }
+
+        body.from-instagram {
+          min-height: 100vh;
+        }
+
+        .bg-wrapper {
+          position: fixed;  /* 背景を画面に固定 */
+          top: 0;
+          /*left: 0;*/
+          /*width: 100vw;*/
+          width: 100%;
+          height: 100vh;
+          background-image: url('<%= asset_path("Lily-wh1294.jpg") %>');
+          background-size: 40% !important;          /* 画面にぴったり合わせる */
+          background-position: -0.5cm;             /* 上中央に配置 */
+          background-repeat: repeat;               /* 繰り返し */
+          background-attachment: fixed;            /* スクロールしても固定 */
+          z-index: -1;                             /* 他要素より背面に */
+        }
+
+        .article-box {
+          padding: 20px !important;
+        }
+
+        .content {
+          margin: 0;
+          padding: 1rem 1.625rem 2rem 1.625rem;    /* 上:1rem 左 下:2rem、右:1cm */
+          padding-left: 2rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;             /* 上寄せ */
+          align-items: center;
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
+			  footer {
+			    margin: 0;
+			    padding: 0;
+			    margin-top: auto;
+			  }
+
+        .footer-links {
+          white-space: nowrap;   /* 改行させない */
+          font-size: 10px;       /* 文字を少し小さく */
+        }
+
+        .responsive-img {
+          max-width: 100%;   /* ← ここで縮める */
+          height: auto;     /* ← 絶対必要（歪み防止） */
+        }
+
+        .footer-square {
+          flex-direction: column;   /* ← これが超重要 */
+          padding: 15px 10px;
+        }
+
+        .footer-links a {
+          display: block;           /* ← 1行ずつ表示 */
+          margin: 5px 0;
+        }
+
+        body {
+          display: flex;
+          flex-direction: column;
+          /*height: 80vh;*/
+          min-height: 95vh;
+        }
+
+      }
+
+      # 「全文表示」「閉じる」ボタン
+      .article-preview {
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+      }
+      .article-preview.collapsed {
+        max-height: 12rem;
+      }
+      .article-preview.expanded {
+        max-height: 1000rem; /* 十分大きな値でOK */
+      }
+
+      /* 紫色＋リンク */
+      .no-underline-purple {
+        color: #47127d;
+        text-decoration: none;
+      }
+
+    </style>
+
+    <style>
+      <!-- ハンバーガーボタンの「三」を押したら「✕」に変える Start-->
+      .navbar-toggler[aria-expanded="true"] .icon-hamburger {
+        display: none !important;
+      }
+
+      .navbar-toggler[aria-expanded="true"] .icon-close {
+        display: inline-block !important;
+        }
+
+      .navbar-toggler[aria-expanded="false"] .icon-close {
+        display: none !important;
+      }
+      <!-- ハンバーガーボタンの「三」を押したら「✕」に変える End -->
+
+      <!-- ハンバーガーボタンの四角い線が太くならないように調整 ここから-->
+      .navbar-toggler:focus,
+      .navbar-toggler:active,
+      .navbar-toggler:focus-visible {
+        box-shadow: none !important;
+        border: 1px solid rgba(0,0,0,0.2) !important;  /* 常に細い枠 */
+        outline: none !important;
+      }
+      <!-- ハンバーガーボタンの四角い線が太くならないように調整 ここまで-->
+
+      <!--マウスをのせた時、リンクボタンを水色にホバーし、背景色・文字色の変更をする ここから-->
+      .btn-hover:hover {
+        background-color: #e8fbfc !important; /* ホバー時の色 */
+        color: #000000 !important;
+        text-decoration: none;  // 文字の下線を作らない
+      }
+      <!--マウスをのせた時、リンクボタンを水色にホバーし、背景色・文字色の変更をする ここまで-->
+    </style>
+
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GL7C946KL3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-GL7C946KL3');
+    </script>
+    <!-- Google tag (gtag.js) -->
+
+    <!-- 開いたメニューバーを本文でタップすることで閉じる -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener("click", function (event) {
+
+        const navbarCollapse = document.getElementById("navbarNav");
+        const navbarToggler = document.querySelector(".navbar-toggler");
+
+        if (!navbarCollapse || !navbarToggler) return;
+
+        const isOpen = navbarCollapse.classList.contains("show");
+
+        if (
+          isOpen &&
+          !navbarCollapse.contains(event.target) &&
+          !navbarToggler.contains(event.target)
+        ) {
+          const bsCollapse =
+            bootstrap.Collapse.getInstance(navbarCollapse) ||
+            new bootstrap.Collapse(navbarCollapse, { toggle: false });
+
+          bsCollapse.hide();
+        }
+      });
+    });
+    </script>
+
+  </head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow noto-serif-jp-extra-light">
+  <div class="container">
+
+
+    <a class="navbar-brand btn btn-white mt-3" 
+        href="https://ariaguma.jp/" 
+        target="_self" 
+        rel="noopener noreferrer" 
+        style="font-size:18px; margin-left: 15px; display:flex; align-items:center; gap:8px;">
+        <img src="<%= asset_path('diamond_square_circle_w266_h271.png') %>" alt="" style="height:70px; opacity:0.8; padding-bottom: 15px;">
+        <img src="<%= asset_path('ARIAGUMA_logo.png') %>" style="height: 55px; padding-bottom: 10px;">
+    </a>
+
+    <!--add 2025-7-11 ハンバーガーボタンの「✕」Start-->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <svg class="icon icon-hamburger" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M1.5 12.5h13v-1h-13v1zm0-4h13v-1h-13v1zm0-4h13v-1h-13v1z"/>
+      </svg>
+    </button>
+    <!--add 2025-7-11 ハンバーガーボタンの「✕」End-->
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <div class="d-flex align-items-center flex-wrap gap-1">
+        <%= link_to "Present『幻魔との死闘』電子書籍DOWNLOAD予約登録",
+            root_path,
+            class: "btn shadow rounded-pill px-4 py-3",
+            style: "background-color:#dff7f7; color:#000; font-size: 10px !important;" %>
+
+        <%= link_to "お問合せ", contact_path,
+            class: "btn shadow rounded-pill px-4 py-3",
+            style: "background-color:#dff7f7; color:#000; font-size: 10px !important;" %>
+
+        <%= link_to "活動", about_path,
+            class: "btn shadow rounded-pill px-4 py-3",
+            style: "background-color:#dff7f7; color:#000; font-size: 10px !important;" %>
+
+        <%= link_to "ご支援", donation_path,
+            class: "btn shadow rounded-pill px-4 py-3",
+            style: "background-color:#dff7f7; color:#000; font-size: 10px !important;" %>
+
+        <%= link_to "文字SIZE", "#",
+            class: "btn shadow rounded-pill px-4 py-3",
+            style: "background-color:#001a59; color:#f0eee0; font-size: 10px !important;",
+            onclick: "toggleFontSizePanel(); return false;" %>
+
+      </div>
+    </div>
+
+    <div id="login-root" style="text-align: right;"></div>
+    <script src="react-assets/index-app.js"></script>
+
+  </div>
+</nav>
+
+
+
+    <!-- フォントサイズパネル START -->
+    <div id="fontSizePanel" 
+      class="container p-4 rounded" 
+      style="background-color: #222; color: white; max-width: 300px; display: none; 
+            position: fixed !important;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.4);
+      ">
+        <!-- 閉じるボタン -->
+        <button type="button" class="btn-close btn-close-white" style="position: absolute; top: 10px; right: 10px;" onclick="toggleFontSizePanel()"></button>
+        <h6 class="mt-4">フォントサイズ調整</h6>
+        <div class="input-group mb-3">
+            <button class="btn btn-outline-light font-adjust-btn" type="button" onclick="adjustFontSize(-1)">−</button>
+            <input type="number" id="fontSizeInput" value="16" min="10" max="40" step="1" class="form-control text-center" style="width: 30pt; background-color: #333; color: white; border: none;">
+            <button class="btn btn-outline-light font-adjust-btn" type="button" onclick="adjustFontSize(1)">＋</button>
+        </div>
+        <button class="btn btn-info w-100" onclick="applyFontSize();toggleFontSizePanel();" style="background-color:#99ebff;">
+          変　更
+        </button>
+    </div>
+    <!-- フォントサイズパネル END -->
+  
+<main id="app-content">
+    <%= yield %>
+</main>
+
+<%= render "layouts/footer" %>
+
+  </body>
+</html>

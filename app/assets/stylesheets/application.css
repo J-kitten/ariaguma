@@ -1,0 +1,58 @@
+/* app/assets/stylesheets/application.css */
+
+/*
+ *= require_self
+ */
+
+/*
+ * This is a manifest file that'll be compiled into application.css.
+ *
+ * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
+ * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
+ * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
+ * depending on specificity.
+ *
+ * Consider organizing styles into separate files for maintainability.
+ */
+
+    html{
+      font-size: 10px; /* 初期サイズ */
+    }
+
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+
+    .resizable-text {
+      font-size: 1em;
+    }
+
+
+  .long-input {
+    width: 400px; /* 任意の幅に変更可能 */
+    max-width: 100%; /* レスポンシブ対応 */
+    padding: 8px;
+    font-size: 16px;
+  }
+
+  input[type=checkbox] {
+    transform: scale(1.5);
+  }
+
+  .notice {
+    background-color: #e0f7fa; /* 背景水色 */
+    color: #00695c;            /* 文字色ダークグリーン */
+    //padding: 10px;
+    //border-radius: 4px;
+    //margin-bottom: 1em;
+  }
+
+  .alert {
+    background-color: #ffebee; /* 背景ピンク */
+    color: #b71c1c;            /* 文字色赤 */
+    //padding: 10px;
+    //border-radius: 4px;
+    //margin-bottom: 1em;
+   }
+
+

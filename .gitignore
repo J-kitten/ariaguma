@@ -1,0 +1,93 @@
+# Rails
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Credentials / secrets
+/config/master.key
+/config/credentials/*.key
+.env
+.env.*
+*.pem
+
+# Database
+/db/*.sqlite3
+/db/*.sqlite3-*
+
+# Storage / uploads
+/storage/*
+!/storage/.keep
+/public/downloads/*
+!/public/downloads/.keep
+
+# Node / React
+node_modules/
+/react-login-app/node_modules/
+/react-login-app/dist/
+
+# Assets build
+/public/assets
+/public/packs
+/public/vite
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Backup / archives
+*.zip
+*.tar
+*.tar.gz
+*.bak
+*.backup
+
+# Environment / local
+.byebug_history
+.ruby-version.local
+
+# Logs
+*.log
+
+# Bundler
+/vendor/bundle
+
+# Rails credentials
+/config/credentials.yml.enc
+
+# Secret / deploy
+.kamal/secrets
+shared/firebase/*.json
+
+# SQL backup
+*.sql
+
+# backup files
+*.backup.*
+*.not_used
+*.notUse
+*.swp
+*backup*
+*Backup*
+
+# vendor bundle
+/vendor/bundle/
+
+# Firebase cache
+/react-login-app/.firebase/
+/react-login-app/.agents/
+/react-login-app/skills-lock.json
+
+# public backup
+/public/management_screen_backup/
+
+.bundle/
+
+*.swp
+
+git_status.txt
+
+public/react-assets/index-app.js
+

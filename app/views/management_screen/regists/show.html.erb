@@ -1,0 +1,226 @@
+<%# app/views/management_screen/regists/show.html.erb %>
+
+<style>
+  .detail-wrapper {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .title-purple {
+    color: #47127d;
+    text-align: center; /* タイトル中央寄せ */
+    padding-right: 155px;
+    padding-top: 10px;
+  }
+
+  .detail-box {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+
+  .detail-table {
+    width: 400px;
+    margin: 0 auto; /* テーブル中央寄せ */
+  }
+
+  .detail-table th {
+    text-align: right;
+    width: 130px;
+    font-weight: 500;
+    vertical-align: middle;
+  }
+
+  .detail-table td {
+    text-align: left; /* デフォルトは left、中央寄せなら center */
+    vertical-align: middle;
+  }
+
+  .action-btn-group {
+    display: flex;
+    justify-content: center; /* ボタン中央寄せ */
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+
+  /* ボタン共通 */
+  .btn-mail {
+    background-color: #c9f5f6;
+    font-size: 0.8rem !important;
+    line-height: 2;
+    color: #000;
+    border-radius: 50px;
+    padding: 6px 18px;
+  }
+
+  .btn-blue {
+    background-color: #0d6efd;
+    color: white;
+    font-size: 0.8rem !important;
+    line-height: 2;
+    border-radius: 50px;
+    padding: 6px 18px;
+  }
+
+  .btn-pink {
+    background-color: #cc0066;
+    color: white;
+    font-size: 0.8rem !important;
+    line-height: 2;
+    border-radius: 50px;
+    padding: 6px 18px;
+  }
+
+  /* タブレット用（幅768px～1024px） */
+  @media screen and (max-width: 1024px) and (min-width: 768px) {
+    .detail-box {
+      padding: 25px;
+    }
+
+    .detail-table th {
+      width: 150px;
+      font-size: 0.85rem;
+    }
+
+    .action-btn-group {
+      gap: 8px;
+    }
+  }
+
+  .button-area {
+    padding-top: 10px;
+    padding-right: 100px;
+    display: flex;
+    justify-content: flex-end; /* 右寄せ */
+    gap: 2px; /* ボタン同士の間隔を統一 */
+  }
+
+  /* スマホ用（幅767px未満） */
+  @media screen and (max-width: 767px) {
+    .detail-box {
+      padding: 20px 15px;
+    }
+
+    .detail-table th {
+      width: 100px;
+      font-size: 0.75rem;
+    }
+
+    .action-btn-group {
+      flex-direction: column;
+      align-items: center; /* 中央寄せ */
+    }
+
+    .action-btn-group .btn {
+      width: 100%;
+      text-align: center;
+    }
+
+    .button-area {
+      padding-bottom: 20px;
+      padding-left: 10px;
+      padding-right: 10px;
+      flex-wrap: wrap;
+      justify-content: center; /* スマホ時はバランス優先し中央寄せ */
+      gap: 2px;
+    }
+
+  }
+
+</style>
+
+<div class="bg-wrapper"></div>
+<br><br><br><br>
+
+<div class="container noto-serif-jp-extra-light" style="align: center;">
+  <div class="detail-wrapper">
+
+    <div class="detail-box shadow bg-light rounded-pill">
+
+      <table class="table table-borderless noto-serif-jp-extra-light align-middle mx-auto detail-table">
+        <tr>
+          <td colspan=3>
+            <div class="title-purple">
+              <% case params[:target] %>
+              <% when 'trash' %>
+                <h6 class="rounded rounded-pill d-inline-block py-4 px-4 mb-2 font-custom" style="color: #47127d; background-color: #eaeaf9;">予約希望者 一覧 > ゴミ箱一覧 > 詳細</h6>
+              <% when 'unread' %>
+                <h6 class="rounded rounded-pill d-inline-block py-4 px-4 mb-2 font-custom" style="color: #47127d; background-color: #eaeaf9;">予約希望者 一覧 > 未読 > 詳細</h6>
+              <% when 'readed' %>
+                <h6 class="rounded rounded-pill d-inline-block py-4 px-4 mb-2 font-custom" style="color: #47127d; background-color: #eaeaf9;">予約希望者 一覧 > 既読 > 詳細</h6>
+              <% else %>
+                <h6 class="rounded rounded-pill d-inline-block py-4 px-4 mb-2 font-custom" style="color: #47127d; background-color: #eaeaf9;">予約希望者 一覧 > 詳細</h6>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+        <tr><th>ID</th><td style="padding-bottom: 10px;"></td><td><%= @regist.id %></td></tr>
+        <tr><th>お名前</th><td style="padding-bottom: 10px;"></td><td><%= @regist.name %></td></tr>
+        <tr><th>MAIL</th><td style="padding-bottom: 10px;"></td><td><%= @regist.email %></td></tr>
+        <tr><th>ダウンロード数</th><td style="padding-bottom: 10px;"></td><td><%= @regist.downloaded %> FILE</td></tr>
+        <tr>
+          <th>「死闘の使命」メール送信</th>
+          <td style="padding-bottom: 10px;"></td>
+          <td>
+            <% if @regist.email_sent_01.present? %>
+              送信済  <%= l(@regist.email_sent_01, format: :long) %>
+            <% else %>
+              <%= button_to '1冊目メール送信', 
+                  send_first_book_management_screen_regist_path(@regist), 
+                  method: :post, 
+                  class: "btn btn-mail shadow my-button-blue" %>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>「死闘の使命」希望の有無</th>
+          <td style="padding-bottom: 10px;"></td>
+          <td><%= @regist.subscribed == true ? "予約希望あり" : "予約希望なし" %></td>
+        </tr>
+        <tr>
+          <th>2冊目メール送信</th>
+          <td style="padding-bottom: 10px;"></td>
+          <td>
+            <% if @regist.subscribed && @regist.email_sent_02.present? %>
+              送信済 <%= l(@regist.email_sent_02, format: :long) %>
+            <% end %>
+            <% if @regist.subscribed && @regist.email_sent_02.blank? %>
+              <%= button_to '2冊目メール送信',
+                  send_second_email_management_screen_regist_path(@regist),
+                  method: :post,
+                  class: "btn btn-mail shadow my-button-blue" %>
+            <% end %>
+          </td>
+        </tr>
+      </table>
+
+      <div class="button-area mt-4">
+        <%= link_to "返信", 
+            reply_management_screen_regist_path(@regist), 
+            class: "btn shadow rounded-pill btn-primary action-btn",
+            style: "background-color:#001a59; color: #f0eee0; border:none;" %>
+
+        <%= form_tag destroy_completely_management_screen_regists_path, method: :delete, class: "d-inline-block" do %>
+          <%= hidden_field_tag "regist_ids[]", @regist.id %>
+          <%= button_tag "完全削除", class: "btn btn-pink btn-pink-hover shadow action-btn", data: { confirm: "完全に削除しますか？" } %>
+        <% end %>
+
+        <% if @regist.trash == true %>
+          <%= form_with url: restore_from_trash_management_screen_regist_path(@regist), method: :post, class: "d-inline-block" do %>
+            <%= submit_tag "復元する", class: "btn btn-mail shadow my-button-blue action-btn", data: { confirm: "復元しますか？" } %>
+          <% end %>
+        <% end %>
+
+        <%= link_to "戻る",
+            params[:target] == 'trash' ? trash_management_screen_regists_path(page: params[:page]) :
+            params[:target] == 'unread' ? unread_management_screen_regists_path(page: params[:page]) :
+            params[:target] == 'readed' ? readed_management_screen_regists_path(page: params[:page]) :
+            management_screen_regists_path(page: params[:page]),
+            class: "btn btn-mail shadow my-button-blue action-btn" %>
+      </div>
+      <br><br><br>
+    </div>
+  </div>
+</div>

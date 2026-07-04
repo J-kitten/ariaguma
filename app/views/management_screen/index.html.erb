@@ -1,0 +1,49 @@
+<% content_for :title, "ARIAGUMA 管理画面" %>
+
+<div class="bg-wrapper"></div>
+
+<div class="container" style="margin-top: 100px;">
+  <div class="row justify-content-center">
+    <div class="p-5 col-md-6 col-lg-4 noto-serif-jp-extra-light shadow rounded"
+         style="background-color: #f8f9fa; max-width: 400px; width: 90%;">
+
+      <!-- app/views/management_screen/index.html.erb -->
+      <h3 style="vertical-align: middle;">
+        <img src="<%= asset_path('diamond.png') %>" alt="" style="height:35px; width: 35px; margin-bottom: 5px; opacity: 0.7;">
+        <span style="position: relative; top: 2px;">ARIAGUMA 管理画面</span>
+      </h3>
+
+      <br>
+      <!--LOGIN履歴をDBに作るか？-->
+      <% if current_user_info %>
+        <p>LOGIN： <%= current_user_info[:name] %></p>
+        <%= Time.now.strftime("%Y/%m/%d %H:%M") %>
+      <% end %>
+
+      <% if flash[:notice] %>
+        <div class="alert shadow mt-3" style="background-color: #000000 !important; color: #ffffff !important; font-size: 8px; width: 300px;">
+          <%= flash[:notice] %>
+        </div>
+      <% end %>
+
+      <% if flash[:alert] %>
+        <div class="alert shadow mt-3" style="background-color: #000000; color: #ffffff !important; font-size: 8px; width: 300px;">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+
+      <div class="mb-2" style="text-align: right;">
+        <%= link_to "予約希望者 一覧", management_screen_regists_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dff7f7; font-size: 0.8rem !important; line-height: 2;" %>
+      </div>
+
+      <div class="mb-2" style="text-align: right">
+        <%= link_to "お問合せ 一覧", management_screen_contacts_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dff7f7; font-size: 0.8rem !important; line-height: 2;" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
+<br><br><br><br><br><br><br><br><br><br><br><br><br>
+<div align="center"><img src="<%= asset_path('ARIAGUMA_CopyLight_green_0088a2.png') %>" style="height:40px;"></div>
+-->

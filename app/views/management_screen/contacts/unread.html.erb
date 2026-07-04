@@ -1,0 +1,240 @@
+<%# app/views/management_screen/contacts/unread.html.erb %>
+<style>
+  html, body {
+    overflow-x: hidden;
+  }
+</style>
+
+<div class="bg-wrapper"></div>
+
+<div class="table-responsive custom-padding mt-5">
+<br><br>
+  <table>
+    <tr>
+      <td>
+        <div class="mb-2 font-custom">
+          <%= link_to "全件表示 #{@all_contacts_count} 件", management_screen_contacts_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dcf8f9; font-size: 0.8rem !important; line-height: 2;" %>
+        </div>
+      </td>
+      <td>
+        <div class="mb-2 font-custom">
+          <%= link_to "ゴミ箱表示 #{@trash_count} 件", trash_management_screen_contacts_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dcf8f9; font-size: 0.8rem !important; line-height: 2;" %>
+        <div>
+      </td>
+      <td>
+        <div class="mb-2 font-custom">
+          <%= link_to "未読メッセージを見る #{@unread_count} 件", unread_management_screen_contacts_path(unread: 0), class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dcf8f9; font-size: 0.8rem !important; line-height: 2;" %>
+        <div>
+      </td>
+      <td>
+        <div class="mb-2 font-custom">
+          <%= link_to "既読メッセージを見る #{@read_count} 件", readed_management_screen_contacts_path(unread: 1), class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dcf8f9; font-size: 0.8rem !important; line-height: 2;" %>
+        </div>
+      </td>
+      <td>
+        <% if params[:query].present? && @total_count.to_i >= 0 %>
+          <div style="top-margin: 5">
+            &nbsp;<span class="mb-2 font-custom">検索結果 <%= @total_count %> 件</span>
+          </div>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <%= form_with url: unread_management_screen_contacts_path, method: :get, class: "mb-2", local: true do |f| %>
+    <div style="position: relative;">
+      <%= f.text_field :query,
+        id: "search_query",
+        value: params[:query],
+        maxlength: 80,
+        class: "form-control rounded-pill shadow noto-serif-jp-extra-light",
+        placeholder: "検索ワードを入力",
+        autocomplete: "off",
+        style: "padding-left: 20px; padding-right: 80px; height: 40px; font-size: 1rem; border: none; box-shadow: none; background-color: rgba(255, 255, 255, 0.8);" %>
+
+      <!-- 検索ボタンを右端に固定配置 -->
+      <button type="submit"
+              class="btn shadow rounded-pill btn-purple-hover noto-serif-jp-extra-light btn-white-search-hover"
+              style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); height: 40px; font-size: 0.8rem; padding-left: 15px; padding-right: 15px; background-color: #eaeaf9;">
+        検索
+      </button>
+
+      <!-- クリアボタン -->
+      <button type="button" id="clear_query"
+              class="btn shadow rounded-pill btn-purple-hover noto-serif-jp-extra-light btn-white-search-hover"
+              title="クリア"
+              style="position: absolute; right: 50px; top: 50%; transform: translateY(-50%); height: 40px; font-size: 0.8rem; padding-left: 15px; padding-right: 15px; background-color: #eaeaf9;">
+        &times;
+      </button>
+    </div>
+  <% end %>
+
+  <% if flash[:notice] %>
+    <div class="alert noto-serif-jp-extra-light shadow" style="background-color: #000000 !important; color: #ffffff !important; font-size: 1rem; !important">
+      <%= flash[:notice] %>
+    </div>
+  <% end %>
+
+  <% if flash[:alert] %>
+    <div class="alert noto-serif-jp-extra-light shadow" style="background-color: #000000; color: #ffffff !important; font-size: 1rem !important;">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h6 class="noto-serif-jp-extra-light rounded rounded-pill d-inline-block py-3 px-3 p-3 mb-2 font-custom" 
+        style="background-color: #eaeaf9;">
+          お問合せ一覧 > 未読
+    </h6>
+    <%= button_tag "更新",
+        type: "button",
+        class: "noto-serif-jp-extra-light shadow rounded rounded-pill py-3 px-3 font-custom border-0 btn-white-search-hover",
+        style: "background-color: #eaeaf9;",
+        onclick: "location.reload();" %>
+  </div>
+
+  <%= form_with url: multiple_management_screen_contacts_path, method: :post, local: true do |f| %>
+    <div style="background-color: rgba(255,255,255,0.8);  padding: 10px; border-radius: 10px;">
+    <table class="table table-hover noto-serif-jp-extra-light">
+      <thead>
+        <tr>
+          <td></td>
+          <td>ID</td>
+          <td>お名前</td>
+          <td>件名</td>
+          <td>メッセージ</td>
+          <td>送信日時</td>
+          <td>送信済</td>
+        </tr>
+      </thead>
+      <tbody>
+        <% @contacts.each do |contact| %>
+          <tr class="<%= 'fw-bold' if contact.unread == false || contact.unread == 0 %>">
+            <td>
+              <%= check_box_tag "contact_ids[]", contact.id, false, class: "form-check-input shadow" %>
+            </td>
+            <td style="color: #7d7d7d; font-size: 1rem !important;">
+              <%= link_to "#",
+                  onclick: "markAsRead(#{contact.id}, 'contacts', 'unread', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                  class: "text-decoration-none",
+                  style: "color: #7d7d7d;" do %>
+                <%= contact.id %>
+              <% end %>
+            </td>
+            <!-- セル全体を d-block でリンクに -->
+            <td style="color: #7d7d7d; font-size: 1rem !important;">
+              <%= link_to "#",
+                  onclick: "markAsRead(#{contact.id}, 'contacts', 'unread', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                  class: "text-decoration-none",
+                  style: "color: #7d7d7d;" do %>
+                <%= contact.name %>
+              <% end %>
+            </td>
+            <td style="color: #7d7d7d; font-size: 1rem !important;">
+              <%= link_to "#",
+                onclick: "markAsRead(#{contact.id}, 'contacts', 'unread', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                class: "text-decoration-none",
+                style: "color: #7d7d7d;" do %>
+                <%= contact.subject %>
+              <% end %>
+            </td>
+            <td style="color: #7d7d7d; font-size: 1rem !important;">
+              <%= link_to "#",
+                onclick: "markAsRead(#{contact.id}, 'contacts', 'unread', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                class: "text-decoration-none",
+                style: "color: #7d7d7d;" do %>
+                <%= truncate(contact.message, length: 40) %>
+              <% end %>
+            </td>
+            <td style="color: #7d7d7d; font-size: 1rem !important;">
+              <%= link_to "#",
+                onclick: "markAsRead(#{contact.id}, 'contacts', 'unread', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                class: "text-decoration-none",
+                style: "color: #7d7d7d;" do %>
+                <%= l(contact.created_at, format: :short) %>
+              <% end %>
+            </td>
+            <td style="font-size: 0.7rem !important;">
+              <%= link_to "#",
+                onclick: "markAsRead(#{contact.id}, 'contacts', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                class: "text-decoration-none",
+                style: "color: #7d7d7d;" do %>
+
+                <% if contact.reply_time.present? %>
+                  <!-- お問合せの詳細を表示させる--> 
+                  <%= link_to "返信済", reply_detail_management_screen_contacts_path(id: contact.id, query: contact.email, page: params[:page]), class: "btn btn-sm shadow noto-serif-jp-extra-light btn-hover rounded-pill px-4 py-2 my-button-blue", style: "background-color:#001a59; color: #f0eee0; line-height: 2; width: 60px; font-size: 0.9rem;" %>
+                  <br><span class="font-size: 0.8rem;" style="color: #7d7d7d;"><%= l(contact.reply_time, format: :short) %></span>
+                <% else %>
+                  <!-- お問合せに返信するページを表示させる--> 
+                  <%= link_to "未返信", not_replying_management_screen_contacts_path(id: contact.id, query: contact.email, page: params[:page]), class: "btn btn-sm shadow noto-serif-jp-extra-light btn-hover rounded-pill px-4 py-2 my-button-blue", style: "background-color:#001a59; color: #f0eee0; line-height: 2; width: 60px; font-size: 0.9rem;" %>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    </div>
+
+    <table border=0 class="table table-sm mt-3">
+      <tr>
+        <td>
+          <div class="d-flex justify-content-start gap-2">
+            <%= f.submit "ゴミ箱へ",
+                  type: "submit",
+                  formaction: multiple_management_screen_contacts_path,
+                  formmethod: "post",
+                  name: "action_type",
+                  value: "Destroy",
+                  class: "btn shadow btn-download rounded-pill px-4 py-2 btn-pink-hover btn-hover noto-serif-jp-extra-light",
+                  data: { turbo_confirm: "本当にゴミ箱に捨てますか？" },
+                  style: "background-color: #cc0066; color: #ffffff; font-size: 0.8rem !important; line-height: 2;" %>
+
+            <%= f.submit "既読にする",
+                  formaction: multiple_management_screen_contacts_path,
+                  type: "submit",
+                  formmethod: "post",
+                  name: "action_type",
+                  value: "Read",
+                  class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover noto-serif-jp-extra-light my-button-blue",
+                  style: "background-color:#dcf8f9; font-size: 0.8rem !important; line-height: 2;" %>
+
+            <%= f.submit "未読にする",
+                  formaction: multiple_management_screen_contacts_path,
+                  formmethod: "post",
+                  type: "submit",
+                  name: "action_type",
+                  value: "Unread",
+                  class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover noto-serif-jp-extra-light my-button-blue",
+                  style: "background-color:#dcf8f9; font-size: 0.8rem !important; line-height: 2;" %>
+          </div>
+        </td>
+        <td style="align: right;">
+          <div class="d-flex justify-content-end mt-1">
+            <nav>
+              <ul class="pagination shadow">
+                <% if @current_page > 1 %>
+                  <li class="page-item">
+                    <%= link_to '← Previous', unread_management_screen_contacts_path(page: @current_page - 1), class: "page-link", style: "font-size: 0.8rem !important; line-height: 2;" %>
+                  </li>
+                <% end %>
+
+                <% (1..@total_pages).each do |i| %>
+                  <li class="page-item <%= 'active' if i == @current_page %>">
+                    <%= link_to i, unread_management_screen_contacts_path(page: i), class: "page-link", style: "font-size: 0.8rem !important; line-height: 2;" %>
+                  </li>
+                <% end %>
+
+                <% if @current_page < @total_pages %>
+                  <li class="page-item">
+                    <%= link_to 'Next →', unread_management_screen_contacts_path(page: @current_page + 1), class: "page-link", style: "font-size: 0.8rem !important; line-height: 2;" %>
+                  </li>
+                <% end %>
+              </ul>
+            </nav>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+  <% end %>

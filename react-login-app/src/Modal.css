@@ -1,0 +1,22 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-box {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+
+  min-width: 320px;
+}
+
+.modal-box button {
+  width: 100%;
+  margin-bottom: 10px;
+}

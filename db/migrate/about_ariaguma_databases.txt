@@ -1,0 +1,17 @@
+
+
+    rails db:migrate
+    テーブル・カラムの作成をしただけでなく、
+    ssh からカラムの型・何文字などを作成
+
+    データベース ariaguma
+    $ mysql -u root -p
+    Enter password: xxxxxxxxxx
+    mysql> use ariaguma;
+    mysql> select * from contacts;
+    mysql> select * from regists;
+    mysql> select * from replies;
+    mysql> select * from users;
+    mysql> select * from regists_replies;
+
+

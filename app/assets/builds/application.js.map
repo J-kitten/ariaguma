@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../javascript/application.js"],
+  "sourcesContent": ["// app/javascript/application.js\ndocument.addEventListener(\"turbo:load\", () => {\n  const button = document.getElementById(\"modal-login-btn\");\n  if (!button) return;\n\n  button.addEventListener(\"click\", () => {\n    window.dispatchEvent(new Event(\"open-login-modal\"));\n  });\n});\n//# sourceMappingURL=/assets/application.js.map\n"],
+  "mappings": ";AACA,SAAS,iBAAiB,cAAc,MAAM;AAC5C,QAAM,SAAS,SAAS,eAAe,iBAAiB;AACxD,MAAI,CAAC,OAAQ;AAEb,SAAO,iBAAiB,SAAS,MAAM;AACrC,WAAO,cAAc,IAAI,MAAM,kBAAkB,CAAC;AAAA,EACpD,CAAC;AACH,CAAC;",
+  "names": []
+}

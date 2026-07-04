@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../javascript/modal.js"],
+  "sourcesContent": ["// app/javascript/modal.js\ndocument.addEventListener(\"DOMContentLoaded\", () => {\n  const btn = document.getElementById(\"modal-login-btn\");\n  if (btn) {\n    btn.addEventListener(\"click\", () => {\n      window.dispatchEvent(new Event(\"open-login-modal\"));\n    });\n  }\n});\n//# sourceMappingURL=/assets/modal.js.map\n"],
+  "mappings": ";AACA,SAAS,iBAAiB,oBAAoB,MAAM;AAClD,QAAM,MAAM,SAAS,eAAe,iBAAiB;AACrD,MAAI,KAAK;AACP,QAAI,iBAAiB,SAAS,MAAM;AAClC,aAAO,cAAc,IAAI,MAAM,kBAAkB,CAAC;AAAA,IACpD,CAAC;AAAA,EACH;AACF,CAAC;",
+  "names": []
+}
