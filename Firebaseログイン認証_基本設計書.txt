@@ -1,0 +1,41 @@
+2. 基本設計書
+
+2.1 システム構成概要
+構成
+フロントエンド：React / Vite / TypeScript
+認証基盤：Firebase Authentication
+バックエンド：Ruby on Rails(API)
+CDN：AWS CloudFront
+ドメイン：ariaguma.jp
+
+2.2 認証フロー設計
+Googleログイン
+ユーザーが「Googleログイン」押下
+Firebase SDKがGoogle OAuthポップアップ起動
+Google認証成功
+FirebaseがIDトークン発行
+フロントがトークンをRails APIへ送信
+
+メール認証ログイン（不具合→未対応可）
+ユーザー登録（email/password）
+Firebaseが認証情報作成
+ログイン時にIDトークン発行
+同様にAPIへ送信
+
+2.3 状態管理設計
+Firebase onAuthStateChangedで認証状態を監視
+React useStateでログインユーザーを管理
+
+2.4 エラーハンドリング設計
+エラー	対応
+auth/popup-closed-by-user Googleログイン画面が閉じられた
+auth/too-many-requests 試行回数が多い
+auth/email-already-in-use メールアドレスはすでに登録済
+auth/invalid-email メールアドレスの形式が正しくない
+auth/weak-password パスワードが6文字以内になってる
+auth/missing-password パスワードが正しくない
+auth/invalid-email メールアドレスが無効
+auth/invalid-credential メールアドレスまたはパスワードが正しくない
+auth/user-not-found	このメールアドレスは登録されていない
+auth/wrong-password	パスワードが正しくない
+auth/unauthorized-domain Googleログインのドメイン設定が未登録
