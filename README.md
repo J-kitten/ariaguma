@@ -230,7 +230,7 @@
 　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/%E7%AE%A1%E7%90%86%E7%94%BB%E9%9D%A2_2026-06-18%20015358.png"> </p>
 
 〇AWS構成図
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/%E7%AE%A1%E7%90%86%E7%94%BB%E9%9D%A2_2026-06-18%20015358.png"> </p>
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/AWS%E6%A7%8B%E6%88%90%E5%9B%B3_2026-06-18%20020231.png"> </p>
 
 〇React Googleログイン画面
 　React + Firebase Authentication による Google ログイン機能を実装。
