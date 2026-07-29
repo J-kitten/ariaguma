@@ -1,0 +1,67 @@
+3. 詳細設計書
+
+3.1 フロント実装（React）
+Googleログイン
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "./firebase";
+
+  const googleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+
+    provider.setCustomParameters({
+      prompt: "select_account",
+    });
+
+      const result = await signInWithPopup(auth, provider);
+      setUser(result.user);
+      onClose();
+  };
+
+メールログイン
+import { signInWithEmailAndPassword } from "firebase/auth";
+
+  const login = async () => {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    setUser(userCredential.user);
+    onClose();
+  };
+
+3.2 セッション設計
+JWT（Firebase ID Token）ベース
+Railsはセッションを持っている
+管理画面　→ Rails Session認証（管理画面はStateful）
+Reactサイト　→ Firebase認証
+
+3.3 Firebaseについて
+Firebase ID Tokenの検証はまだ使っていない
+verify_id_token() が必要になるのは React → Rails API 認証を実装するとき
+
+3.3 セキュリティ設計
+Firebase Auth Token必須ではない
+CORS制御　→ない
+　gem "rack-cors"
+　config/initializers/cors.rb
+allowedDomains制限（重要）
+■Firebase Console
+　Authentication
+　↓
+　Settings
+　↓
+　Authorized domains
+
+$ gem "rack-cors"
+
+vim config/initializers/cors.rb
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    origins "https://ariaguma.jp"
+
+    resource "*",
+      headers: :any,
+      methods: [:get, :post, :put, :patch, :delete]
+  end
+end
