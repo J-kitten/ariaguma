@@ -42,7 +42,7 @@
 
         <div class="mb-3">
           <%= f.label :email, class: "form-label" %>
-          <%= f.text_field params[:email],
+          <%= f.text_field :email,
               style: "width: 300px",
               class: "noto-serif-jp-extra-light form-control form-control-lg shadow #{'is-invalid' if flash[:alert] && params[:email].blank?}",
               placeholder: "login@ariaguma.world.jp" %>

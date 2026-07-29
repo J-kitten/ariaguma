@@ -1,58 +1,68 @@
 import { useEffect, useState } from "react";
-import {
-  signOut,
-  onAuthStateChanged,
-  //GoogleAuthProvider,
-  //signInWithPopup,
-} from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { createPortal } from "react-dom";
 
 import { auth } from "./firebase";
 import type { User } from "firebase/auth";
 import AuthModal from "./AuthModal";
+import Profile from "./Profile";
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [open, setOpen] = useState(false); //add
+  const [open, setOpen] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+
+  const profileModalRoot = document.getElementById("profile-modal-root");
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      console.log("AUTH STATE CHANGED");
-      console.log(currentUser);
+    const profileHandler = () => {
+      setShowProfile(true);
+    };
 
-      setUser(currentUser);
-    });
+    const logoutHandler = async () => {
+      await fetch("/firebase_logout", {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "X-CSRF-Token":
+            document.querySelector<HTMLMetaElement>(
+              'meta[name="csrf-token"]'
+            )?.content || "",
+        },
+      });
 
-    return unsubscribe;
+      await signOut(auth);
+      window.location.href = "/";
+    };
+
+    window.addEventListener("open-profile", profileHandler);
+    window.addEventListener("firebase-logout", logoutHandler);
+
+    return () => {
+      window.removeEventListener("open-profile", profileHandler);
+      window.removeEventListener("firebase-logout", logoutHandler);
+    };
   }, []);
-
-  const login = async () => {
-    setOpen(true);
-  };
-
-  const logout = async () => {
-    await signOut(auth);
-  };
 
   return (
     <div style={{ padding: "20px" }}>
-
-      {!user ? (
+      {!user && (
         <>
           <button
-            onClick={login}
+            onClick={() => setOpen(true)}
             className="btn shadow rounded-pill px-4 py-3"
             style={{
               width: "90px",
               backgroundColor: "#001a59",
               color: "#f0eee0",
-              padding: "10px 20px",
+              padding: "0px 20px",
               borderRadius: "999px",
               border: "none",
               cursor: "pointer",
-              fontSize: "10px !important"
-           }}
+              fontSize: "10px",
+            }}
           >
-            ログイン
+            MyPAGE
           </button>
 
           <AuthModal
@@ -60,34 +70,73 @@ export default function App() {
             onClose={() => setOpen(false)}
             setUser={setUser}
           />
-
-        </>
-      ) : (
-        <>
-          <div>
-            <span style={{ fontSize: "9px" }}>
-              ログイン中: {user?.email}
-            </span>
-          </div>
-
-          <button
-            onClick={logout}
-            className="btn shadow rounded-pill px-4 py-3"
-            style={{
-              width: "90px",
-              backgroundColor: "#001a59",
-              color: "#f0eee0",
-              padding: "10px 20px",
-              borderRadius: "999px",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "10px !important"
-            }}
-          >
-            ログアウト
-          </button>
         </>
       )}
+
+      {showProfile &&
+        profileModalRoot &&
+        createPortal(
+          <div
+            style={{
+              position: "fixed",
+              inset: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.35)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 9999,
+              padding: "15px",
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                maxWidth: "520px",
+                maxHeight: "90vh",
+                overflowY: "auto",
+                backgroundColor: "#fff",
+                padding: "25px",
+                borderRadius: "16px",
+                boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+              }}
+            >
+              <div className="text-end">
+                <button
+                  type="button"
+                  onClick={() => setShowProfile(false)}
+                  className="btn-close"
+                  aria-label="閉じる"
+                />
+              </div>
+
+              <h5 className="text-center mb-4">プロフィール再設定</h5>
+
+              <Profile />
+
+              <div className="text-center mt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowProfile(false)}
+                  className="btn rounded-pill px-4"
+                  style={{
+                    width: "100px",
+                    height: "40px",
+                    backgroundColor: "#dff7f7",
+                    color: "#001a59",
+                    fontSize: "12px",
+                    outline: "none",
+                    boxShadow: "none",
+                    border: "1px solid #dff7f7",
+                    borderRadius: "999px",
+                  }}
+                >
+                  閉じる
+                </button>
+              </div>
+            </div>
+          </div>,
+          profileModalRoot
+        )}
     </div>
   );
 }

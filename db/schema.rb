@@ -11,13 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2026_06_10_080845) do
-  create_table "accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "email"
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "contacts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", limit: 50, null: false
     t.string "subject", limit: 50, null: false
@@ -32,14 +25,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_080845) do
     t.index ["email"], name: "index_contacts_on_email"
   end
 
-  create_table "inquiries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.string "email"
-    t.string "email_confirmation"
-    t.string "subject"
-    t.text "message"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table "download_files", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", limit: 100, null: false
+    t.string "filename", null: false
+    t.string "path", limit: 500, null: false
+    t.integer "volume", limit: 1, null: false, unsigned: true
+    t.bigint "file_size", unsigned: true
+    t.string "content_type", limit: 100
+    t.integer "download_limit", default: 10, null: false, unsigned: true
+    t.integer "download_count", default: 0, null: false, unsigned: true
+    t.boolean "published", default: false, null: false
+    t.integer "sort_order", default: 0, null: false
+    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" }, null: false
+    t.index ["path"], name: "uk_download_files_path", unique: true
   end
 
   create_table "regists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -81,6 +80,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_080845) do
     t.integer "contact_id"
     t.boolean "unread", default: false
     t.integer "regist_id"
+    t.boolean "trash", default: false, null: false
   end
 
   create_table "users", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -90,6 +90,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_080845) do
     t.string "password_digest", null: false
     t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" }
+    t.string "firebase_uid", limit: 128
     t.index ["email_hash"], name: "email_hash", unique: true
+    t.index ["firebase_uid"], name: "uk_users_firebase_uid", unique: true
   end
 end

@@ -70,39 +70,30 @@ class DownloadsController < ApplicationController
               disposition: "attachment"
   end
 
-  # 「要る」ボタンが押されたとき（subscribed を true に更新）
   def subscribe
     set_regist_by_token
-    @regist.update(subscribed: true)
     @regist.email_confirmation = @regist.email
+
     if @regist.update(subscribed: true)
       Rails.logger.info "登録更新成功: #{@regist.inspect}"
     else
       Rails.logger.error "登録更新失敗: #{@regist.errors.full_messages}"
     end
 
-    #respond_to do |format|
-    #  format.html { redirect_to download_path(@regist.token), notice: "登録されました" }
-    #  format.json { render json: { status: "OK", subscribed: true } }
-    #end
-
+    redirect_back fallback_location: root_path
   end
 
-  # 「要らない」ボタンが押されたとき（subscribed を false に更新）
   def unsubscribe
     set_regist_by_token
     @regist.email_confirmation = @regist.email
+
     if @regist.update(subscribed: false)
       Rails.logger.info "登録解除成功"
     else
       Rails.logger.error "登録解除失敗: #{@regist.errors.full_messages}"
     end
 
-    #respond_to do |format|
-    #  format.html { redirect_to download_path(@regist.token), notice: "登録解除されました" }
-    #  format.json { render json: { status: "ok", subscribed: false } }
-    #end
-
+    redirect_back fallback_location: root_path
   end
 
   def second  # 2冊目をdownload する

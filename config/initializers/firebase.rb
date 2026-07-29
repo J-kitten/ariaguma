@@ -6,4 +6,12 @@ FirebaseIdToken.configure do |config|
   #)
   config.project_ids = ["ariagumareact"]
   #config.project_ids = [ENV["GOOGLE_CLIENT_ID"]]
+
+  begin
+    FirebaseIdToken::Certificates.request
+    Rails.logger.info "Firebase certificates loaded."
+  rescue => e
+    Rails.logger.error e.message
+  end
+
 end

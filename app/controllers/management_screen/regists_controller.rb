@@ -462,16 +462,15 @@ class ManagementScreen::RegistsController < ManagementScreen::BaseController
 
       quoted_message = "#{@regist.name}"
       from_ariaguma = <<~TEXT
-        ARIAGUMA GROUP のARIA GUMAです。
-        著書の『死闘の使命』が完成いたしましたことをお知らせいたします。
+        ARIAGUMA GROUP のARIAGUMAです。
+        著書『死闘の使命』が完成いたしましたことをお知らせいたします。
         
-        以前は、ARIAGUMA GROUPサイトから無料の電子書籍、
-        著書『死闘の使命』のダウンロードをご希望の書籍の登録予約の受け
-        付けをいたしました。
+        以前は、ARIAGUMA GROUPにて、Present電子書籍『死闘の使命』
+        のDOWNLOAD を登録予約を受けつけされまので、
+        本メールをお送りさせて頂きました。
         
-        下記 URL が、ダウンロードサイトです。
+        下記のURLからダウンロードなさってくだいませ。
         https://ariaguma.jp/download/#{@regist.token}
-        このURLからのみ、ダウンロード画面が表示可能となっております。
       TEXT
 
       @regist.reply_body = "#{quoted_message} さま\n\n#{from_ariaguma}"
@@ -510,7 +509,7 @@ class ManagementScreen::RegistsController < ManagementScreen::BaseController
 
     RegistsReply.create!(
       name: @regist.name,
-      subject: "Present『死闘の使命』DOWNLOAD URL ARIAGUMA",
+      subject: "Present『死闘の使命』DOWNLOAD ARIAGUMA",
       email_hash: @regist.email_hash,
       regist_id: @regist.id
     )
@@ -528,7 +527,7 @@ class ManagementScreen::RegistsController < ManagementScreen::BaseController
 
     RegistsReply.create!(
       name: @regist.name,
-      subject: 'ARIAGUMA 2冊目の電子書籍のDOWNLOAD URLのご通知です',
+      subject: 'ARIAGUMA 2冊目の電子書籍のDOWNLOAD のご通知です',
       email_hash: @regist.email_hash,
       regist_id: @regist.id
     )

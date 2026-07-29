@@ -9,37 +9,20 @@
     <div class="col-md-10 col-lg-8" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px;">
       <div id="reserve_regist" class="noto-serif-jp-extra-light" style="font-size:16px; color: #000f33;">
 
-        <img src="<%= asset_path('diamond.png') %>" style="height: 30px; width: 30px; margin-bottom: 5px; opacity: 0.7;"> 電子書籍『死闘の使命』無料ダウンロード予約登録</div>
+        <img src="<%= asset_path('diamond.png') %>" style="height: 30px; width: 30px; margin-bottom: 5px; opacity: 0.7;"> Present電子書籍『死闘の使命』DOWNLOADのご予約</div>
         <br>
         <div class="noto-serif-jp-extra-light">
           ARIAGUMA GROUPは、電子書籍の企画・制作・公開を行う創作プロジェクトです。<br>
+          主に人生経験・困難・再生などをテーマとしたオリジナル電子書籍を制作し、インターネット上で公開、また書籍ファイル等のダウンロードができるよう制作中でおります。<br>
+          制作完了まで暫くかかりそうです。ご登録をなさってお待ちください。お知らせを致します。<br>
           <br>
-          主に人生経験・困難・再生などをテーマとしたオリジナル電子書籍を制作し、インターネット上で公開しています。<br>
-          <br>
-          本プロジェクトは任意のご支援（寄付）によって運営されています。<br>
-          収益は制作活動および継続的なコンテンツ公開のために使用されます。<br>
-          <br>
-          ご支援いただいた資金は、主に以下の用途に活用させていただきます。<br>
-          <br>
-          サーバー維持費・ドメイン維持費・書籍・電子書籍制作費・サイト運営費<br>
-          <br>
-          皆様のご支援に心より感謝申し上げます。<br>
-          <br>
-          お名前とメールアドレスを書きテキストボックスにご入力なされた方に、本が完成次第、ダウンロードできるURLをお送りいたします。<br>
+          お名前とメールアドレスを書きテキストボックスにご入力された方に、電子書籍の完成をお知らせいたします。<br>
         </div>
-        <br>
 
         <div style="text-align: center">
         <% if flash[:admin_notice] %>
           <div class="noto-serif-jp-extra-light alert alert-info mb-0"><%= flash[:admin_notice].html_safe %></div>
         <% end %>
-
-        <!--
-        <% if flash[:admin_alert] %>
-          <div class="noto-serif-jp-extra-light alert alert-danger mb-0"><%= flash[:admin_alert].html_safe %></div>
-        <% end %>
-        </div>
-        -->
 
         <div class="container mt-4 noto-serif-jp-extra-light">
           <%= form_with model: @regist, url: home_create_path, local: true, data: { turbo: false } do |form| %>
@@ -84,20 +67,20 @@
                 <%= form.submit "予約登録送信", 
                     id: "toggleButton", 
                     class: "btn btn-sm shadow noto-serif-jp-extra-light btn-hover rounded-pill px-4 py-4 my-button-blue", 
-                    style: "background-color:#001a59; color:#f0eee0; font-size: 11px !important; line-height: 2; width: 150px" %>
+                    style: "background-color:#001a59; color:#f0eee0; font-size: 11px !important; line-height: 2; width: 200px" %>
               </div>
             </div>
-              <br>
-              <br>
-              <br>
-              <br>
-              <br>
-              <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
           <% end %>
         </div>
+      </div><!-- reserve_regist -->
     </div><!-- div col-md-8 col-lg-6 -->
   </div><!-- div container content px-4 -->
 </div>
-
-
 

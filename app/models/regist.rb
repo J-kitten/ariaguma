@@ -25,6 +25,9 @@ class Regist < ApplicationRecord
 
   after_create :send_download_email
 
+  has_many :download_logs,
+           dependent: :nullify
+
   private
 
   def replying?
@@ -56,9 +59,9 @@ class Regist < ApplicationRecord
 
     RegistsReply.create!(
       name: self.name,
-      subject: '『幻魔との死闘』無料電子書籍の予約完了通知（自動）',
+      subject: 'Present『死闘の使命』電子書籍の予約完了通知（自動）',
       email_hash: self.email_hash,
-      message: "ダウンロードURLメールの予約を受け付け、予約者のデータをDBに保存しました（#{Time.current.strftime('%Y/%m/%d %H:%M:%S')}）",
+      message: "ダウンロードURLメールの予約を受け付け、予約者からの登録データをDBに保存しました（#{Time.current.strftime('%Y/%m/%d %H:%M:%S')}）",
       regist_id: self.id
     )
 

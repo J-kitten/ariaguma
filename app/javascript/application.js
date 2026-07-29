@@ -1,4 +1,5 @@
 // app/javascript/application.js
+import "@hotwired/turbo-rails"
 document.addEventListener("turbo:load", () => {
   const button = document.getElementById("modal-login-btn");
   if (!button) return;

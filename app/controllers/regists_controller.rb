@@ -2,6 +2,7 @@ class RegistsController < ApplicationController
   before_action :set_regist, only: [:show, :update_subscription]
 
   def show
+    @regist.Regist.new
   end
 
   def  update_subscription
@@ -32,7 +33,7 @@ class RegistsController < ApplicationController
     )
 
     if @regist.save
-      flash[:admin_notice] = "無料電子書籍『幻魔との死闘』が完成しましたら、ご登録いただいたメールアドレス宛に、ダウンロード用のURLをお送りします。<br>また、ご登録内容の確認メールもお送りしていますので、ご確認ください。regists_controller.rb"
+      flash[:admin_notice] = "Present電子書籍『死闘の死闘』が完成しましたら、登録予約されましたメールアドレス宛に、メールをお送りします。<br>また、ご登録内容の確認メールもお送りしていますので、ご確認ください。regists_controller.rb"
       redirect_to root_path
     else
       flash.now[:admin_alert] = "メールアドレスが重複しているため予約登録ができません。regists_controller.rb"

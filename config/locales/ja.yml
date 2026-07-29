@@ -13,6 +13,7 @@ ja:
     models:
       regist: 登録
       contact: お問い合わせ
+      download_file: ダウンロードファイル
     attributes:
       regist:
         name: お名前
@@ -25,6 +26,18 @@ ja:
         email_confirmation: メールアドレス（確認用）
         subject: 件名
         message: メッセージ
+      download_file:
+        name: 表示名
+        filename: 元のファイル名
+        path: 保存先
+        pdf_file: PDFファイル
+        volume: 巻数
+        file_size: ファイルサイズ
+        content_type: ファイル形式
+        download_limit: ダウンロード上限
+        download_count: ダウンロード回数
+        published: 公開状態
+        sort_order: 表示順
 
   errors:
     messages:

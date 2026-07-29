@@ -1,0 +1,2 @@
+module ManagementScreen::DashboardHelper
+end

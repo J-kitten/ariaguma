@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default function AuthModal({ open, onClose, setUser }: Props) {
-  console.log("AUTHMODAL VERSION 2026-06-23");
+  console.log("AUTHMODAL VERSION 2026-07-06");
 
   if (!open) return null;
   console.log("AuthModal render");
@@ -56,6 +56,7 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
 
       setUser(result.user);
       onClose();
+      await loginToRails(result.user);
 
     } catch (error: unknown) {
 
@@ -94,8 +95,11 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
         password
       );
 
+      await loginToRails(userCredential.user);
       setUser(userCredential.user);
       onClose();
+      window.location.href = "/";
+
     } catch (error: any) {
       if (error instanceof FirebaseError) {
         switch (error.code) {
@@ -126,7 +130,6 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
 
   // --- ログイン ---
   const login = async () => {
-
     console.log("LOGINED");
 
     try {
@@ -136,11 +139,10 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
         password
       );
 
-      setUser(userCredential.user);
-      onClose();
+      // FirebaseのIDトークンをRailsへ送信
+      await loginToRails(userCredential.user);
 
     } catch (error: unknown) {
-
       console.log("LOGIN ERROR =", error);
 
       const firebaseError = error as FirebaseError;
@@ -217,6 +219,39 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
         alert("予期しないエラーが発生しました。");
       }
     }
+  };
+
+  const loginToRails = async (firebaseUser: User) => {
+    console.log("LOGIN TO RAILS START");
+
+    const idToken = await firebaseUser.getIdToken();
+
+    const response = await fetch("/firebase_login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token":
+          document
+            .querySelector<HTMLMetaElement>('meta[name="csrf-token"]')
+            ?.content || "",
+      },
+      credentials: "same-origin",
+      body: JSON.stringify({ id_token: idToken }),
+    });
+
+    console.log("Rails login status:", response.status);
+
+    if (response.ok) {
+      //setUser(auth.currentUser);
+      setUser(firebaseUser);
+      onClose();
+      window.location.href = "/mypage";
+      return;
+    } else {
+      alert("Railsログインに失敗しました");
+      return;
+    }
+
   };
 
   return (

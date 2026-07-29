@@ -1,0 +1,249 @@
+<% content_for :title, "ARIAGUMA お問合わせ詳細 | 返信" %>
+
+<div class="bg-wrapper"></div>
+
+<div class="container px-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8" style="background-color: rgba(255, 255, 255, 0.8);">
+
+      <div class="mypage-layout">
+
+        <!-- 左側 -->
+        <% @regists.each do |regist| %>
+          <% if regist.created_at.present? %>
+            <div class="mypage-left text-start">
+              <h2 class="noto-serif-jp-extra-light" style="padding: 10px; font-size:16px;">MyPAGE</h2>
+              <table style="width:200px;">
+                <tr>
+                  <td>
+                    <div class="text-end mb-4">
+                      <!--
+                      <%= link_to "MyPAGE", mypage_path,
+                          class: "btn shadow rounded-pill px-4 py-3 me-2",
+                          style: "background-color:#001a59; color:#f0eee0;" %>
+                      -->
+                      <button type="button"
+                              class="btn shadow rounded-pill px-4 py-3 me-2"
+                              style="background-color:#001a59; color:#f0eee0; font-size:10px;"
+                              onclick="window.dispatchEvent(new Event('open-profile'))">
+                        Profile再設定
+                      </button>
+                      <button type="button"
+                              class="btn shadow rounded-pill px-4 py-3"
+                              style="background-color:#001a59; color:#f0eee0; font-size:10px;"
+                              onclick="window.dispatchEvent(new Event('firebase-logout'))">
+                        LOGOUT
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="align-top">
+                    <% if regist.created_at.present? %>
+                      <div class="d-flex align-items-start" style="margin-bottom: 2px;">
+                        <div style="background-color: #f3f3f3; color: #000000; width: 40px; border-radius: 8px; padding: 5px; display: inline-block;">
+                          <% if @download_files_by_volume.present? %>
+                            公開中
+                          <% else %>
+                            制作中
+                          <% end %>
+                        </div>
+                        <span style="padding: 2px 8px;">
+                          <% @download_files_by_volume.each do |volume, download_file| %>
+                            <div>
+                              <%= volume %>冊目：<br>
+                              <%= download_file.name %><br>
+                            </div>
+                          <% end %>
+                        </span>
+                      </div>
+                    <% end %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <% if regist.created_at.present? %>
+                      <div style="margin-bottom: 0px;">
+                        <div style="background-color: #f3f3f3; color: #000000; width: 40px; border-radius: 8px; padding: 5px; display: inline-block;">
+                          予約日
+                        </div>
+                        <span style="padding: 2px 8px; display: inline-block;">
+                          <%= l(regist.created_at, format: :long) %>
+                        </span>
+                      </div>
+                    <!--公開済み-->
+                    <% end %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="display: flex; align-items: flex-start;">
+                      <div style="background-color: #f3f3f3; color: #000000; width: 40px; border-radius: 8px; padding: 5px; margin-bottom: 8px;">
+                        STATE
+                      </div>
+
+                      <% first_book = @download_files_by_volume[1] %>
+                      <% second_book = @download_files_by_volume[2] %>
+                      <div>
+                        <% if first_book.present? && regist.downloaded.to_i.positive? %>
+                          <span style="padding: 2px 8px; display: inline-block;">
+                            <%= first_book.name %>
+                            <%= regist.downloaded %>回ダウンロード済<br>
+                          </span>
+                        <% end %>
+
+                        <% if second_book.present? && regist.second_download.to_i.positive? %>
+                          <span style="padding: 2px 8px; display: inline-block;">
+                            <%= second_book.name %>
+                            <%= second_book.volume %>冊目
+                            <%= regist.second_download %>回ダウンロード済
+                          </span>
+                        <% end %>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div id="profile-root"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <% @regists.each do |regist| %>
+                      <% if regist.name %>
+                        <div style="margin-bottom: 0px;">
+                          <div style="background-color: #f3f3f3; color: #000000; width: 40px; border-radius: 8px; padding: 5px; display: inline-block;">
+                            お名前
+                          </div>
+                          <span style="padding: 2px 8px; display: inline-block;">
+                            <%= regist.name %><br>
+                          </span>
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <% @regists.each do |regist| %>
+                      <% if regist.email %>
+                        <div style="margin-bottom: 0px;">
+                          <div style="background-color: #f3f3f3; color: #000000; width: 70px; border-radius: 8px; padding: 5px; display: inline-block;">
+                            LOGIN EMAIL
+                          </div>
+                          <span style="padding: 2px 8px; display: inline-block;">
+                            <%= regist.email %><br>
+                          </span>
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px;"><!--class noto-serif-jp-extra-light-->
+                    <% @regists.each do |regist| %>
+                      <% if regist.email_sent_01.present? && first_book.present? %>
+                        <% @download_files_by_volume.each do |volume, download_file| %>
+                          <% token = 
+                              case volume
+                              when 1
+                                regist.token
+                              when 2
+                                regist.second_token
+                              end %>
+                          <%= link_to "『#{download_file.name}』をDOWNLOAD",
+                              "/download/#{token}",
+                              class: "btn",
+                              style: "padding: 10px 20px;
+                                      border-radius: 25px;
+                                      background-color: #fffcf4;
+                                      color: #000000;
+                                      margin-bottom: 5px;
+                                      border: 5px solid #000000;" %>
+                        <% end %>
+                      <% end %>
+                    <% end %>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          <% end %>
+        <% end %>
+
+        <!-- 右側 -->
+
+      <br><br>
+
+        <div class="mypage-right">
+          <div>
+            <% if @histories.present? %>
+              <% @histories.each do |history| %>
+
+                <div style="margin-bottom: 10px; padding: 15px 10px; background-color: #f3f3f3; width: 350px; border-radius: 8px; margin: 0 auto 25px auto;">
+                  <div style="margin-bottom: 2px;">
+
+                    <% if history[:type] == :contact %>
+                      <div style="padding: 10px 10px; background-color: #ffffff; width: 330px; border-radius: 8px;">お問合わせ履歴</div>
+                    <% elsif history[:type] == :reply %>
+                      <div style="padding: 10px 10px; background-color: #ffffff; width: 330px; border-radius: 8px;">管理者からの返信</div>
+                    <% end %>
+                  </div>
+
+                  <div style="margin-bottom: 2px;">
+                    <div style="background-color: #dff7f7; width: 70px; border-radius: 8px; padding: 5px; display: inline-block;">
+                      件名
+                    </div>
+
+                    <span style="padding: 2px 8px; display: inline-block;">
+                      <%= history[:data].subject %>
+                    </span>
+                  </div>
+
+                  <div style="margin-bottom: 2px;">
+                    <div style="background-color: #dff7f7; width: 70px; border-radius: 8px; padding: 5px; display: inline-block;">
+                      送信日時
+                    </div>
+
+                    <span style="padding: 2px 8px; display: inline-block;">
+                      <%= l(history[:data].created_at, format: :long) %>
+                    </span>
+                  </div>
+
+                  <div style="margin-bottom: 4px;">
+                    <div style="background-color: #dff7f7; width: 70px; border-radius: 8px; padding: 5px; display: inline-block;">
+                      内容
+                    </div>
+
+                    <span style="padding: 2px 8px; display: inline-block;">
+                      <%= truncate(history[:data].message, length: 50) %>
+                    </span>
+                  </div>
+
+                  <div style="text-align: right;">
+                    <% if history[:type] == :contact %>
+                      <%= link_to "内容を確認・返信", mypage_contact_path(history[:data]),
+                          class: "btn shadow",
+                          style: "padding: 10px 20px; border-radius: 25px; background-color: #fffcf4; color: #000000; border: none;" %>
+                    <% elsif history[:type] == :reply %>
+                      <%= link_to "返信に返信する", mypage_reply_path(history[:data]),
+                          class: "btn shadow",
+                          style: "padding: 10px 20px; border-radius: 25px; background-color: #fffcf4; color: #000000; border: none;" %>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <p>お問合わせ|管理者からの履歴はございません。</p>
+            <% end %>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

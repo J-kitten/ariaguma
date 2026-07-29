@@ -17,8 +17,12 @@ class UsersController < ApplicationController
       log_in(@user)  # 登録と同時にログイン
       redirect_to management_screen_path, notice: "登録が完了しました。"
     else
-      flash.now[:alert] = "登録に失敗しました。"
-      render :new
+      if @user.errors[:email].any?
+        flash.now[:alert] = "このメールアドレスは既に登録されています。"
+      else
+        flash.now[:alert] = "入力内容をご確認ください。"
+      end
+      render :new, status: :unprocessable_entity
     end
   end
 

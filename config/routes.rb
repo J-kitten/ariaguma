@@ -57,6 +57,16 @@ Rails.application.routes.draw do
   patch 'download/:token/subscribe', to: 'downloads#subscribe', as: :subscribe_download
   patch 'download/:token/unsubscribe', to: 'downloads#unsubscribe', as: :unsubscribe_download
 
+  patch "/api/profile", to: "api/profile#update"  # プロフィール再設定
+
+  namespace :management_screen do
+    get "regist_book",
+        to: "download_files#new",
+        as: :regist_book
+
+    resources :download_files
+  end
+
   # 各一覧ページへのルート（仮のコントローラー名とアクション）
   get 'reservations', to: 'reservations#index' #予約 
   get 'inquiries', to: 'inquiries#index' #お問合せ インクリーズ
@@ -143,6 +153,7 @@ Rails.application.routes.draw do
   get 'download/second_download/:token', to: 'downloads#second', as: 'second_download'
 
   scope :management_screen do
+    #get  'signin', to: 'users#new',    as: :management_screen_signin_path
     get  'signup', to: 'users#new',    as: :management_screen_signup_path
     post 'create', to: 'users#create', as: :management_screen_create_path
   end
@@ -154,6 +165,27 @@ Rails.application.routes.draw do
 
   get 'management_screen/login',  to: 'sessions#new', as: :login
   post 'management_screen/login',  to: 'sessions#create'
+
+  # Firebase
+  get  "/mypage", to: "mypage#show"
+  post "/firebase_login", to: "firebase_sessions#create"
+  delete "/logout", to: "firebase_sessions#destroy"
+
+  get  "/mypage/contacts/:id", to: "mypage#contact_show", as: :mypage_contact
+  post "/mypage/contacts/:id/reply", to: "mypage#contact_reply", as: :mypage_contact_reply
+
+  get  "mypage/replies/:id",       to: "mypage#reply_show",  as: :mypage_reply
+  post "mypage/replies/:id/reply", to: "mypage#reply_reply", as: :mypage_reply_reply
+
+  delete "/firebase_logout", to: "firebase_sessions#destroy"
+
+  namespace :management_screen do
+    root "dashboard#index"
+
+    resources :download_files
+    resources :contacts
+    resources :regists
+  end
 
   class ErrorsController < ApplicationController
     def not_found

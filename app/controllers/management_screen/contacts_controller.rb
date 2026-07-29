@@ -379,19 +379,14 @@ class ManagementScreen::ContactsController < ManagementScreen::BaseController
       @contact.reply_subject = "Re: #{@contact.subject}"
 
       quoted_message = @contact.message.lines.map { |line| "#{line}" }.join
-#      from_ariaguma = <<~TEXT
-#        このたびは、ARIA GUMA 著書「死闘の使命」無料電子書籍に
-#        ご関心を持たれたことを、とても嬉しく思っております。
+      from_ariaguma = <<~TEXT
+        この度は、ARIAGUMA のPresent『死闘の使命』電子書籍に
+        登録予約されましたので、電子書籍の完成後、
+        DOWNLOAD URLを記載したご案内をお送りいたします。
 
-#        電子書籍の完成後、
-#        こちらのメールアドレス #{@contact.email} 宛に、
-#        ダウンロード用のURLを記載したご案内をお送りいたします。
-
-#        現在、完成時期は未定となっておりますが、準備が整い次第、
-#        速やかにご連絡いたします。
-
-#        今しばらくお待ちくださいますようお願い申し上げます。
-#      TEXT
+        現在、完成時期は未定となっております。
+        今しばらくお待ちくださいますようお願い申し上げます。
+      TEXT
 
       @contact.reply_body = "#{quoted_message}\n\n"
     end

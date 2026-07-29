@@ -1,0 +1,61 @@
+<% content_for :title, "ARIAGUMA お問合わせ詳細 | 返信" %>
+
+<div class="bg-wrapper"></div>
+
+<div class="container px-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px;">
+
+      <span style="vertical-align: middle; padding: 8px 8px;">
+        <img src="<%= asset_path('diamond.png') %>" alt="" style="height:30px; width: 30px; margin-bottom: 5px; opacity: 0.7;">
+        <span style="position: relative; top: 2px; font-size: 14px;">お問合わせ詳細 | 返信</span>
+      </span>
+
+      <% if flash[:notice] %>
+        <div class="alert mt-3" style="background-color: #fffcf4; font-size: 8px;">
+          <%= flash[:notice] %>
+        </div>
+      <% end %>
+
+      <% if flash[:alert] %>
+        <div class="alert mt-3" style="background-color: #fffcf4; font-size: 8px;">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+
+      <div style="padding: 2px 5px;">
+        <span style="background-color: #dff7f7; width: 70px; border-radius: 8px; padding: 8px 8px; display: inline-block;">件名</span>
+        <span style="padding: 8px 8px; display: inline-block;">
+          <%= @contact.subject %>
+        </span>
+      </div>
+      <div style="padding: 2px 5px;">
+        <span style="background-color: #dff7f7; width: 70px; border-radius: 8px; padding: 8px 8px; display: inline-block;">送信日時</span>
+        <span style="padding: 8px 8px; display: inline-block;">
+          <%= l(@contact.created_at, format: :long) %>
+        </span>
+      </div>
+      <div style="padding: 2px 5px;">
+        <span style="background-color: #dff7f7; width: 70px; border-radius: 8px; padding: 8px 8px; display: inline-block;">内容</span>
+        <span style="padding: 8px 8px; display: inline-block;">
+          <%= simple_format(@contact.message) %>
+        </span>
+      </div>
+
+      <%= form_with url: mypage_contact_reply_path(@contact), method: :post, local: true do |form| %>
+        <div style="padding: 8px 0px 8px 70px;">
+          <%= form.text_area :message, rows: 6, class: "form-control" %>
+        </div>
+
+        <div style="text-align: right;">
+          <%= form.submit "送信する", 
+            class: "btn btn-primary shadow", style: "padding: 15px 20px; border-radius: 25px; background-color: #cc0066; color: #ffffff; border: none;" %>
+          <%= link_to "戻る", mypage_path, 
+            class: "btn btn-primary shadow", style: "padding: 15px 20px; border-radius: 25px; background-color: #dff7f7; color: #000000; border: none;" %>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+</div>
+

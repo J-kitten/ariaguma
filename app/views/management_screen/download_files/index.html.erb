@@ -1,0 +1,165 @@
+<!-- app/views/management_screen/download_files/index.html.erb -->
+
+<div class="container py-4">
+  <% if notice.present? %>
+    <div class="alert alert-success">
+      <%= notice %>
+    </div>
+  <% end %>
+
+  <% if alert.present? %>
+    <div class="alert alert-danger">
+      <%= alert %>
+    </div>
+  <% end %>
+
+<br><br><br>
+
+<div class="bg-wrapper"></div>
+
+<div class="container px-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px;">
+
+      <div class="d-flex
+                  justify-content-between
+                  align-items-center
+                  mb-4">
+
+        <h1 class="h3 mb-0">
+          PDFファイル管理
+        </h1>
+
+        <%= link_to "PDF新規登録", 
+            new_management_screen_download_file_path, 
+            class: "btn rounded-pill px-5 py-3", 
+            style: "background-color: #fffcf4; color: #000000; outline: 5px solid #000000;" %>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table
+                      table-bordered
+                      table-hover
+                      align-middle">
+
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>表示名</th>
+              <th>巻数</th>
+              <th>ファイル</th>
+              <th>サイズ</th>
+              <th>回数</th>
+              <th>上限</th>
+              <th>公開</th>
+              <th>表示順</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @download_files.each do |download_file| %>
+              <tr>
+                <td>
+                  <%= download_file.id %>
+                </td>
+
+                <td>
+                  <%= download_file.name %>
+                </td>
+
+                <td>
+                  <%= download_file.volume %>
+                </td>
+
+                <td>
+                  <div>
+                    <%= download_file.filename %>
+                  </div>
+
+                  <small class="text-muted">
+                    <%= download_file.path %>
+                  </small>
+                </td>
+
+                <td>
+                  <%= download_file.file_size_text %>
+                </td>
+
+                <td>
+                  <%= download_file.download_count %>
+                </td>
+
+                <td>
+                  <% if download_file.download_limit.zero? %>
+                    無制限
+                  <% else %>
+                    <%= download_file.download_limit %>
+                  <% end %>
+                </td>
+
+                <td>
+                  <% if download_file.published? %>
+                    <span class="badge text-bg-success btn-info" style="">
+                      公開
+                    </span>
+                  <% else %>
+                    <span class="badge text-bg-secondary">
+                      非公開
+                    </span>
+                  <% end %>
+                </td>
+
+                <td>
+                  <%= download_file.sort_order %>
+                </td>
+
+                <td>
+                  <div class="d-flex
+                              flex-wrap
+                              gap-2">
+
+                    <%= link_to "詳細", 
+                          management_screen_download_file_path(download_file),
+                          class: "btn shadow btn-info rounded-pill px-3 py-3", 
+                          style: "color: #ffffff; line-height: 2;" %>
+
+                    <%= link_to "編集", 
+                          edit_management_screen_download_file_path(
+                                download_file
+                              ),
+                          class: "btn shadow btn-download rounded-pill px-3 py-3", 
+                          style: "background-color:#dff7f7; line-height: 2;" %>
+
+                    <%= button_to "Destroy",
+                          management_screen_download_file_path(
+                            download_file
+                          ),
+                          method: :delete,
+                          class: "btn btn-danger shadow rounded-pill py-3 px-3",
+                          style: "background-color: #cc0066; color: #ffffff; line-height: 2;",
+                          form: {
+                            onsubmit:
+                              "return confirm(" \
+                              "'このファイル情報とPDFを削除しますか？'" \
+                              ");"
+                          } %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+
+            <% if @download_files.empty? %>
+              <tr>
+                <td colspan="10"
+                    class="text-center py-4">
+                  登録されているPDFファイルはありません。
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

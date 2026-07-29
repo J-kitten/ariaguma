@@ -1,0 +1,124 @@
+<!-- app/views/management_screen/download_files/_form.html.erb -->
+
+<%= form_with(
+      model: [:management_screen, download_file],
+      local: true,
+      multipart: true
+    ) do |form| %>
+
+  <% if download_file.errors.any? %>
+    <div class="alert alert-danger">
+      <p class="mb-2">
+        入力内容をご確認ください。
+      </p>
+
+      <ul class="mb-0">
+        <% download_file.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= form.label :name,
+          "表示名",
+          class: "form-label" %>
+
+    <%= form.text_field :name,
+          class: "form-control",
+          maxlength: 100,
+          required: true,
+          placeholder: "死闘の使命" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :pdf_file,
+          download_file.persisted? ?
+            "PDFファイルを差し替える" :
+            "PDFファイル",
+          class: "form-label" %>
+
+    <%= form.file_field :pdf_file,
+          class: "form-control",
+          accept: ".pdf,application/pdf",
+          required: download_file.new_record? %>
+
+    <% if download_file.persisted? %>
+      <div class="form-text">
+        差し替えない場合は、ファイルを選択しないでください。
+      </div>
+
+      <div class="mt-2">
+        現在のファイル：
+        <strong>
+          <%= download_file.filename %>
+        </strong>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <%= form.label :volume,
+            "巻数",
+            class: "form-label" %>
+
+      <%= form.number_field :volume,
+            class: "form-control",
+            min: 0,
+            max: 255,
+            required: true %>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <%= form.label :download_limit,
+            "ダウンロード上限",
+            class: "form-label" %>
+
+      <%= form.number_field :download_limit,
+            class: "form-control",
+            min: 0,
+            required: true %>
+
+      <div class="form-text">
+        0は無制限として扱います。
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <%= form.label :sort_order,
+            "表示順",
+            class: "form-label" %>
+
+      <%= form.number_field :sort_order,
+            class: "form-control",
+            required: true %>
+    </div>
+  </div>
+
+  <div class="form-check mb-4">
+    <%= form.check_box :published,
+          class: "form-check-input" %>
+
+    <%= form.label :published,
+          "公開する",
+          class: "form-check-label" %>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= form.submit(
+          download_file.new_record? ?
+            "PDFをアップロード" :
+            "変更を保存",
+          class: "btn shadow btn-info rounded-pill px-5 py-4",
+          style: "color:#ffffff;"
+        ) %>
+
+    <%= link_to "戻る",
+          management_screen_download_files_path,
+          class: "btn rounded-pill shadow px-5 py-4",
+          style: "background-color:#dff7f7;" %>
+
+  </div>
+<% end %>

@@ -28,4 +28,112 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  activerecord:
+    format: "%{attribute} %{message}"
+
+    errors:
+      messages:
+        blank: "can't be blank"
+        confirmation: "doesn't match"
+        too_short: "is too short (minimum is %{count} characters)"
+        too_long: "is too long (maximum is %{count} characters)"
+        invalid: "is invalid"
+        taken: "has already been taken"
+        record_invalid: "Validation failed: %{errors}"
+
+    models:
+      regist: Registration
+      contact: Contact
+      download_file: Download file
+
+    attributes:
+      regist:
+        name: Name
+        email: Email address
+        email_confirmation: Email address confirmation
+        message: Message
+
+      contact:
+        name: Name
+        email: Email address
+        email_confirmation: Email address confirmation
+        subject: Subject
+        message: Message
+
+      download_file:
+        name: Display name
+        filename: Original filename
+        path: Storage path
+        pdf_file: PDF file
+        volume: Volume
+        file_size: File size
+        content_type: File type
+        download_limit: Download limit
+        download_count: Download count
+        published: Publication status
+        sort_order: Display order
+
+  errors:
+    messages:
+      blank: "can't be blank"
+      confirmation: "doesn't match the email address"
+
+  time:
+    formats:
+      short: "%Y/%m/%d %H:%M"
+      long: "%A, %B %d, %Y %H:%M"
+      default: "%Y/%m/%d %H:%M:%S"
+
+  date:
+    formats:
+      default: "%Y/%m/%d"
+      short: "%m/%d"
+      long: "%A, %B %d, %Y"
+
+    day_names:
+      - Sunday
+      - Monday
+      - Tuesday
+      - Wednesday
+      - Thursday
+      - Friday
+      - Saturday
+
+    abbr_day_names:
+      - Sun
+      - Mon
+      - Tue
+      - Wed
+      - Thu
+      - Fri
+      - Sat
+
+    month_names:
+      -
+      - January
+      - February
+      - March
+      - April
+      - May
+      - June
+      - July
+      - August
+      - September
+      - October
+      - November
+      - December
+
+    abbr_month_names:
+      -
+      - Jan
+      - Feb
+      - Mar
+      - Apr
+      - May
+      - Jun
+      - Jul
+      - Aug
+      - Sep
+      - Oct
+      - Nov
+      - Dec

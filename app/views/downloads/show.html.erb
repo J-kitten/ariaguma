@@ -10,7 +10,7 @@
       <br>
       <h4 class="noto-serif-jp-extra-light">
         <img src="<%= asset_path('diamond.png') %>" alt="" style="height:25px; width: 25px; margin-bottom: 5px;"> Present 電子書籍『死闘の使命』</h4>
-      <br>
+
       <div class="noto-serif-jp-extra-light">
 
         <p><%= @regist.name %> さん、長らくお待たせいたしました。電子書籍『死闘の使命』が完成いたしました。</p>
@@ -31,12 +31,12 @@
                           html: { id: "download-form-ja", style: "display:inline;" } do %>
               <%= submit_tag "『死闘の使命』日本語 ZIP FILE",
                              class: "btn btn-download shadow rounded-pill d-inline-block px-4 py-3 btn-hover",
-                             style: "background-color:#b2edf7; color:black !important;" %>
+                             style: "background-color:#dff7f7; color:black !important;" %>
             <% end %>
           </div>
         <% else %>
           <div style="text-align:right; margin-bottom: 1rem;">
-            <button class="btn btn-download shadow rounded-pill d-inline-block px-4 py-2" style="background-color:#b2edf7; color:black !important;" disabled>ダウンロード上限に達しました。</button>
+            <button class="btn btn-download shadow rounded-pill d-inline-block px-4 py-2" style="background-color:#dff7f7; color:black !important;" disabled>ダウンロード上限に達しました。</button>
           </div>
         <% end %>
         <!-- 日本語の書籍のダウンロードボタン END -->
@@ -50,7 +50,7 @@
                         html: { id: "download-form-en", style: "display:inline;" } do %>
             <%= submit_tag "英語 ZIP FILE",
                            class: "btn btn-download shadow rounded-pill d-inline-block px-4 py-2",
-                           style: "background-color:#b2edf7; color:black !important;" %>
+                           style: "background-color:#dff7f7; color:black !important;" %>
           <% end %>
         </div>
         -->
@@ -78,10 +78,10 @@
 
         <h4 class="noto-serif-jp-extra-light">
           <img src="<%= asset_path('diamond.png') %>" alt="" style="height:25px; width: 25px; margin-bottom: 5px;"> 二冊目の受け取りについて</h4>
-        <br>
         もしかしたら、『死闘の使命』に続く二冊目の書籍も書くかもしれません。<br>
         欲しい方はボタンを押すと、完成時にURLをメールに記述してお送りします。<br>
-        不要な方は、ボタンを押さなければ、二冊目の通知をお送りすることはありません。
+        不要な方は、ボタンを押さなければ、二冊目の通知をお送りすることはありません。<br>
+        「ON」ボタンを押すと、二冊目が完成した時に、メールにてダウンロード先のURLをお知らせ致します。<br>
 
         <br>
         <% if flash[:notice] %>
@@ -92,53 +92,33 @@
           <div class="noto-serif-jp-extra-light alert alert-info">ALERT: <%= flash[:alert] %></div>
         <% end %>
 
+        <div class="w-100 text-end" style="text-align:right; margin-bottom: 1rem;">
+          <%= form_with url: (@regist.subscribed ? unsubscribe_download_path(@regist.token) : subscribe_download_path(@regist.token)),
+                        method: :patch,
+                        local: true,
+                        data: { turbo: false },
+                        style: "display:inline-block;" do %>
 
-        <!-- 「要る」「要らない」ボタン START -->
-        <div style="margin-bottom: 1em;">
-          <% if @regist.subscribed == true %>
-            <div style="text-align:right; margin-bottom: 1rem;">
-              <%= button_to "要る", subscribe_download_path(@regist.token),
-                  method: :patch,
-                  disabled: true,
-                  class: "btn shadow btn-download rounded-pill px-4 py-3 btn-hover",
-                  form: { style: "display:inline-block; margin-right: 0px; margin-top: 2px;" },
-                  style: "background-color:#dd2c76; color:black !important;" %>
+            <div class="d-flex justify-content-end" style="padding-right: 20px; align-items:center; gap:8px;">
+              設定
+              <span>OFF</span>
 
-              <%= button_to "要らない", unsubscribe_download_path(@regist.token),
-                  method: :patch,
-                  class: "btn shadow btn-download rounded-pill px-4 py-3 btn-hover",
-                  form: { style: "display:inline-block;" },
-                  style: "background-color:#c11d4e; color:black !important;" %>
+              <div class="form-check form-switch" style="margin:0; padding-left:2.5em;">
+                <%= check_box_tag :subscribed,
+                      "1",
+                      @regist.subscribed,
+                      class: "form-check-input",
+                      id: "subscribed_switch",
+                      onchange: "this.form.submit();" %>
+              </div>
+
+              <span>ON</span>
             </div>
 
-          <% elsif @regist.subscribed == false %>
-            <div style="text-align:right; margin-bottom: 1rem;">
-              <%= button_to "要る", subscribe_download_path(@regist.token),
-                  method: :patch,
-                  class: "btn shadow btn-download rounded-pill px-4 py-3 btn-hover",
-                  form: { style: "display:inline-block; margin-right: 0px; margin-top: 2px;" },
-                  style: "background-color:#dd2c76; color:black !important;" %>
-
-              <%= button_to "要らない", unsubscribe_download_path(@regist.token),
-                  method: :patch,
-                  disabled: true,
-                  class: "btn shadow btn-download rounded-pill px-4 py-3 btn-hover",
-                  form: { style: "display:inline-block;" },
-                  style: "background-color:#dd2c76; color:black !important;" %>
-            </div>
           <% end %>
         </div>
         <!-- 「要る」「要らない」ボタン END -->
 
-        <br>
-        <!-- 二冊目の電子書籍をお送りするか文章でお知らせ START -->
-        <% if @regist.subscribed == true %>
-            <div class="noto-serif-jp-extra-light alert alert-info">二冊目が完成した時には、メールにてダウンロード先のURLをお送りいたします。</div>
-        <% elsif @regist.subscribed == false %>
-            <div class="noto-serif-jp-extra-light alert alert-info">「要る」ボタンを押すと、二冊目が完成した時に、メールにてダウンロード先のURLをお知らせ致します。</div>
-        <% end %>
-      </div>
-      <!-- 二冊目の電子書籍をお送りするか文章でお知らせ END -->
       <br><br><br><br><br><br>
     </div>
   </div>
