@@ -1,121 +1,385 @@
 class DownloadsController < ApplicationController
-#  before_action :set_regist
-  before_action :set_regist_by_token, only: [:show, :subscribe, :unsubscribe]
+  before_action :set_regist_by_token,
+                only: %i[
+                  show
+                  file
+                  subscribe
+                  unsubscribe
+                ]
 
-  MAX_DOWNLOADS = 50
-
+  # 1冊目のダウンロード画面
   def show
-    @regist = Regist.find_by(token: params[:token])
-    unless @regist
-      redirect_to root_path, admin_alert: '無効なトークン'
-    end
-#    if @regist.nil?
-#      redirect_to root_path, admin_alert: "無効なトークンです"
-#    elsif @regist.downloaded >= MAX_DOWNLOADS
-#      render plain: "ダウンロード可能回数を超えました。"
-#    else
-#      # ダウンロードページのビューを表示（言語チェックボックス等）
-#      render :show
-#    end
+    @download_file = DownloadFile.find_by(
+      volume: 1,
+      published: true
+    )
+
+    return if @download_file.present?
+
+    redirect_to(
+      root_path,
+      alert: "公開中のダウンロードファイルがありません。"
+    )
   end
 
-  def download_files
-    file_path = Rails.root.join("public", "downloads", "Deadly_Battle_with_the_Phantom_Demon_ja.zip")
-
-    if File.exist?(file_path)
-      logger.debug ">>> ファイル送信準備OK"
-      file_data = File.binread(file_path)
-      send_data file_data,
-                filename: "Deadly_Battle_with_the_Phantom_Demon_ja.zip",
-                type: "application/zip",
-                disposition: "attachment"
-      return
-    else
-      logger.debug ">>> ファイルが存在しません"
-      render plain: "ファイルが存在しません", status: :not_found
-    end
-  end
-
+  # 1冊目の実ダウンロード
   def file
-    @regist = Regist.find_by(token: params[:token])
-    unless @regist
-      head :not_found and return
+    download_file = DownloadFile.find_by(
+      id: params[:download_file_id],
+      volume: 1,
+      published: true
+    )
+
+    unless download_file
+      redirect_to(
+        download_path(@regist.token),
+        alert: "ダウンロードファイルが見つかりません。"
+      )
+      return
     end
 
-    if @regist.downloaded < MAX_DOWNLOADS
-      redirect_to download_path(@regist.token), admin_alert: "ダウンロード上限に達しました。"
-      #render plain: "ダウンロード上限に達しています", status: :forbidden and return
+    process_download!(
+      regist: @regist,
+      download_file: download_file,
+      redirect_path: download_path(@regist.token)
+    )
+  rescue ActiveRecord::RecordInvalid,
+         ActiveRecord::RecordNotSaved => e
+    log_download_error(
+      label: "Download record error",
+      error: e
+    )
 
-    end
+    redirect_to(
+      download_path(@regist.token),
+      alert: "ダウンロード履歴の保存に失敗しました。"
+    )
+  rescue StandardError => e
+    log_download_error(
+      label: "Download error",
+      error: e
+    )
 
-    # ダウンロード回数を加算
-    @regist.increment!(:downloaded)
-
-    # ダウンロードファイルのパス
-    filename = params[:filename]
-    file_path = Rails.root.join("public", "downloads", "#{filename}.zip")
-
-    Rails.logger.debug ">>>>>> 送信ファイル: #{file_path}"
-    Rails.logger.debug "ファイルパス: #{file_path}"
-    Rails.logger.debug "ファイル存在?: #{File.exist?(file_path)}"
-
-    unless File.exist?(file_path)
-      render plain: "ファイルが存在しません", status: :not_found and return
-    end
-
-    # ファイルを送信
-    send_file file_path,
-              filename: "#{filename}.zip",
-              type: "application/zip",
-              disposition: "attachment"
+    redirect_to(
+      download_path(@regist.token),
+      alert: "ダウンロード処理に失敗しました。"
+    )
   end
 
+  # メール購読
   def subscribe
-    set_regist_by_token
     @regist.email_confirmation = @regist.email
 
     if @regist.update(subscribed: true)
-      Rails.logger.info "登録更新成功: #{@regist.inspect}"
+      Rails.logger.info(
+        "登録更新成功: #{@regist.inspect}"
+      )
     else
-      Rails.logger.error "登録更新失敗: #{@regist.errors.full_messages}"
+      Rails.logger.error(
+        "登録更新失敗: " \
+        "#{@regist.errors.full_messages.join(', ')}"
+      )
     end
 
     redirect_back fallback_location: root_path
   end
 
+  # メール購読解除
   def unsubscribe
-    set_regist_by_token
     @regist.email_confirmation = @regist.email
 
     if @regist.update(subscribed: false)
-      Rails.logger.info "登録解除成功"
+      Rails.logger.info("登録解除成功")
     else
-      Rails.logger.error "登録解除失敗: #{@regist.errors.full_messages}"
+      Rails.logger.error(
+        "登録解除失敗: " \
+        "#{@regist.errors.full_messages.join(', ')}"
+      )
     end
 
     redirect_back fallback_location: root_path
   end
 
-  def second  # 2冊目をdownload する
-    @regist = Regist.find_by(second_token: params[:token])
+  # 2冊目のダウンロード画面
+  def second
+    @regist = Regist.find_by(
+      second_token: params[:token]
+    )
 
-    if @regist.nil?
-      render plain: "無効なリンクです", status: :not_found
+    unless @regist
+      render(
+        plain: "無効なリンクです",
+        status: :not_found
+      )
       return
     end
 
-    # 必要であればログ記録や、DL済みのフラグ更新など
+    @download_file = DownloadFile.find_by(
+      volume: 2,
+      published: true
+    )
+
+    return if @download_file.present?
+
+    redirect_to(
+      root_path,
+      alert: "公開中の2冊目のファイルがありません。"
+    )
   end
 
+  # 2冊目の実ダウンロード
+  def second_file
+    @regist = Regist.find_by(
+      second_token: params[:token]
+    )
+
+    unless @regist
+      redirect_to(
+        root_path,
+        alert: "無効なダウンロードURLです。"
+      )
+      return
+    end
+
+    download_file = DownloadFile.find_by(
+      id: params[:download_file_id],
+      volume: 2,
+      published: true
+    )
+
+    unless download_file
+      redirect_to(
+        second_download_path(@regist.second_token),
+        alert: "2冊目のダウンロードファイルが見つかりません。"
+      )
+      return
+    end
+
+    process_download!(
+      regist: @regist,
+      download_file: download_file,
+      redirect_path:
+        second_download_path(@regist.second_token)
+    )
+  rescue ActiveRecord::RecordInvalid,
+         ActiveRecord::RecordNotSaved => e
+    log_download_error(
+      label: "Second download record error",
+      error: e
+    )
+
+    redirect_to(
+      second_download_path(@regist.second_token),
+      alert: "ダウンロード履歴の保存に失敗しました。"
+    )
+  rescue StandardError => e
+    log_download_error(
+      label: "Second download error",
+      error: e
+    )
+
+    redirect_to(
+      second_download_path(@regist.second_token),
+      alert: "ダウンロード処理に失敗しました。"
+    )
+  end
 
   private
 
+  # 1冊目のtokenから予約者を取得
   def set_regist_by_token
-    @regist = Regist.find_by(token: params[:token]) 
-    logger.warn(">>>>> def set_regist")
-    logger.warn("Regist.find_by(token: params[:token] #{Regist.find_by(token: params[:token])}")
-    #unless @regist
-      redirect_to root_path, admin_alert: "データが見つかりません" unless @regist
-    #end
+    @regist = Regist.find_by(
+      token: params[:token]
+    )
+
+    return if @regist.present?
+
+    redirect_to(
+      root_path,
+      alert: "データが見つかりません。"
+    )
+  end
+
+  # ファイル確認・カウント・ログ保存・ファイル送信
+  def process_download!(
+    regist:,
+    download_file:,
+    redirect_path:
+  )
+    file_path = absolute_file_path(download_file)
+
+    Rails.logger.info(
+      "[Download] " \
+      "download_file_id=#{download_file.id}, " \
+      "regist_id=#{regist.id}, " \
+      "volume=#{download_file.volume}, " \
+      "db_path=#{download_file.path}, " \
+      "absolute_path=#{file_path}, " \
+      "exists=#{File.file?(file_path)}, " \
+      "readable=#{File.readable?(file_path)}"
+    )
+
+    unless File.file?(file_path)
+      Rails.logger.error(
+        "[Download file missing] " \
+        "download_file_id=#{download_file.id}, " \
+        "path=#{file_path}"
+      )
+
+      redirect_to(
+        redirect_path,
+        alert: "ファイルが存在しません。"
+      )
+      return
+    end
+
+    unless File.readable?(file_path)
+      Rails.logger.error(
+        "[Download file unreadable] " \
+        "download_file_id=#{download_file.id}, " \
+        "path=#{file_path}"
+      )
+
+      redirect_to(
+        redirect_path,
+        alert: "ファイルを読み込めません。"
+      )
+      return
+    end
+
+    unless regist_downloadable?(
+      regist: regist,
+      download_file: download_file
+    )
+      redirect_to(
+        redirect_path,
+        alert: "ダウンロード上限に達しました。"
+      )
+      return
+    end
+
+    record_download!(
+      regist: regist,
+      download_file: download_file
+    )
+
+    send_file(
+      file_path,
+      filename: download_file.filename,
+      type:
+        download_file.content_type.presence ||
+        "application/pdf",
+      disposition: "attachment"
+    )
+  end
+
+  # DBのpathから実ファイルの絶対パスを作成
+  def absolute_file_path(download_file)
+    Rails.root.join(
+      "public",
+      download_file.path.to_s.delete_prefix("/")
+    )
+  end
+
+  # 予約者ごとのダウンロード上限判定
+  def regist_downloadable?(regist:, download_file:)
+    download_limit =
+      download_file.download_limit.presence || 10
+
+    if download_file.volume.to_i == 2
+      regist.second_download_count.to_i <
+        download_limit.to_i
+    else
+      regist.download_count.to_i <
+        download_limit.to_i
+    end
+  end
+
+  # カウント更新とログ登録を同じトランザクションで実行
+  def record_download!(regist:, download_file:)
+    ActiveRecord::Base.transaction do
+      # 同時押下時のカウントずれを防止
+      regist.lock!
+      download_file.lock!
+
+      # lock後の最新値でもう一度上限を確認
+      unless regist_downloadable?(
+        regist: regist,
+        download_file: download_file
+      )
+        regist.errors.add(
+          :base,
+          "ダウンロード上限に達しています。"
+        )
+
+        raise ActiveRecord::RecordInvalid,
+              regist
+      end
+
+      increment_regist_download_count!(
+        regist: regist,
+        volume: download_file.volume
+      )
+
+      download_file.increment!(
+        :download_count
+      )
+
+      DownloadLog.create!(
+        download_file: download_file,
+        regist: regist,
+        downloaded_at: Time.current,
+        ip_address: request.remote_ip,
+        user_agent:
+          request.user_agent.to_s.truncate(65_535)
+      )
+    end
+  end
+
+  # 1冊目・2冊目で予約者側のカラムを分けて加算
+  def increment_regist_download_count!(
+    regist:,
+    volume:
+  )
+    if volume.to_i == 2
+      regist.increment!(
+        :second_download_count
+      )
+    else
+      regist.increment!(
+        :download_count
+      )
+    end
+  end
+
+  # エラー内容をproduction.logと専用ログへ記録
+  def log_download_error(label:, error:)
+    error_message =
+      "[#{label}]\n" \
+      "class=#{error.class}\n" \
+      "message=#{error.message}\n" \
+      "regist_id=#{@regist&.id}\n" \
+      "download_file_id=#{params[:download_file_id]}\n" \
+      "#{error.backtrace&.first(20)&.join("\n")}"
+
+    Rails.logger.error(error_message)
+
+    File.open(
+      Rails.root.join(
+        "log",
+        "download_error.log"
+      ),
+      "a"
+    ) do |file|
+      file.puts
+      file.puts "----------------------------------------"
+      file.puts Time.current
+      file.puts error_message
+    end
+  rescue StandardError => log_error
+    Rails.logger.error(
+      "[Download error log failure] " \
+      "#{log_error.class}: #{log_error.message}"
+    )
   end
 end

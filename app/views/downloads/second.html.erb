@@ -2,137 +2,138 @@
 
 <div class="bg-wrapper"></div>
 
-<br>
-
-<div class="container">
+<div class="container px-4">
   <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6" style="background-color: rgba(255, 255, 255, 0.8); padding-right: 20px; padding-left: 20px;">
-      <br>
-      <div class="noto-serif-jp-extra-light" style="font-size: 16px">2冊目の電子書籍について</div>
-      <br><br>
-      <div class="noto-serif-jp-extra-light">
+    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px;">
+      <div class="container px-2 px-md-5">
 
-        <p><%= @regist.name %> さん、2冊目を執筆するかは現在未定です。</p>
+        <div class="noto-serif-jp-extra-light" style="font-size: 16px">2冊目の電子書籍について</div>
+        <br><br>
+        <div class="noto-serif-jp-extra-light">
 
-        <!-- カラム regists.second_downloaded を二冊目 download カウントに使用 1～10回downloadできる -->
-<!--        <% if @regist.downloaded == 0 %>
-          <p>ダウンロードは終わっていません。右下のボタンを押してください。</p>
-        <% elsif @regist.downloaded < 10 %>
-          すでにダウンロード済みです。<br>
-          ダウンロード回数はあと <%= 10 - @regist.downloaded %> 回可能です。<br><br>
-        <% end %>
--->
-        <!-- 日本語の書籍のダウンロードボタン START -->
-<!--
-        <% if @regist.downloaded < 10 %>
-          <div style="text-align:right; margin-bottom: 1rem;">
-            <%= form_with url: download_file_path(@regist.token, filename: "Deadly_Battle_with_the_Phantom_Demon_ja.zip"),
+          <p><%= @regist.name %> さん、2冊目を執筆するかは現在未定です。</p>
+
+          <!-- カラム regists.second_downloaded を二冊目 download カウントに使用 1～10回downloadできる -->
+  <!--        <% if @regist.download_count == 0 %>
+            <p>ダウンロードは終わっていません。右下のボタンを押してください。</p>
+          <% elsif @regist.download_count < 10 %>
+            すでにダウンロード済みです。<br>
+            ダウンロード回数はあと <%= 10 - @regist.download_count %> 回可能です。<br><br>
+          <% end %>
+  -->
+          <!-- 日本語の書籍のダウンロードボタン START -->
+  <!--
+          <% if @regist.download_count < 10 %>
+            <div style="text-align:right; margin-bottom: 1rem;">
+              <%= form_with url: download_file_path(@regist.token, filename: "Deadly_Battle_with_the_Phantom_Demon_ja.zip"),
+                            method: :post,
+                            local: true,
+                            html: { id: "download-form-ja", style: "display:inline;" } do %>
+                <%= submit_tag "『死闘の使命』日本語 ZIP FILE",
+                               class: "btn btn-download shadow rounded-pill d-inline-block px-4 py-2",
+                               style: "background-color:#b2edf7; color:black !important;" %>
+              <% end %>
+            </div>
+          <% else %>
+            <div style="text-align:right; margin-bottom: 1rem;">
+              <button class="btn btn-download shadow rounded-pill d-inline-block px-4 py-2" style="background-color:#b2edf7; color:black !important;" disabled>ダウンロード上限に達しました。</button>
+            </div>
+          <% end %>
+  -->
+          <!-- 日本語の書籍のダウンロードボタン END -->
+          
+  <% if flash[:admin_notice] %>
+    <div class="noto-serif-jp-extra-light alert alert-info"><%= flash[:admin_notice].html_safe %></div>
+  <% end %>
+
+  <% if flash[:admin_alert] %>
+    <div class="noto-serif-jp-extra-light alert alert-danger"><%= flash[:admin_alert].html_safe %></div>
+  <% end %>
+
+
+          <!-- 英語の書籍のダウンロードボタン START -->
+          <!--
+          <div style="text-align:right">
+            <%= form_with url: download_file_path(@regist.token, filename: "Deadly_Battle_with_the_Phantom_Demon_en.zip"),
                           method: :post,
                           local: true,
-                          html: { id: "download-form-ja", style: "display:inline;" } do %>
-              <%= submit_tag "『死闘の使命』日本語 ZIP FILE",
+                          html: { id: "download-form-en", style: "display:inline;" } do %>
+              <%= submit_tag "英語 ZIP FILE",
                              class: "btn btn-download shadow rounded-pill d-inline-block px-4 py-2",
                              style: "background-color:#b2edf7; color:black !important;" %>
             <% end %>
           </div>
-        <% else %>
-          <div style="text-align:right; margin-bottom: 1rem;">
-            <button class="btn btn-download shadow rounded-pill d-inline-block px-4 py-2" style="background-color:#b2edf7; color:black !important;" disabled>ダウンロード上限に達しました。</button>
-          </div>
-        <% end %>
--->
-        <!-- 日本語の書籍のダウンロードボタン END -->
-        
-<% if flash[:admin_notice] %>
-  <div class="noto-serif-jp-extra-light alert alert-info"><%= flash[:admin_notice].html_safe %></div>
-<% end %>
+          -->
+          <!-- 英語の書籍のダウンロードボタン END -->
 
-<% if flash[:admin_alert] %>
-  <div class="noto-serif-jp-extra-light alert alert-danger"><%= flash[:admin_alert].html_safe %></div>
-<% end %>
+          <br><br>
 
+          <!-- ダウンロード後のリロード処理 SATRT -->
+          <script>
+            document.addEventListener("DOMContentLoaded", function() {
+              // 「download-form-」で始まる全てのフォームを対象にする
+              const forms = document.querySelectorAll("form[id^='download-form-']");
 
-        <!-- 英語の書籍のダウンロードボタン START -->
-        <!--
-        <div style="text-align:right">
-          <%= form_with url: download_file_path(@regist.token, filename: "Deadly_Battle_with_the_Phantom_Demon_en.zip"),
-                        method: :post,
-                        local: true,
-                        html: { id: "download-form-en", style: "display:inline;" } do %>
-            <%= submit_tag "英語 ZIP FILE",
-                           class: "btn btn-download shadow rounded-pill d-inline-block px-4 py-2",
-                           style: "background-color:#b2edf7; color:black !important;" %>
-          <% end %>
-        </div>
-        -->
-        <!-- 英語の書籍のダウンロードボタン END -->
-
-        <br><br>
-
-        <!-- ダウンロード後のリロード処理 SATRT -->
-        <script>
-          document.addEventListener("DOMContentLoaded", function() {
-            // 「download-form-」で始まる全てのフォームを対象にする
-            const forms = document.querySelectorAll("form[id^='download-form-']");
-
-            forms.forEach(function(form) {
-              form.addEventListener("submit", function() {
-                setTimeout(function() {
-                  location.reload(); // 2秒後に画面リロード
-                }, 2000);
+              forms.forEach(function(form) {
+                form.addEventListener("submit", function() {
+                  setTimeout(function() {
+                    location.reload(); // 2秒後に画面リロード
+                  }, 2000);
+                });
               });
             });
-          });
-        </script>
-        <!-- ダウンロード後のリロード処理 END -->
+          </script>
+          <!-- ダウンロード後のリロード処理 END -->
 
-        <!-- 非表示 
-        <h2>二冊目の受け取りについて</h2>
-        <br>
-        もしかしたら、『幻魔との死闘』に続く二冊目の書籍も書くかもしれません。<br>
-        欲しい方はボタンを押すと、完成時にURLをメールに記述してお送りします。<br>
-        不要な方は、ボタンを押さなければ、二冊目の通知をお送りすることはありません。
+          <!-- 非表示 
+          <h2>二冊目の受け取りについて</h2>
+          <br>
+          もしかしたら、『幻魔との死闘』に続く二冊目の書籍も書くかもしれません。<br>
+          欲しい方はボタンを押すと、完成時にURLをメールに記述してお送りします。<br>
+          不要な方は、ボタンを押さなければ、二冊目の通知をお送りすることはありません。
 
-        <br>非表示 -->
+          <br>非表示 -->
 
 
-        <!-- 「要る」「要らない」ボタン START 
-        <div style="margin-bottom: 1em;">
-          <% if @regist.subscribed == true %>
-            <div style="text-align:right; margin-bottom: 1rem;">
-              <%= button_to "要る", subscribe_download_path(@regist.token), method: :patch, disabled: true, class: "btn shadow btn-download rounded-pill d-inline-block px-4 py-2", style: "background-color:#dd2c76; color:black !important" %>
-            </div>
-            <div style="text-align:right">
-              <%= button_to "要らない", unsubscribe_download_path(@regist.token), method: :patch, class: "btn shadow btn-download rounded-pill px-4 py-2", style: "background-color:#c11d4e; color:black !important" %>
-            </div>
-          <% elsif @regist.subscribed == false %>
-            <div style="text-align:right; margin-bottom: 1rem;">
-              <%= button_to "要る", subscribe_download_path(@regist.token), method: :patch, class: "btn shadow btn-download rounded-pill d-inline-block px-4 py-2", style: "background-color:#dd2c76; color:black !important" %>
-            </div>
-            <div style="text-align:right">
-              <%= button_to "要らない", unsubscribe_download_path(@regist.token), method: :patch, disabled: true, class: "btn shadow btn-download rounded-pill px-4 py-2", style: "background-color:#dd2c76; color:black !important" %>
-            </div>
-          <% else %>
-            <div style="text-align:right; margin-bottom: 1rem;">
-              <!-- 初期値が nil の場合 -->
-              <%= button_to "要る", subscribe_download_path(@regist.token), method: :patch, class: "btn shadow btn-download rounded-pill px-4 py-2", style: "background-color:#dd2c76; color:black !important" %>
-            </div>
-            <div style="text-align:right">
-              <%= button_to "要らない", unsubscribe_download_path(@regist.token), method: :patch, class: "btn btn-download rounded-pill px-4 py-2 shadow", style: "background-color:#dd2c76; color:black !important" %>
-            </div>
-          <% end %>
+          <!-- 「要る」「要らない」ボタン START 
+          <div style="margin-bottom: 1em;">
+            <% if @regist.subscribed == true %>
+              <div style="text-align:right; margin-bottom: 1rem;">
+                <%= button_to "要る", subscribe_download_path(@regist.token), method: :patch, disabled: true, class: "btn shadow btn-download rounded-pill d-inline-block px-4 py-2", style: "background-color:#dd2c76; color:black !important" %>
+              </div>
+              <div style="text-align:right">
+                <%= button_to "要らない", unsubscribe_download_path(@regist.token), method: :patch, class: "btn shadow btn-download rounded-pill px-4 py-2", style: "background-color:#c11d4e; color:black !important" %>
+              </div>
+            <% elsif @regist.subscribed == false %>
+              <div style="text-align:right; margin-bottom: 1rem;">
+                <%= button_to "要る", subscribe_download_path(@regist.token), method: :patch, class: "btn shadow btn-download rounded-pill d-inline-block px-4 py-2", style: "background-color:#dd2c76; color:black !important" %>
+              </div>
+              <div style="text-align:right">
+                <%= button_to "要らない", unsubscribe_download_path(@regist.token), method: :patch, disabled: true, class: "btn shadow btn-download rounded-pill px-4 py-2", style: "background-color:#dd2c76; color:black !important" %>
+              </div>
+            <% else %>
+              <div style="text-align:right; margin-bottom: 1rem;">
+                <!-- 初期値が nil の場合 -->
+                <%= button_to "要る", subscribe_download_path(@regist.token), method: :patch, class: "btn shadow btn-download rounded-pill px-4 py-2", style: "background-color:#dd2c76; color:black !important" %>
+              </div>
+              <div style="text-align:right">
+                <%= button_to "要らない", unsubscribe_download_path(@regist.token), method: :patch, class: "btn btn-download rounded-pill px-4 py-2 shadow", style: "background-color:#dd2c76; color:black !important" %>
+              </div>
+            <% end %>
+          </div>
+           「要る」「要らない」ボタン END -->
+
+          <!-- 二冊目の電子書籍をお送りするか文章でお知らせ START 
+            <% if @regist.subscribed == true %>
+                <div class="noto-serif-jp-extra-light alert alert-info">二冊目が完成した時には、メールにてダウンロード先のURLをお送りいたします。</div>
+            <% elsif @regist.subscribed == false %>
+                <div class="noto-serif-jp-extra-light alert alert-info">「要る」ボタンを押すと、二冊目が完成した時に、メールにてダウンロード先のURLをお知らせ致します。</div>
+            <% end %>
+          </div>
+           二冊目の電子書籍をお送りするか文章でお知らせ END -->
+          <br><br>
         </div>
-         「要る」「要らない」ボタン END -->
-
-        <!-- 二冊目の電子書籍をお送りするか文章でお知らせ START 
-          <% if @regist.subscribed == true %>
-              <div class="noto-serif-jp-extra-light alert alert-info">二冊目が完成した時には、メールにてダウンロード先のURLをお送りいたします。</div>
-          <% elsif @regist.subscribed == false %>
-              <div class="noto-serif-jp-extra-light alert alert-info">「要る」ボタンを押すと、二冊目が完成した時に、メールにてダウンロード先のURLをお知らせ致します。</div>
-          <% end %>
-        </div>
-         二冊目の電子書籍をお送りするか文章でお知らせ END -->
-        <br><br>
+      </div>
     </div>
   </div>
 </div>

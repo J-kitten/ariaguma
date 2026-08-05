@@ -37,7 +37,7 @@ class SessionsController < ApplicationController
       # 内の、require_login が動かない
       session[:user_id] = user.id
       session[:email_hash] = user.email_hash
-      redirect_to management_screen_path, notice: "ログインに成功しました" #ARIA GUMA 管理画面で表示される変数 controllers/session_controller.rb
+      redirect_to management_screen_root_path, notice: "ログインに成功しました" #ARIA GUMA 管理画面で表示される変数 controllers/session_controller.rb
     else
       flash.now[:alert] = "メールアドレスまたはパスワードが正しくありません"
       render :new, status: :unprocessable_entity
@@ -50,7 +50,7 @@ class SessionsController < ApplicationController
       success: true
     }
     redirect_to logout_path, notice: "ログアウトしました"
-    #redirect_to management_screen_path, notice: "ログアウトしました app/controllers/sessions_controller.rb"
+    #redirect_to management_screen_root_path, notice: "ログアウトしました app/controllers/sessions_controller.rb"
   end
 
   def destroy_view

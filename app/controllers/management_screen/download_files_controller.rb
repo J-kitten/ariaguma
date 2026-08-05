@@ -1,13 +1,12 @@
 # app/controllers/management_screen/download_files_controller.rb
 class ManagementScreen::DownloadFilesController <
-      #ManagementScreen::BaseController
-      ApplicationController
+      ManagementScreen::BaseController
   layout 'management'
 
   before_action :set_download_file,
                 only: %i[show edit update destroy]
 
-  MAX_PDF_SIZE = 100.megabytes
+  MAX_PDF_SIZE = 20_000.kilobytes # 20MB位
 
   def index
     @download_files =
@@ -20,7 +19,7 @@ class ManagementScreen::DownloadFilesController <
   def new
     @download_file = DownloadFile.new(
       volume: 1,
-      download_limit: 10,
+      download_limit: 50,
       download_count: 0,
       published: false,
       sort_order: 0
@@ -226,22 +225,13 @@ class ManagementScreen::DownloadFilesController <
 
   def download_file_params
     params.require(:download_file).permit(
-        :name,
-        :pdf_file,
-        :volume,
-        :download_limit,
-        :published,
-        :sort_order
-      #:name, #
-      #:filename,
-      #:path,
-      #:volume,
-      #:file_size,
-      #:content_type,
-      #:download_limit,
-      #:download_count,
-      #:published,
-      #:sort_order
+      :name,
+      :filename,
+      :pdf_file,
+      :volume,
+      :download_limit,
+      :published,
+      :sort_order
     )
   end
 
@@ -274,7 +264,7 @@ class ManagementScreen::DownloadFilesController <
     if uploaded_file.size > MAX_PDF_SIZE
       @download_file.errors.add(
         :pdf_file,
-        "は100MB以下にしてください"
+        "は1000MB以下にしてください"
       )
       return false
     end
@@ -310,7 +300,33 @@ class ManagementScreen::DownloadFilesController <
   end
 
   def generate_stored_filename
-    "#{SecureRandom.uuid}.pdf"
+    requested_filename =
+      @download_file.filename.presence ||
+      uploaded_pdf&.original_filename
+
+    base_name =
+      File.basename(
+        requested_filename.to_s,
+        File.extname(requested_filename.to_s)
+      )
+
+    sanitized_base_name =
+      base_name
+        .encode(
+          "UTF-8",
+          invalid: :replace,
+          undef: :replace,
+          replace: "_"
+        )
+        .gsub(/[^0-9A-Za-z_-]/, "_")
+        .gsub(/_+/, "_")
+        .delete_prefix("_")
+        .delete_suffix("_")
+        .truncate(200)
+
+    sanitized_base_name = SecureRandom.uuid if sanitized_base_name.blank?
+
+    "#{sanitized_base_name}.pdf"
   end
 
   def sanitize_original_filename(filename)

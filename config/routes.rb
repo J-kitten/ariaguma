@@ -1,115 +1,139 @@
 # config/routes.rb
+
 Rails.application.routes.draw do
-  get 'inquiries/new'
-  get 'inquiries/create'
-  get 'ebooks/download'
-  get "home/index"
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  # ----------------------------------------
+  # トップページ・一般ページ
+  # ----------------------------------------
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  root "home#index"
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  get "home/index", to: "home#index"
+  post "home/create", to: "home#create"
 
-  root 'home#index'
-  post 'home/create', to: 'home#create'
-  
-  get "contact", to: "home#contact"         # お問合せページ
-  get "book_present", to: "home#book_present" # 無料本のダウンロードぺージ
-  get "donation", to: "home#donation"       # ご寄付ページ
-  get "about", to: "home#about"             # 団体概要ページ
-  get "privacy_policy", to: "home#privacy_policy" # プライバシーポリシー
-  get 'legal', to: 'pages#legal'           # 特定商取引法
-  get 'set_language/:lang', to: 'application#set_language', as: :set_language
+  get "contact", to: "home#contact"
+  get "book_present", to: "home#book_present"
+  get "donation", to: "home#donation"
+  get "about", to: "home#about"
+  get "privacy_policy", to: "home#privacy_policy"
+  get "legal", to: "pages#legal"
+  get "set_language/:lang", to: "application#set_language", as: :set_language
 
-  post '/google_login', to: 'google_auth#login'
-  get '/me', to: 'users#me'
-  #post "/logout", to: "google_auth#logout"
-  #post "/logout", to: "logout#destroy"
-  post "/logout", to: "sessions#destroy"
+  post "send_form", to: "home#send_form"
 
-  post "/auth/login", to: "auth#login"
-  post "/auth/logout", to: "auth#logout"
-  get  "/auth/me", to: "auth#me"
+  # ----------------------------------------
+  # ヘルスチェック
+  # ----------------------------------------
 
-  resources :regists, only: [:index ,:create] do
+  get "up", to: "rails/health#show", as: :rails_health_check
+
+  # ----------------------------------------
+  # Google認証・通常認証
+  # ----------------------------------------
+
+  post "google_login", to: "google_auth#login"
+  get "me", to: "users#me"
+
+  post "auth/login", to: "auth#login"
+  post "auth/logout", to: "auth#logout"
+  get "auth/me", to: "auth#me"
+
+  namespace :api do
+    resource :session, controller: :sessions, only: %i[create destroy] do
+      collection do
+        get :me
+      end
+    end
+
+    patch "profile", to: "profile#update"
+  end
+
+  # ----------------------------------------
+  # 予約登録
+  # ----------------------------------------
+
+  resources :regists, only: %i[index create] do
     collection do
       get :complete
     end
   end
 
-  post 'send_form', to: 'home#send_form'
+  # ----------------------------------------
+  # お問い合わせ
+  # ----------------------------------------
 
-  get 'download/:token', to: 'downloads#show', as: 'download' # ダウンロードページ表示
-  post 'download/:token', to: 'downloads#download_files', as: 'download_files' # ファイルの選択・ダウンロード処理
+  resources :contacts, only: %i[new create index show destroy]
+  resources :inquiries, only: %i[new create]
 
-  #post "downloads/:token/:filename", to: "downloads#file", as: :download_ebook
-  post 'downloads/:token/:filename', to: 'downloads#file', as: 'download_file'
+  get "reservations", to: "reservations#index"
+  get "inquiries", to: "inquiries#index"
 
-  resources :regists, only: [:create]
+  # ----------------------------------------
+  # 電子書籍ダウンロード
+  # ----------------------------------------
 
-  resources :contacts, only: [:new, :create, :index, :show, :destroy]
+  get "download/:token", to: "downloads#show", as: :download
+  post "download/:token/file", to: "downloads#file", as: :download_file
+  patch "download/:token/subscribe", to: "downloads#subscribe", as: :subscribe_download
+  patch "download/:token/unsubscribe", to: "downloads#unsubscribe", as: :unsubscribe_download
 
-  resources :inquiries, only: [:new, :create]
+  get "download/second_download/:token", to: "downloads#second", as: :second_download
+  post "download/second/:token/file", to: "downloads#second_file", as: :second_download_file
 
-  patch 'download/:token/subscribe', to: 'downloads#subscribe', as: :subscribe_download
-  patch 'download/:token/unsubscribe', to: 'downloads#unsubscribe', as: :unsubscribe_download
+  # ----------------------------------------
+  # 管理画面ログイン
+  # ----------------------------------------
 
-  patch "/api/profile", to: "api/profile#update"  # プロフィール再設定
+  get "management_screen/login", to: "sessions#new", as: :login
+  post "management_screen/login", to: "sessions#create"
+
+  get "management_screen/signup", to: "users#new", as: :management_screen_signup
+  post "management_screen/create", to: "users#create", as: :management_screen_create
+
+  get "destroy", to: "sessions#destroy_view", as: :logout_complete
+
+  # ----------------------------------------
+  # 管理画面
+  # ----------------------------------------
 
   namespace :management_screen do
-    get "regist_book",
-        to: "download_files#new",
-        as: :regist_book
+    root "dashboard#index"
+
+    match "logout", to: "sessions#destroy", via: %i[get delete], as: :logout
+
+    get "regist_book", to: "download_files#new", as: :regist_book
 
     resources :download_files
-  end
 
-  # 各一覧ページへのルート（仮のコントローラー名とアクション）
-  get 'reservations', to: 'reservations#index' #予約 
-  get 'inquiries', to: 'inquiries#index' #お問合せ インクリーズ
+    resources :download_logs, only: %i[index show]
 
-  namespace :api do
-    resource :session,
-             controller: :sessions,
-             only: [:create, :destroy] do
-      collection do
-        get :me
-      end
-    end
-  end
-
-  namespace :management_screen do
-    # contacts
-    resources :contacts, only: [:index, :show] do
+    resources :contacts, only: %i[index show] do
       member do
-        get :reply        # /management_screen/contacts/:id/reply
-        post :sent_reply  # replyのPOSTアクション名
+        get :reply
+        post :sent_reply
         patch :mark_read
         patch :restore
         get :trash_show
         get :thread_detail
       end
+
       collection do
         get :unread
         get :readed
-        get :trash     # /management_screen/contacts/trash
-        get :search    # /management_screen/contacts/search
+        get :trash
+        get :search
         get :trash_search
+        get :reply_detail
+        get :not_replying
         post :multiple
-        post :mark_read_multiple     # 複数を既読にする
-        post :mark_unread_multiple   # 複数を未読にする
-        get :reply_detail   # => reply_detail_management_screen_contacts_path
-        get :not_replying   # => not_replying_management_screen_contacts_path
+        post :mark_read_multiple
+        post :mark_unread_multiple
         post :restore_multiple_from_trash
       end
     end
 
-    resources :regists, only: [:index, :show] do
+    resources :regists, only: %i[index show] do
       member do
-        patch :toggle_unread # 不要かも
+        patch :toggle_unread
         patch :mark_read
         get :reply
         post :restore_from_trash
@@ -117,6 +141,7 @@ Rails.application.routes.draw do
         post :send_first_book
         post :send_second_email
       end
+
       collection do
         get :search
         get :trash
@@ -136,63 +161,30 @@ Rails.application.routes.draw do
         delete :destroy_completely
       end
 
-      resources :regists_replies, only: [:new, :create, :index]
+      resources :regists_replies, only: %i[new create index]
     end
 
-    # replies
-    resources :replies, only: [:show, :index]
-
-    # 管理画面配下のリソース
-    get 'regists', to: 'regists#index'  # 予約希望者一覧
-    get 'contacts', to: 'contacts#index'  # お問合せ一覧
-    match 'logout', to: 'sessions#destroy', via: [:get, :delete], as: :logout
-
+    resources :replies, only: %i[index show]
   end
 
-  # https://ariaguma.jp/download/second_download/token
-  get 'download/second_download/:token', to: 'downloads#second', as: 'second_download'
+  # ----------------------------------------
+  # Firebase・マイページ
+  # ----------------------------------------
 
-  scope :management_screen do
-    #get  'signin', to: 'users#new',    as: :management_screen_signin_path
-    get  'signup', to: 'users#new',    as: :management_screen_signup_path
-    post 'create', to: 'users#create', as: :management_screen_create_path
-  end
+  get "mypage", to: "mypage#show"
 
-  get '/destroy', to: 'sessions#destroy_view', as: :logout_complete
+  post "firebase_login", to: "firebase_sessions#create"
+  delete "firebase_logout", to: "firebase_sessions#destroy"
 
-  # 管理画面トップページ
-  get 'management_screen', to: 'management_screen#index', as: :management_screen
+  get "mypage/contacts/:id", to: "mypage#contact_show", as: :mypage_contact
+  post "mypage/contacts/:id/reply", to: "mypage#contact_reply", as: :mypage_contact_reply
 
-  get 'management_screen/login',  to: 'sessions#new', as: :login
-  post 'management_screen/login',  to: 'sessions#create'
-
-  # Firebase
-  get  "/mypage", to: "mypage#show"
-  post "/firebase_login", to: "firebase_sessions#create"
-  delete "/logout", to: "firebase_sessions#destroy"
-
-  get  "/mypage/contacts/:id", to: "mypage#contact_show", as: :mypage_contact
-  post "/mypage/contacts/:id/reply", to: "mypage#contact_reply", as: :mypage_contact_reply
-
-  get  "mypage/replies/:id",       to: "mypage#reply_show",  as: :mypage_reply
+  get "mypage/replies/:id", to: "mypage#reply_show", as: :mypage_reply
   post "mypage/replies/:id/reply", to: "mypage#reply_reply", as: :mypage_reply_reply
 
-  delete "/firebase_logout", to: "firebase_sessions#destroy"
-
-  namespace :management_screen do
-    root "dashboard#index"
-
-    resources :download_files
-    resources :contacts
-    resources :regists
-  end
-
-  class ErrorsController < ApplicationController
-    def not_found
-      redirect_to root_path
-    end
-  end
+  # ----------------------------------------
+  # 存在しないURL
+  # ----------------------------------------
 
   match "*path", to: "errors#not_found", via: :all
-
 end

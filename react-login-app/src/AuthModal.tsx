@@ -19,14 +19,14 @@ type Props = {
 };
 
 export default function AuthModal({ open, onClose, setUser }: Props) {
-  console.log("AUTHMODAL VERSION 2026-07-06");
+  console.log("AUTHMODAL VERSION 2026-08-01");
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   if (!open) return null;
   console.log("AuthModal render");
   console.log("open =", open);
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
 /* signInWithRedirect(auth, provider); を使う場合
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
   }, []);
 */
 
-  // --- Googleログイン（popup版）---
+  /* Googleログイン */
   const googleLogin = async () => {
     const provider = new GoogleAuthProvider();
 
@@ -54,39 +54,46 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
     try {
       const result = await signInWithPopup(auth, provider);
 
-      setUser(result.user);
-      onClose();
       await loginToRails(result.user);
 
     } catch (error: unknown) {
-
       if (error instanceof FirebaseError) {
         switch (error.code) {
-
           case "auth/popup-closed-by-user":
-            alert("Googleログイン画面が閉じられました。再試行してください。");
+            alert(
+              "Googleログイン画面が閉じられました。再試行してください。"
+            );
             break;
 
           case "auth/too-many-requests":
-            alert("試行回数が多すぎます。しばらく時間を置いて再試行してください。");
+            alert(
+              "試行回数が多すぎます。しばらく時間を置いて再試行してください。"
+            );
             break;
 
           case "auth/unauthorized-domain":
             alert(
-              "Googleログインのドメイン設定が未登録です。Firebaseコンソールの承認済みドメインを確認してください。"
+              "Googleログインのドメイン設定が未登録です。" +
+              "Firebaseコンソールの承認済みドメインを確認してください。"
             );
             break;
 
           default:
             alert("Googleログインに失敗しました。");
         }
+      } else if (error instanceof Error) {
+        /*
+         * loginToRails内ですでにエラーメッセージを表示しているため、
+         * ここではコンソール出力だけでも構いません。
+         */
+        console.error("Google / Rails login error:", error);
       } else {
         alert("予期しないエラーが発生しました。");
       }
     }
   };
 
-  // --- 新規登録 ---
+  /* 新規登録 */
   const register = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -96,11 +103,8 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
       );
 
       await loginToRails(userCredential.user);
-      setUser(userCredential.user);
-      onClose();
-      window.location.href = "/";
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof FirebaseError) {
         switch (error.code) {
           case "auth/email-already-in-use":
@@ -116,19 +120,23 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
             break;
 
           case "auth/too-many-requests":
-            alert("試行回数が多すぎます。しばらく時間を置いて再試行してください。");
+            alert(
+              "試行回数が多すぎます。しばらく時間を置いて再試行してください。"
+            );
             break;
 
           default:
             alert("登録に失敗しました。");
         }
+      } else if (error instanceof Error) {
+        console.error("Register / Rails login error:", error);
       } else {
         alert("予期しないエラーが発生しました。");
       }
     }
   };
 
-  // --- ログイン ---
+  /* ログイン */
   const login = async () => {
     console.log("LOGINED");
 
@@ -139,7 +147,7 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
         password
       );
 
-      // FirebaseのIDトークンをRailsへ送信
+      /* FirebaseのIDトークンをRailsへ送信 */
       await loginToRails(userCredential.user);
 
     } catch (error: unknown) {
@@ -187,7 +195,7 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
     }
   };
 
-  // --- パスワードリセット ---
+  /* パスワードリセット */
   const resetPassword = async () => {
     if (!email || email.trim() === "") {
       alert("メールアドレスが入力されていません。");
@@ -221,37 +229,70 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
     }
   };
 
-  const loginToRails = async (firebaseUser: User) => {
+  const loginToRails = async (firebaseUser: User): Promise<void> => {
     console.log("LOGIN TO RAILS START");
 
-    const idToken = await firebaseUser.getIdToken();
+    try {
+      const csrfToken =
+        document.querySelector<HTMLMetaElement>(
+          'meta[name="csrf-token"]'
+        )?.content;
 
-    const response = await fetch("/firebase_login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token":
-          document
-            .querySelector<HTMLMetaElement>('meta[name="csrf-token"]')
-            ?.content || "",
-      },
-      credentials: "same-origin",
-      body: JSON.stringify({ id_token: idToken }),
-    });
+      if (!csrfToken) {
+        throw new Error(
+          "CSRFトークンを取得できませんでした。csrf_meta_tagsを確認してください。"
+        );
+      }
 
-    console.log("Rails login status:", response.status);
+      const idToken = await firebaseUser.getIdToken(true);
 
-    if (response.ok) {
-      //setUser(auth.currentUser);
+      const response = await fetch("/firebase_login", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": csrfToken,
+        },
+        body: JSON.stringify({
+          id_token: idToken,
+        }),
+      });
+
+      console.log("Rails login status:", response.status);
+
+      if (!response.ok) {
+        let errorMessage = "Railsログインに失敗しました。";
+
+        try {
+          const errorData = await response.json();
+
+          if (typeof errorData.error === "string") {
+            errorMessage = errorData.error;
+          }
+        } catch {
+          // レスポンスがJSONでない場合は既定メッセージを使用
+        }
+
+        throw new Error(
+          `${errorMessage} ステータスコード: ${response.status}`
+        );
+      }
+
       setUser(firebaseUser);
       onClose();
       window.location.href = "/mypage";
-      return;
-    } else {
-      alert("Railsログインに失敗しました");
-      return;
-    }
 
+    } catch (error: unknown) {
+      console.error("LOGIN TO RAILS ERROR =", error);
+
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("Railsログイン中に予期しないエラーが発生しました。");
+      }
+
+      throw error;
+    }
   };
 
   return (

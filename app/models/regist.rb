@@ -12,6 +12,9 @@ class Regist < ApplicationRecord
 
   has_many :regists_replies
 
+  FIRST_DOWNLOAD_LIMIT = 10
+  SECOND_DOWNLOAD_LIMIT = 10
+
   validates :name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, length: { maximum: 100 }
   validates :email_confirmation, presence: true, on: :create, length: { maximum: 100 }
@@ -27,6 +30,8 @@ class Regist < ApplicationRecord
 
   has_many :download_logs,
            dependent: :nullify
+
+  belongs_to :regist, optional: true
 
   private
 
@@ -67,6 +72,31 @@ class Regist < ApplicationRecord
 
     # 1通目のメールの送信日時をregist.email_sent_01に保存
     #self.update_column(:email_sent_01, Time.current)
+  end
+
+  def first_downloadable?
+    download_count.to_i < FIRST_DOWNLOAD_LIMIT
+  end
+
+  def second_downloadable?
+    second_download_count.to_i <
+      SECOND_DOWNLOAD_LIMIT
+  end
+
+  def first_remaining_download_count
+    [
+      FIRST_DOWNLOAD_LIMIT -
+        download_count.to_i,
+      0
+    ].max
+  end
+
+  def second_remaining_download_count
+    [
+      SECOND_DOWNLOAD_LIMIT -
+        second_download_count.to_i,
+      0
+    ].max
   end
 
 end

@@ -51,7 +51,9 @@ class DownloadFile < ApplicationRecord
     where(published: true).order(:sort_order, :id)
   }
   has_many :download_logs,
-           dependent: :destroy
+           dependent: :restrict_with_error
+
+  attr_accessor :pdf_file
 
   def downloadable?
     published? &&
@@ -67,6 +69,16 @@ class DownloadFile < ApplicationRecord
     return "-" if file_size.blank?
 
     ActiveSupport::NumberHelper.number_to_human_size(file_size)
+  end
+
+  def physical_file_exists?
+    path.present? &&
+      File.file?(absolute_file_path)
+  end
+
+  def download_limit_reached?
+    download_limit.present? &&
+      download_count.to_i >= download_limit.to_i
   end
 
 end

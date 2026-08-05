@@ -1,0 +1,342 @@
+<br><br>
+
+<div class="bg-wrapper"></div>
+
+<div class="container px-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 25px;">
+
+      <div class="container px-2 px-md-5">
+
+        <div class="d-flex
+                    justify-content-between
+                    align-items-center
+                    my-4">
+
+          <h2 class="mb-0 h4">
+            ダウンロード履歴
+          </h2>
+
+          <%= link_to "管理画面へ戻る",
+                      management_screen_root_path,
+                      class: "btn btn-outline-secondary" %>
+        </div>
+
+        <% if flash[:alert].present? %>
+          <div class="alert alert-danger">
+            <%= flash[:alert] %>
+          </div>
+        <% end %>
+
+        <!-- 集計 -->
+        <div class="row g-3 mb-4">
+
+          <div class="col-12 col-md-6 col-xl-3">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <div class="text-muted mb-2">
+                  本日のダウンロード数
+                </div>
+
+                <div class="fs-2 fw-bold">
+                  <%= number_with_delimiter(
+                        @today_count
+                      ) %>
+                  <span class="fs-6 fw-normal">
+                    回
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-xl-3">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <div class="text-muted mb-2">
+                  今月のダウンロード数
+                </div>
+
+                <div class="fs-2 fw-bold">
+                  <%= number_with_delimiter(
+                        @month_count
+                      ) %>
+                  <span class="fs-6 fw-normal">
+                    回
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-xl-3">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <div class="text-muted mb-2">
+                  総ダウンロード数
+                </div>
+
+                <div class="fs-2 fw-bold">
+                  <%= number_with_delimiter(
+                        @total_count
+                      ) %>
+                  <span class="fs-6 fw-normal">
+                    回
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 col-xl-3">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <div class="text-muted mb-2">
+                  ダウンロード人数
+                </div>
+
+                <div class="fs-2 fw-bold">
+                  <%= number_with_delimiter(
+                        @unique_regist_count
+                      ) %>
+                  <span class="fs-6 fw-normal">
+                    人
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 絞り込み -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-header">
+            履歴の絞り込み
+          </div>
+
+          <div class="card-body">
+            <%= form_with url: management_screen_download_logs_path,
+                          method: :get,
+                          local: true do %>
+
+              <div class="row g-3">
+
+                <div class="col-12 col-md-3">
+                  <%= label_tag :date_from,
+                                "開始日",
+                                class: "form-label" %>
+
+                  <%= date_field_tag :date_from,
+                                     params[:date_from],
+                                     class: "form-control" %>
+                </div>
+
+                <div class="col-12 col-md-3">
+                  <%= label_tag :date_to,
+                                "終了日",
+                                class: "form-label" %>
+
+                  <%= date_field_tag :date_to,
+                                     params[:date_to],
+                                     class: "form-control" %>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <%= label_tag :download_file_id,
+                                "書籍",
+                                class: "form-label" %>
+
+                  <%= select_tag :download_file_id,
+                                 options_from_collection_for_select(
+                                   @download_files,
+                                   :id,
+                                   :name,
+                                   params[:download_file_id]
+                                 ),
+                                 include_blank: "すべての書籍",
+                                 class: "form-select" %>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <%= label_tag :regist_name,
+                                "予約者名",
+                                class: "form-label" %>
+
+                  <%= text_field_tag :regist_name,
+                                     params[:regist_name],
+                                     placeholder: "予約者名を入力",
+                                     class: "form-control" %>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <%= label_tag :email,
+                                "メールアドレス",
+                                class: "form-label" %>
+
+                  <%= text_field_tag :email,
+                                     params[:email],
+                                     placeholder: "メールアドレスを入力",
+                                     class: "form-control" %>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <%= label_tag :ip_address,
+                                "IPアドレス",
+                                class: "form-label" %>
+
+                  <%= text_field_tag :ip_address,
+                                     params[:ip_address],
+                                     placeholder: "IPアドレスを入力",
+                                     class: "form-control" %>
+                </div>
+
+                <div class="col-12">
+                  <div class="d-flex
+                              justify-content-end
+                              gap-2">
+
+                    <%= link_to "条件を解除",
+                                management_screen_download_logs_path,
+                                class: "btn btn-outline-secondary" %>
+
+                    <%= submit_tag "検索",
+                                   class: "btn btn-primary" %>
+                  </div>
+                </div>
+
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <div
+          class="
+            d-flex
+            flex-wrap
+            justify-content-between
+            align-items-center
+            gap-2
+          " 
+          style="padding-top: 30px; padding-bottom: 10px;"
+        >
+          <div class="mb-0">
+            <span style="padding-right: 20px;">
+              表示件数：
+              <%= @download_logs.size %>件
+            </span>
+          </div>
+
+          <span class="text-muted">
+            <%= link_to(
+                  "PDFファイル一覧へ",
+                  management_screen_download_files_path,
+                  class:
+                    "btn btn-light shadow rounded-pill px-4"
+                ) %>
+          </span>
+
+        </div>
+
+        <% if @download_logs.present? %>
+          <div class="table-responsive" style="padding-bottom: 30px;">
+            <table
+              class="
+                table
+                table-striped
+                align-middle
+              "
+            >
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>ダウンロード日時</th>
+                  <th>ファイル名</th>
+                  <th>冊数</th>
+                  <th>予約者</th>
+                  <th>メールアドレス</th>
+                  <th>IPアドレス</th>
+                  <th style="width: 100px;">詳細</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <% @download_logs.each do |log| %>
+                  <tr>
+                    <td>
+                      <%= log.id %>
+                    </td>
+
+                    <td>
+                      <%= l(
+                            log.downloaded_at,
+                            format: :long
+                          ) %>
+                    </td>
+
+                    <td>
+                      <%= log.download_file&.name ||
+                            "削除済み" %>
+                    </td>
+
+                    <td>
+                      <% if log.download_file.present? %>
+                        <%= log.download_file.volume %>冊目
+                      <% else %>
+                        -
+                      <% end %>
+                    </td>
+
+                    <td>
+                      <%= log.regist&.name ||
+                            "登録者不明" %>
+                    </td>
+
+                    <td>
+                      <%= log.regist&.email || "-" %>
+                    </td>
+
+                    <td>
+                      <%= log.ip_address.presence ||
+                            "-" %>
+                    </td>
+
+                    <td>
+                      <% if log.user_agent.present? %>
+                        <% browser = log.user_agent[/Chrome\/[\d\.]+/] %>
+                        <%= browser || "-" %>
+                      <% else %>
+                        -
+                      <% end %>
+                    </td>
+
+                    <td>
+                      <%= link_to(
+                            "詳細",
+                            management_screen_download_log_path(
+                              log
+                            ),
+                            class:
+                              "btn btn-sm btn-info"
+                          ) %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <% if respond_to?(:paginate) %>
+            <div class="mt-4">
+              <%= paginate @download_logs %>
+            </div>
+          <% end %>
+        <% else %>
+          <p>
+            ダウンロード履歴はまだありません。
+          </p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

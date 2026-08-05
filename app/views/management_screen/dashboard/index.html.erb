@@ -1,414 +1,437 @@
 <!-- app/views/management_screen/dashboard/index.html.erb -->
 
-<div class="container-fluid py-4">
-  <div class="d-flex
-              justify-content-between
-              align-items-center
-              flex-wrap
-              gap-2
-              mb-4">
+<div class="bg-wrapper"></div>
 
-    <div>
-      <h1 class="h3 mb-1">
-        管理ダッシュボード
-      </h1>
+<div class="container px-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 25px;">
 
-      <p class="text-muted mb-0">
-        ARIAGUMAの運営状況を確認できます。
-      </p>
-    </div>
+      <div class="container px-2 px-md-5">
+        <div class="d-flex
+                    justify-content-between
+                    align-items-center
+                    flex-wrap
+                    gap-2
+                    mb-4">
 
-    <div class="text-muted">
-      <%= l(
-            Time.current,
-            format: :long
-          ) %>
-    </div>
-  </div>
+          <div>
+            <h1 class="h3 mb-1">
+              管理ダッシュボード
+            </h1>
 
-  <div class="row g-4">
-
-    <!-- 予約人数 -->
-    <div class="col-12 col-md-6 col-xl-4">
-      <div class="card
-                  border-0
-                  shadow-sm
-                  h-100
-                  dashboard-card">
-
-        <div class="card-body p-4">
-          <div class="d-flex
-                      justify-content-between
-                      align-items-start">
-
-            <div>
-              <p class="text-muted mb-2">
-                予約人数
-              </p>
-
-              <p class="display-6
-                        fw-bold
-                        mb-0">
-
-                <%= number_with_delimiter(
-                      @regists_count
-                    ) %>
-
-                <span class="fs-5 fw-normal">
-                  人
-                </span>
-              </p>
-            </div>
-
-            <div class="dashboard-icon">
-              <i class="bi bi-people"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- お問い合わせ未返信 -->
-    <div class="col-12 col-md-6 col-xl-4">
-      <div class="card
-                  border-0
-                  shadow-sm
-                  h-100
-                  dashboard-card">
-
-        <div class="card-body p-4">
-          <div class="d-flex
-                      justify-content-between
-                      align-items-start">
-
-            <div>
-              <p class="text-muted mb-2">
-                お問い合わせ未返信
-              </p>
-
-              <p class="display-6
-                        fw-bold
-                        mb-0">
-
-                <%= number_with_delimiter(
-                      @unanswered_contacts_count
-                    ) %>
-
-                <span class="fs-5 fw-normal">
-                  件
-                </span>
-              </p>
-            </div>
-
-            <div class="dashboard-icon">
-              <i class="bi bi-envelope"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 公開中電子書籍 -->
-    <div class="col-12 col-md-6 col-xl-4">
-      <div class="card
-                  border-0
-                  shadow-sm
-                  h-100
-                  dashboard-card">
-
-        <div class="card-body p-4">
-          <div class="d-flex
-                      justify-content-between
-                      align-items-start">
-
-            <div>
-              <p class="text-muted mb-2">
-                公開中電子書籍
-              </p>
-
-              <p class="display-6
-                        fw-bold
-                        mb-0">
-
-                <%= number_with_delimiter(
-                      @published_books_count
-                    ) %>
-
-                <span class="fs-5 fw-normal">
-                  冊
-                </span>
-              </p>
-            </div>
-
-            <div class="dashboard-icon">
-              <i class="bi bi-book"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 制作中電子書籍 -->
-    <div class="col-12 col-md-6 col-xl-4">
-      <div class="card
-                  border-0
-                  shadow-sm
-                  h-100
-                  dashboard-card">
-
-        <div class="card-body p-4">
-          <div class="d-flex
-                      justify-content-between
-                      align-items-start">
-
-            <div>
-              <p class="text-muted mb-2">
-                制作中
-              </p>
-
-              <p class="display-6
-                        fw-bold
-                        mb-0">
-
-                <%= number_with_delimiter(
-                      @unpublished_books_count
-                    ) %>
-
-                <span class="fs-5 fw-normal">
-                  冊
-                </span>
-              </p>
-            </div>
-
-            <div class="dashboard-icon">
-              <i class="bi bi-pencil-square"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 今日のダウンロード -->
-    <div class="col-12 col-md-6 col-xl-4">
-      <div class="card
-                  border-0
-                  shadow-sm
-                  h-100
-                  dashboard-card">
-
-        <div class="card-body p-4">
-          <div class="d-flex
-                      justify-content-between
-                      align-items-start">
-
-            <div>
-              <p class="text-muted mb-2">
-                今日のダウンロード
-              </p>
-
-              <p class="display-6
-                        fw-bold
-                        mb-0">
-
-                <%= number_with_delimiter(
-                      @today_downloads_count
-                    ) %>
-
-                <span class="fs-5 fw-normal">
-                  回
-                </span>
-              </p>
-            </div>
-
-            <div class="dashboard-icon">
-              <i class="bi bi-download"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 今月のダウンロード -->
-    <div class="col-12 col-md-6 col-xl-4">
-      <div class="card
-                  border-0
-                  shadow-sm
-                  h-100
-                  dashboard-card">
-
-        <div class="card-body p-4">
-          <div class="d-flex
-                      justify-content-between
-                      align-items-start">
-
-            <div>
-              <p class="text-muted mb-2">
-                今月のダウンロード
-              </p>
-
-              <p class="display-6
-                        fw-bold
-                        mb-0">
-
-                <%= number_with_delimiter(
-                      @month_downloads_count
-                    ) %>
-
-                <span class="fs-5 fw-normal">
-                  回
-                </span>
-              </p>
-            </div>
-
-            <div class="dashboard-icon">
-              <i class="bi bi-calendar-month"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="row g-4 mt-1">
-
-    <!-- 最近の予約 -->
-    <div class="col-12 col-lg-6">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-header
-                    bg-white
-                    border-0
-                    py-3">
-
-          <h2 class="h5 mb-0">
-            最近の予約
-          </h2>
-        </div>
-
-        <div class="card-body p-0">
-          <% if @recent_regists.any? %>
-            <div class="table-responsive">
-              <table class="table
-                            table-hover
-                            align-middle
-                            mb-0">
-
-                <thead class="table-light">
-                  <tr>
-                    <th>お名前</th>
-                    <th>メールアドレス</th>
-                    <th>予約日時</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <% @recent_regists.each do |regist| %>
-                    <tr>
-                      <td>
-                        <%= regist.name %>
-                      </td>
-
-                      <td>
-                        <%= regist.email %>
-                      </td>
-
-                      <td>
-                        <%= l(
-                              regist.created_at,
-                              format: :short
-                            ) %>
-                      </td>
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
-            </div>
-          <% else %>
-            <p class="text-muted p-4 mb-0">
-              予約情報はありません。
+            <p class="text-muted mb-0">
+              ARIAGUMAの運営状況を確認できます。
             </p>
-          <% end %>
+
+            <%= l(
+                  Time.current,
+                  format: :long
+                ) %>
+          </div>
+
+          <div class="text-muted">
+            <div class="d-flex flex-wrap justify-content-end gap-2 mb-3">
+
+              <%= link_to "ダウンロード履歴",
+                  management_screen_download_logs_path,
+                  class: "btn shadow rounded-pill px-4 py-3 title-link",
+                  style: "color: #000000; font-size: 10px !important; border:5px solid #000000;" %>
+
+              <%= link_to "登録した電子書籍一覧",
+                  management_screen_download_files_path,
+                  class: "btn shadow rounded-pill px-4 py-3 title-link",
+                  style: "color: #000000; font-size: 10px !important; border:5px solid #000000;" %>
+
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- 最近のお問い合わせ -->
-    <div class="col-12 col-lg-6">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-header
-                    bg-white
-                    border-0
-                    py-3">
+        <div class="row g-4">
 
-          <h2 class="h5 mb-0">
-            最近のお問い合わせ
-          </h2>
+          <!-- 予約人数 -->
+          <div class="col-12 col-md-6 col-xl-4">
+            <div class="card
+                        border-0
+                        shadow-sm
+                        h-100
+                        dashboard-card">
+
+              <div class="card-body p-4">
+                <div class="d-flex
+                            justify-content-between
+                            align-items-start">
+
+                  <div>
+                    <p class="text-muted mb-2">
+                      予約人数
+                    </p>
+
+                    <p class="display-6
+                              fw-bold
+                              mb-0">
+
+                      <%= number_with_delimiter(
+                            @regists_count
+                          ) %>
+
+                      <span class="fs-5 fw-normal">
+                        人
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="dashboard-icon">
+                    <i class="bi bi-people"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- お問い合わせ未返信 -->
+          <div class="col-12 col-md-6 col-xl-4">
+            <div class="card
+                        border-0
+                        shadow-sm
+                        h-100
+                        dashboard-card">
+
+              <div class="card-body p-4">
+                <div class="d-flex
+                            justify-content-between
+                            align-items-start">
+
+                  <div>
+                    <p class="text-muted mb-2">
+                      お問い合わせ未返信
+                    </p>
+
+                    <p class="display-6
+                              fw-bold
+                              mb-0">
+
+                      <%= number_with_delimiter(
+                            @unanswered_contacts_count
+                          ) %>
+
+                      <span class="fs-5 fw-normal">
+                        件
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="dashboard-icon">
+                    <i class="bi bi-envelope"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 公開中電子書籍 -->
+          <div class="col-12 col-md-6 col-xl-4">
+            <div class="card
+                        border-0
+                        shadow-sm
+                        h-100
+                        dashboard-card">
+
+              <div class="card-body p-4">
+                <div class="d-flex
+                            justify-content-between
+                            align-items-start">
+
+                  <div>
+                    <p class="text-muted mb-2">
+                      公開中電子書籍
+                    </p>
+
+                    <p class="display-6
+                              fw-bold
+                              mb-0">
+
+                      <%= number_with_delimiter(
+                            @published_books_count
+                          ) %>
+
+                      <span class="fs-5 fw-normal">
+                        冊
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="dashboard-icon">
+                    <i class="bi bi-book"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 制作中電子書籍 -->
+          <div class="col-12 col-md-6 col-xl-4">
+            <div class="card
+                        border-0
+                        shadow-sm
+                        h-100
+                        dashboard-card">
+
+              <div class="card-body p-4">
+                <div class="d-flex
+                            justify-content-between
+                            align-items-start">
+
+                  <div>
+                    <p class="text-muted mb-2">
+                      制作中
+                    </p>
+
+                    <p class="display-6
+                              fw-bold
+                              mb-0">
+
+                      <%= number_with_delimiter(
+                            @unpublished_books_count
+                          ) %>
+
+                      <span class="fs-5 fw-normal">
+                        冊
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="dashboard-icon">
+                    <i class="bi bi-pencil-square"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 今日のダウンロード -->
+          <div class="col-12 col-md-6 col-xl-4">
+            <div class="card
+                        border-0
+                        shadow-sm
+                        h-100
+                        dashboard-card">
+
+              <div class="card-body p-4">
+                <div class="d-flex
+                            justify-content-between
+                            align-items-start">
+
+                  <div>
+                    <p class="text-muted mb-2">
+                      今日のダウンロード
+                    </p>
+
+                    <p class="display-6
+                              fw-bold
+                              mb-0">
+
+                      <%= number_with_delimiter(
+                            @today_downloads_count
+                          ) %>
+
+                      <span class="fs-5 fw-normal">
+                        回
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="dashboard-icon">
+                    <i class="bi bi-download"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 今月のダウンロード -->
+          <div class="col-12 col-md-6 col-xl-4">
+            <div class="card
+                        border-0
+                        shadow-sm
+                        h-100
+                        dashboard-card">
+
+              <div class="card-body p-4">
+                <div class="d-flex
+                            justify-content-between
+                            align-items-start">
+
+                  <div>
+                    <p class="text-muted mb-2">
+                      今月のダウンロード
+                    </p>
+
+                    <p class="display-6
+                              fw-bold
+                              mb-0">
+
+                      <%= number_with_delimiter(
+                            @month_downloads_count
+                          ) %>
+
+                      <span class="fs-5 fw-normal">
+                        回
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="dashboard-icon">
+                    <i class="bi bi-calendar-month"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        <div class="card-body p-0">
-          <% if @recent_contacts.any? %>
-            <div class="table-responsive">
-              <table class="table
-                            table-hover
-                            align-middle
-                            mb-0">
+        <div class="row g-4 mt-1">
 
-                <thead class="table-light">
-                  <tr>
-                    <th>件名</th>
-                    <th>お名前</th>
-                    <th>状態</th>
-                    <th>受信日時</th>
-                  </tr>
-                </thead>
+          <!-- 最近の予約 -->
+          <div class="col-12 col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-header
+                          bg-white
+                          border-0
+                          py-3">
 
-                <tbody>
-                  <% @recent_contacts.each do |contact| %>
-                    <tr>
-                      <td>
-                        <%= truncate(
-                              contact.subject,
-                              length: 25
-                            ) %>
-                      </td>
+                <h2 class="h5 mb-0">
+                  最近の予約
+                </h2>
+              </div>
 
-                      <td>
-                        <%= contact.name %>
-                      </td>
+              <div class="card-body p-0">
+                <% if @recent_regists.any? %>
+                  <div class="table-responsive">
+                    <table class="table
+                                  table-hover
+                                  align-middle
+                                  mb-0">
 
-                      <td>
-                        <% if contact.reply_time.present? %>
-                          <span class="badge
-                                       text-bg-secondary">
-                            返信済
-                          </span>
-                        <% else %>
-                          <span class="badge
-                                       text-bg-danger">
-                            未返信
-                          </span>
+                      <thead class="table-light">
+                        <tr>
+                          <th>お名前</th>
+                          <th>メールアドレス</th>
+                          <th>予約日時</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <% @recent_regists.each do |regist| %>
+                          <tr>
+                            <td>
+                              <%= regist.name %>
+                            </td>
+
+                            <td>
+                              <%= regist.email %>
+                            </td>
+
+                            <td>
+                              <%= l(
+                                    regist.created_at,
+                                    format: :short
+                                  ) %>
+                            </td>
+                          </tr>
                         <% end %>
-                      </td>
-
-                      <td>
-                        <%= l(
-                              contact.created_at,
-                              format: :short
-                            ) %>
-                      </td>
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
+                      </tbody>
+                    </table>
+                  </div>
+                <% else %>
+                  <p class="text-muted p-4 mb-0">
+                    予約情報はありません。
+                  </p>
+                <% end %>
+              </div>
             </div>
-          <% else %>
-            <p class="text-muted p-4 mb-0">
-              お問い合わせはありません。
-            </p>
-          <% end %>
+          </div>
+
+          <!-- 最近のお問い合わせ -->
+          <div class="col-12 col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-header
+                          bg-white
+                          border-0
+                          py-3">
+
+                <h2 class="h5 mb-0">
+                  最近のお問い合わせ
+                </h2>
+              </div>
+
+              <div class="card-body p-0">
+                <% if @recent_contacts.any? %>
+                  <div class="table-responsive">
+                    <table class="table
+                                  table-hover
+                                  align-middle
+                                  mb-0">
+
+                      <thead class="table-light">
+                        <tr>
+                          <th>件名</th>
+                          <th>お名前</th>
+                          <th>状態</th>
+                          <th>受信日時</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <% @recent_contacts.each do |contact| %>
+                          <tr>
+                            <td>
+                              <%= truncate(
+                                    contact.subject,
+                                    length: 25
+                                  ) %>
+                            </td>
+
+                            <td>
+                              <%= contact.name %>
+                            </td>
+
+                            <td>
+                              <% if contact.reply_time.present? %>
+                                <span class="badge
+                                             text-bg-secondary">
+                                  返信済
+                                </span>
+                              <% else %>
+                                <span class="badge
+                                             text-bg-danger">
+                                  未返信
+                                </span>
+                              <% end %>
+                            </td>
+
+                            <td>
+                              <%= l(
+                                    contact.created_at,
+                                    format: :short
+                                  ) %>
+                            </td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                <% else %>
+                  <p class="text-muted p-4 mb-0">
+                    お問い合わせはありません。
+                  </p>
+                <% end %>
+                <br><br><br><br><br><br><br><br>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>

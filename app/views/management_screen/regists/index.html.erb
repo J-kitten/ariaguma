@@ -2,264 +2,269 @@
 
 <div class="bg-wrapper"></div>
 
-<div class="container my-4 custom-padding table-responsive mt-5">
+<div class="container px-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-11" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px;">
+      <div class="container px-2 px-md-5">
 
-<br><br>
-  <table>
-    <tr>
-      <td>
-        <div class="mb-2 font-custom">
-          <%= link_to "全件表示 #{@all_regists_count} 件", management_screen_regists_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dcf8f9; line-height: 2; font-size: 0.8rem !important;" %>
-        </div>
-      </td>
-      <td>
-        <div class="mb-2 font-custom">
-          <%= link_to "ゴミ箱表示 #{@trash_count} 件", trash_management_screen_regists_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dcf8f9; line-height: 2; font-size: 0.8rem !important;" %>
-        <div>
-      </td>
-      <td>
-        <div class="mb-2 font-custom">
-          <%= link_to "未読メッセージを見る #{@unread_count} 件", unread_management_screen_regists_path(unread: 0), class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dcf8f9; line-height: 2; font-size: 0.8rem !important;" %>
-        <div>
-      </td>
-      <td>
-        <div class="mb-2 font-custom">
-          <%= link_to "既読メッセージを見る #{@read_count} 件", readed_management_screen_regists_path(unread: 1), class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dcf8f9; line-height: 2; font-size: 0.8rem !important;" %>
-        </div>
-      </td>
-      <td>
-        <% if params[:query].present? && @total_count.to_i >= 0 %>
-          <div style="top-margin: 5;">
-            &nbsp;<span class="mb-2 font-custom">検索結果 <%= @total_count %> 件</span>
-          </div>
-        <% end %>
-      </td>
-    </tr>
-  </table>
-
-  <%= form_with url: search_management_screen_regists_path, method: :get, class: "mb-2 position-relative", html: { novalidate: true }, local: true do |f| %>
-    <div style="position: relative;">
-      <%= f.text_field :query,
-        id: "search_query",
-        value: params[:query],
-        maxlength: 80,
-        class: "form-control rounded-pill shadow noto-serif-jp-extra-light",
-        placeholder: "検索ワードを入力",
-        autocomplete: "off",
-        style: "padding-left: 20px; padding-right: 80px; height: 40px; font-size: 1rem; border: none; box-shadow: none; background-color: rgba(255, 255, 255, 0.8);" %>
-
-      <!-- 検索ボタンを右端に固定配置 -->
-      <button type="submit"
-              class="btn shadow rounded-pill noto-serif-jp-extra-light btn-white-search-hover"
-              style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); height: 40px; font-size: 0.8rem; padding-left: 15px; padding-right: 15px; background-color: #eaeaf9;">
-        検索
-      </button>
-    </div>
-
-    <!-- クリアボタン -->
-    <button type="button" id="clear_query"
-            class="btn shadow rounded-pill btn-white-search-hover noto-serif-jp-extra-light"
-            title="クリア"
-            style="position: absolute; right: 50px; top: 50%; transform: translateY(-50%); height: 40px; font-size: 0.8rem; padding-left: 15px; padding-right: 15px; background-color: #eaeaf9;">
-      &times;
-    </button>
-
-  <% end %>
-
-  <% if flash[:notice] %>
-    <div class="alert noto-serif-jp-extra-light shadow" style="background-color: #000000 !important; color: #ffffff !important; font-size: 1rem; !important">
-      <%= flash[:notice] %>
-    </div>
-  <% end %>
-
-  <% if flash[:alert] %>
-    <div class="alert font shadow" style="background-color: #000000; color: #ffffff !important; font-size: 1rem !important;">
-      <%= flash[:alert] %>
-    </div>
-  <% end %>
-
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h6 class="noto-serif-jp-extra-light rounded rounded-pill d-inline-block py-3 px-3 p-3 mb-0 font-custom"
-        style="background-color: #eaeaf9;">
-      予約希望者 一覧 > 全件表示
-    </h6>
-    <%= button_tag "更新",
-      type: "button",
-      class: "noto-serif-jp-extra-light shadow rounded rounded-pill py-3 px-3 font-custom border-0 btn-white-search-hover",
-      style: "background-color: #eaeaf9;",
-      onclick: "location.reload();" %>
-  </div>
-
-  <%= form_with url: multiple_management_screen_regists_path, method: :post, local: true do |f| %>
-
-    <div style="background-color: rgba(255,255,255,0.8);  padding: 10px; border-radius: 10px;">
-    <table class="table table-hover noto-serif-jp-extra-light">
-      <thead>
-        <tr>
-          <td></td>
-          <td>ID</td>
-          <td>お名前</td>
-          <td>DownLoad数</td>
-          <td>1冊目送信</td><!-- ariaguma.jpからの送信日時をupdate-->
-          <td>2冊目希望</td>
-          <td>2冊目送信</td><!-- ariaguma.jpからの送信日時をupdate-->
-          <td>予約登録日時</td>
-          <td>お問合せ</td>
-        </tr>
-      </thead>
-      <tbody>
-        <% @regists.each do |regist| %>
-          <tr id="regist-<%= regist.id %>" class="<%= 'fw-bold' unless regist.unread %>">
-            <td><%= check_box_tag "regist_ids[]", regist.id, false, class: "form-check-input shadow" %></td>
-            <td style="color: #7d7d7d; font-size: 1rem !important;">
-              <%= link_to "#",
-                onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
-                class: "text-decoration-none",
-                style: "color: #7d7d7d;" do %>
-                <%= regist.id %>
-              <% end %>
+        <br><br>
+        <table>
+          <tr>
+            <td>
+              <div class="mb-2 font-custom">
+                <%= link_to "全件表示 #{@all_regists_count} 件", management_screen_regists_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dcf8f9; line-height: 2; font-size: 0.8rem !important;" %>
+              </div>
             </td>
-            <td style="color: #7d7d7d; font-size: 1rem !important;">
-              <%= link_to "#",
-                onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
-                class: "text-decoration-none",
-                style: "color: #7d7d7d;" do %>
-                <%= regist.name %>
-              <% end %>
+            <td>
+              <div class="mb-2 font-custom">
+                <%= link_to "ゴミ箱表示 #{@trash_count} 件", trash_management_screen_regists_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dcf8f9; line-height: 2; font-size: 0.8rem !important;" %>
+              <div>
             </td>
-            <td style="font-size: 1rem !important;">
-              <%= link_to "#",
-                onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
-                class: "text-decoration-none",
-                style: "color: #7d7d7d;" do %>
-                <%= regist.downloaded %> FILE
-              <% end %>
+            <td>
+              <div class="mb-2 font-custom">
+                <%= link_to "未読メッセージを見る #{@unread_count} 件", unread_management_screen_regists_path(unread: 0), class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dcf8f9; line-height: 2; font-size: 0.8rem !important;" %>
+              <div>
             </td>
-            <td style="font-size: 1rem !important;">
-              <%= link_to "#",
-                onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
-                class: "text-decoration-none",
-                style: "color: #7d7d7d;" do %>
-                <% if regist.email_sent_01.present? %>
-                  送信済<br><%= l(regist.email_sent_01, format: :short) %>
-                <% else %>
-                  未送信
-                <% end %>
-              <% end %>
+            <td>
+              <div class="mb-2 font-custom">
+                <%= link_to "既読メッセージを見る #{@read_count} 件", readed_management_screen_regists_path(unread: 1), class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover my-button-blue", style: "background-color:#dcf8f9; line-height: 2; font-size: 0.8rem !important;" %>
+              </div>
             </td>
-            <td style="font-size: 1rem !important;">
-              <%= link_to "#",
-                onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
-                class: "text-decoration-none",
-                style: "color: #7d7d7d;" do %>
-                <% if regist.subscribed == true %>
-                  希望あり
-                <% end %>
-                <% if regist.subscribed == false %>
-                  希望なし
-                <% end %>
-              <% end %>
-            </td>
-            <td style="font-size: 1rem !important;">
-              <%= link_to "#",
-                onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
-                class: "text-decoration-none",
-                style: "color: #7d7d7d;" do %>
-                <% if regist.email_sent_02.present? %>
-                  送信済<br><%= l(regist.email_sent_02, format: :short) %>
-                <% else %>
-                  未送信
-                <% end %>
-              <% end %>
-            </td>
-            <td style="font-size: 1rem !important;">
-              <%= link_to "#",
-                onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
-                class: "text-decoration-none",
-                style: "color: #7d7d7d;" do %>
-                <%= l(regist.created_at, format: :short) %>
-              <% end %>
-            </td>
-            <td style="font-size: 1rem !important;">
-              <% if @related_contact_email_hashes.include?(regist.email_hash) %>
-                <%= link_to "履歴一覧", thread_management_screen_regists_path(query: regist.email), class: "btn btn-sm shadow noto-serif-jp-extra-light btn-hover rounded-pill px-4 py-2 my-button-blue", style: "background-color:#001a59; color: #f0eee0; font-size: 0.9rem !important; line-height: 2;" %>
-             <% else %>
-                <!-- お問合せなしのとき -->
-                <span style: "color: #7d7d7d;">－</span>
+            <td>
+              <% if params[:query].present? && @total_count.to_i >= 0 %>
+                <div style="top-margin: 5;">
+                  &nbsp;<span class="mb-2 font-custom">検索結果 <%= @total_count %> 件</span>
+                </div>
               <% end %>
             </td>
           </tr>
+        </table>
+
+        <%= form_with url: search_management_screen_regists_path, method: :get, class: "mb-2 position-relative", html: { novalidate: true }, local: true do |f| %>
+          <div style="position: relative;">
+            <%= f.text_field :query,
+              id: "search_query",
+              value: params[:query],
+              maxlength: 80,
+              class: "form-control rounded-pill shadow noto-serif-jp-extra-light",
+              placeholder: "検索ワードを入力",
+              autocomplete: "off",
+              style: "padding-left: 20px; padding-right: 80px; height: 40px; font-size: 1rem; border: none; box-shadow: none; background-color: rgba(255, 255, 255, 0.8);" %>
+
+            <!-- 検索ボタンを右端に固定配置 -->
+            <button type="submit"
+                    class="btn shadow rounded-pill noto-serif-jp-extra-light btn-white-search-hover"
+                    style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); height: 40px; font-size: 0.8rem; padding-left: 15px; padding-right: 15px; background-color: #eaeaf9;">
+              検索
+            </button>
+          </div>
+
+          <!-- クリアボタン -->
+          <button type="button" id="clear_query"
+                  class="btn shadow rounded-pill btn-white-search-hover noto-serif-jp-extra-light"
+                  title="クリア"
+                  style="position: absolute; right: 50px; top: 50%; transform: translateY(-50%); height: 40px; font-size: 0.8rem; padding-left: 15px; padding-right: 15px; background-color: #eaeaf9;">
+            &times;
+          </button>
+
         <% end %>
-      </tbody>
-    </table>
+
+        <% if flash[:notice] %>
+          <div class="alert noto-serif-jp-extra-light shadow" style="background-color: #000000 !important; color: #ffffff !important; font-size: 1rem; !important">
+            <%= flash[:notice] %>
+          </div>
+        <% end %>
+
+        <% if flash[:alert] %>
+          <div class="alert font shadow" style="background-color: #000000; color: #ffffff !important; font-size: 1rem !important;">
+            <%= flash[:alert] %>
+          </div>
+        <% end %>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="noto-serif-jp-extra-light rounded rounded-pill d-inline-block py-3 px-3 p-3 mb-0 font-custom"
+              style="background-color: #eaeaf9;">
+            予約希望者 一覧 > 全件表示
+          </h6>
+          <%= button_tag "更新",
+            type: "button",
+            class: "noto-serif-jp-extra-light shadow rounded rounded-pill py-3 px-3 font-custom border-0 btn-white-search-hover",
+            style: "background-color: #eaeaf9;",
+            onclick: "location.reload();" %>
+        </div>
+
+        <%= form_with url: multiple_management_screen_regists_path, method: :post, local: true do |f| %>
+
+          <div style="background-color: rgba(255,255,255,0.8);  padding: 10px; border-radius: 10px;">
+          <table class="table table-hover noto-serif-jp-extra-light">
+            <thead>
+              <tr>
+                <td></td>
+                <td>ID</td>
+                <td>お名前</td>
+                <td>DownLoad数</td>
+                <td>1冊目送信</td><!-- ariaguma.jpからの送信日時をupdate-->
+                <td>2冊目希望</td>
+                <td>2冊目送信</td><!-- ariaguma.jpからの送信日時をupdate-->
+                <td>予約登録日時</td>
+                <td>お問合せ</td>
+              </tr>
+            </thead>
+            <tbody>
+              <% @regists.each do |regist| %>
+                <tr id="regist-<%= regist.id %>" class="<%= 'fw-bold' unless regist.unread %>">
+                  <td><%= check_box_tag "regist_ids[]", regist.id, false, class: "form-check-input shadow" %></td>
+                  <td style="color: #7d7d7d; font-size: 1rem !important;">
+                    <%= link_to "#",
+                      onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                      class: "text-decoration-none",
+                      style: "color: #7d7d7d;" do %>
+                      <%= regist.id %>
+                    <% end %>
+                  </td>
+                  <td style="color: #7d7d7d; font-size: 1rem !important;">
+                    <%= link_to "#",
+                      onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                      class: "text-decoration-none",
+                      style: "color: #7d7d7d;" do %>
+                      <%= regist.name %>
+                    <% end %>
+                  </td>
+                  <td style="font-size: 1rem !important;">
+                    <%= link_to "#",
+                      onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                      class: "text-decoration-none",
+                      style: "color: #7d7d7d;" do %>
+                      <%= regist.download_count %> FILE
+                    <% end %>
+                  </td>
+                  <td style="font-size: 1rem !important;">
+                    <%= link_to "#",
+                      onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                      class: "text-decoration-none",
+                      style: "color: #7d7d7d;" do %>
+                      <% if regist.email_sent_01.present? %>
+                        送信済<br><%= l(regist.email_sent_01, format: :short) %>
+                      <% else %>
+                        未送信
+                      <% end %>
+                    <% end %>
+                  </td>
+                  <td style="font-size: 1rem !important;">
+                    <%= link_to "#",
+                      onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                      class: "text-decoration-none",
+                      style: "color: #7d7d7d;" do %>
+                      <% if regist.subscribed == true %>
+                        希望あり
+                      <% end %>
+                      <% if regist.subscribed == false %>
+                        希望なし
+                      <% end %>
+                    <% end %>
+                  </td>
+                  <td style="font-size: 1rem !important;">
+                    <%= link_to "#",
+                      onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                      class: "text-decoration-none",
+                      style: "color: #7d7d7d;" do %>
+                      <% if regist.email_sent_02.present? %>
+                        送信済<br><%= l(regist.email_sent_02, format: :short) %>
+                      <% else %>
+                        未送信
+                      <% end %>
+                    <% end %>
+                  </td>
+                  <td style="font-size: 1rem !important;">
+                    <%= link_to "#",
+                      onclick: "markAsRead(#{regist.id}, 'regists', 'all_contacts', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
+                      class: "text-decoration-none",
+                      style: "color: #7d7d7d;" do %>
+                      <%= l(regist.created_at, format: :short) %>
+                    <% end %>
+                  </td>
+                  <td style="font-size: 1rem !important;">
+                    <% if @related_contact_email_hashes.include?(regist.email_hash) %>
+                      <%= link_to "履歴一覧", thread_management_screen_regists_path(query: regist.email), class: "btn btn-sm shadow noto-serif-jp-extra-light btn-hover rounded-pill px-4 py-2 my-button-blue", style: "background-color:#001a59; color: #f0eee0; font-size: 0.9rem !important; line-height: 2;" %>
+                   <% else %>
+                      <!-- お問合せなしのとき -->
+                      <span style: "color: #7d7d7d;">－</span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          </div>
+
+          <table border=0 class="table table-sm">
+            <tr>
+              <td>
+                <div class="d-flex gap-2">
+                  <%= f.submit "ゴミ箱へ",
+                        type: "submit",
+                        formaction: multiple_management_screen_regists_path,
+                        formmethod: "post",
+                        name: "action_type",
+                        value: "Destroy",
+                        class: "btn shadow btn-download rounded-pill px-4 py-2 btn-pink-hover noto-serif-jp-extra-light",
+                        data: { turbo_confirm: "本当にゴミ箱に捨てますか？" },
+                        style: "background-color: #cc0066; color: #ffffff; font-size: 0.8rem !important; line-height: 2;" %>
+
+                  <%= f.submit "既読にする",
+                        formaction: multiple_management_screen_regists_path,
+                        type: "submit",
+                        formmethod: "post",
+                        name: "action_type",
+                        value: "Read",
+                        class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover noto-serif-jp-extra-light my-button-blue",
+                        style: "background-color:#dcf8f9; font-size: 0.8rem !important; line-height: 2;" %>
+
+                  <%= f.submit "未読にする",
+                        formaction: multiple_management_screen_regists_path,
+                        formmethod: "post",
+                        type: "submit",
+                        name: "action_type",
+                        value: "Unread",
+                        class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover noto-serif-jp-extra-light my-button-blue",
+                        style: "background-color:#dcf8f9; font-size: 0.8rem !important; line-height: 2;" %>
+                </div>
+              </td>
+
+              <!-- ページング Start -->
+              <td class="text-end" colspan="0">
+                <div class="d-flex justify-content-end">
+                  <% if @current_page && @total_pages %>
+                    <nav>
+                      <ul class="pagination shadow">
+                        <% if @current_page > 1 %>
+                          <li class="page-item">
+                            <%= link_to '← Previous', url_for(params.permit(:query).merge(page: @current_page - 1)), class: "page-link", style: "font-size: 0.8rem !important; line-height: 2;" %>
+                          </li>
+                        <% end %>
+
+                        <% (1..@total_pages).each do |i| %>
+                          <li class="page-item <%= 'active' if i == @current_page %>">
+                            <%= link_to i, request.path + "?page=#{i}#{params[:query].present? ? "&query=#{params[:query]}" : ''}", class: "page-link", style: "font-size: 0.8rem !important; line-height: 2;" %>
+                          </li>
+                        <% end %>
+
+                        <% if @current_page < @total_pages %>
+                          <li class="page-item">
+                            <%= link_to 'Next →', url_for(params.permit(:query).merge(page: @current_page + 1)), class: "page-link", style: "font-size: 0.8rem !important; line-height: 2;" %>
+                          </li>
+                        <% end %>
+                      </ul>
+                    </nav>
+                  <% end %>
+                </div>
+              </td>
+              <!-- ページング End -->
+            </tr>
+          </table>
+        <% end %>
+      </div>
     </div>
-
-    <table border=0 class="table table-sm">
-      <tr>
-        <td>
-          <div class="d-flex gap-2">
-            <%= f.submit "ゴミ箱へ",
-                  type: "submit",
-                  formaction: multiple_management_screen_regists_path,
-                  formmethod: "post",
-                  name: "action_type",
-                  value: "Destroy",
-                  class: "btn shadow btn-download rounded-pill px-4 py-2 btn-pink-hover noto-serif-jp-extra-light",
-                  data: { turbo_confirm: "本当にゴミ箱に捨てますか？" },
-                  style: "background-color: #cc0066; color: #ffffff; font-size: 0.8rem !important; line-height: 2;" %>
-
-            <%= f.submit "既読にする",
-                  formaction: multiple_management_screen_regists_path,
-                  type: "submit",
-                  formmethod: "post",
-                  name: "action_type",
-                  value: "Read",
-                  class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover noto-serif-jp-extra-light my-button-blue",
-                  style: "background-color:#dcf8f9; font-size: 0.8rem !important; line-height: 2;" %>
-
-            <%= f.submit "未読にする",
-                  formaction: multiple_management_screen_regists_path,
-                  formmethod: "post",
-                  type: "submit",
-                  name: "action_type",
-                  value: "Unread",
-                  class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover noto-serif-jp-extra-light my-button-blue",
-                  style: "background-color:#dcf8f9; font-size: 0.8rem !important; line-height: 2;" %>
-          </div>
-        </td>
-
-        <!-- ページング Start -->
-        <td class="text-end" colspan="0">
-          <div class="d-flex justify-content-end">
-            <% if @current_page && @total_pages %>
-              <nav>
-                <ul class="pagination shadow">
-                  <% if @current_page > 1 %>
-                    <li class="page-item">
-                      <%= link_to '← Previous', url_for(params.permit(:query).merge(page: @current_page - 1)), class: "page-link", style: "font-size: 0.8rem !important; line-height: 2;" %>
-                    </li>
-                  <% end %>
-
-                  <% (1..@total_pages).each do |i| %>
-                    <li class="page-item <%= 'active' if i == @current_page %>">
-                      <%= link_to i, request.path + "?page=#{i}#{params[:query].present? ? "&query=#{params[:query]}" : ''}", class: "page-link", style: "font-size: 0.8rem !important; line-height: 2;" %>
-                    </li>
-                  <% end %>
-
-                  <% if @current_page < @total_pages %>
-                    <li class="page-item">
-                      <%= link_to 'Next →', url_for(params.permit(:query).merge(page: @current_page + 1)), class: "page-link", style: "font-size: 0.8rem !important; line-height: 2;" %>
-                    </li>
-                  <% end %>
-                </ul>
-              </nav>
-            <% end %>
-          </div>
-        </td>
-        <!-- ページング End -->
-      </tr>
-    </table>
-
-  <% end %>
+  </div>
 </div>
 

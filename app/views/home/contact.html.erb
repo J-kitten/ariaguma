@@ -3,114 +3,114 @@
 
 <div class="bg-wrapper"></div>
 
-<br>
+<div class="container px-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px;">
+      <div class="noto-serif-jp-extra-light container px-2 px-md-5">
+        <div style="font-size: 16px;">
+          <img src="<%= asset_path('diamond.png') %>" style="height: 30px; width: 30px; margin-bottom: 5px; opacity: 0.7;"> お問合せ
 
-<div class="container noto-serif-jp-extra-light px-4">
-  <div style="display: flex; justify-content: center;" class="table-responsive">
-    <div class="col-md-10 col-lg-8" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px;">
-      <div style="font-size: 16px;">
-        <img src="<%= asset_path('diamond.png') %>" style="height: 30px; width: 30px; margin-bottom: 5px; opacity: 0.7;"> お問合せ
+        <h6 class="noto-serif-jp-extra-light rounded-pill px-4 py-2" style="font-size:11px;">
+        お問合せは、お名前・メールアドレス・メールアドレス（確認）・件名へのご入力、<br>
+        また、メッセージ（お問合せ）をご入力後、送信してください。<br><br>
+        ARIAGUMA GROUP ＆ 白蓮ゆりGROUP 宛</h6>
 
-      <h6 class="noto-serif-jp-extra-light rounded-pill px-4 py-2" style="font-size:11px;">
-      お問合せは、お名前・メールアドレス・メールアドレス（確認）・件名へのご入力、<br>
-      また、メッセージ（お問合せ）をご入力後、送信してください。<br><br>
-      ARIAGUMA GROUP ＆ 白蓮ゆりGROUP 宛</h6>
-
-      <% if flash[:admin_notice] %>
-        <div class="noto-serif-jp-extra-light alert" style="background-color: #000000 !important; font-size: 9px; color: #ffffff;"><%= flash[:admin_notice].html_safe %></div>
-      <% end %>
-
-      <% if flash[:admin_alert] %>
-        <div class="noto-serif-jp-extra-light alert" style="background-color: #000000 !important; font-size: 9px; color: #ffffff;"><%= flash[:admin_alert].html_safe %></div>
-      <% end %>
-
-      <div class="container noto-serif-jp-extra-light mt-4">
-        <%= form_with model: @contact, url: contacts_path, local: true, data: { turbo: false } do |form| %>
-
-          <!-- お名前 -->
-          <div class="mb-3 row">
-            <label class="col-sm-4 col-form-label text-md-end" style="font-size:11px;">お名前（必須）</label>
-            <div class="col-sm-8">
-              <%= form.text_field :name, 
-                    class: "form-control #{'is-invalid' if @contact.errors[:name].any?}", 
-                    placeholder: "佐藤 まよ",
-                    style: "width: 250px"
-              %>
-              <% if @contact.errors[:name].any? %>
-                <div class="text-danger small mt-1" style="font-size: 1rem">① <%= @contact.errors.full_messages_for(:name).first %></div>
-              <% end %>
-            </div>
-          </div>
-
-          <!-- メールアドレス -->
-          <div class="mb-3 row">
-            <label class="col-sm-4 col-form-label text-md-end" style="font-size:11px;">メールアドレス（必須）</label>
-            <div class="col-sm-8">
-              <%= form.email_field :email, 
-                    class: "form-control #{'is-invalid' if @contact.errors[:email].any?}", 
-                    placeholder: "contact@ariaguma.jp",
-                    style: "width: 250px"
-              %>
-              <% if @contact.errors[:email].any? %>
-                <div class="text-danger small mt-1" style="font-size: 0.9rem">② <%= @contact.errors.full_messages_for(:email).first %></div>
-              <% end %>
-            </div>
-          </div>
-
-          <!-- メールアドレス確認 -->
-          <div class="mb-3 row">
-            <label class="col-sm-4 col-form-label text-md-end" style="font-size:11px;">メールアドレス 確認用（必須）</label>
-            <div class="col-sm-8">
-              <%= form.email_field :email_confirmation, 
-                    class: "form-control #{'is-invalid' if @contact.errors[:email_confirmation].any?}", 
-                    placeholder: "確認のため、もう一度入力してください",
-                    style: "width: 250px"
-              %>
-              <% if @contact.errors[:email_confirmation].any? %>
-                <div class="text-danger small mt-1" style="font-size: 0.8rem">③ <%= @contact.errors.full_messages_for(:email_confirmation).first %></div>
-              <% end %>
-            </div>
-          </div>
-
-          <!-- 件名 -->
-          <div class="mb-3 row">
-            <label class="col-sm-4 col-form-label text-md-end" style="font-size:11px;">件名</label>
-            <div class="col-sm-8">
-              <%= form.text_field :subject, 
-                    class: "form-control #{'is-invalid' if @contact.errors[:subject].any?}", 
-                    placeholder: "ご質問・ご要望など" %>
-              <% if @contact.errors[:subject].any? %>
-                <div class="text-danger small mt-1" style="font-size: 0.8rem">④ <%= @contact.errors.full_messages_for(:subject).first %></div>
-              <% end %>
-            </div>
-          </div>
-
-          <!-- メッセージ -->
-          <div class="mb-1 row">
-            <label class="col-sm-12 col-form-label" style="font-size:11px;">メッセージ（必須）
-              <% if @contact.errors[:message].any? %>
-                <span class="text-danger small" style="font-size: 0.7rem">⑤ <%= @contact.errors.full_messages_for(:message).first %></span>
-              <% end %>
-            </label>
-          </div>
-          <div class="mb-4 row">
-            <div class="col-sm-12">
-              <%= form.text_area :message, 
-                    rows: 10, 
-                    class: "form-control #{'is-invalid' if @contact.errors[:message].any?}", 
-                    placeholder: "こちらにメッセージをご記入ください。" %>
-            </div>
-          </div>
-
-          <!-- 送信ボタン -->
-          <div class="text-end">
-            <%= form.submit "　送 信　", 
-                class: "btn btn-sm noto-serif-jp-extra-light btn-hover rounded-pill px-4 py-4 my-button-blue shadow", 
-                style: "background-color:#001a59; color:#f0eee0; font-size: 10px; width: 150px;" %>
-          </div>
-          <br>
+        <% if flash[:admin_notice] %>
+          <div class="noto-serif-jp-extra-light alert" style="background-color: #000000 !important; font-size: 9px; color: #ffffff;"><%= flash[:admin_notice].html_safe %></div>
         <% end %>
-        <br><br><br><br><br><br>
+
+        <% if flash[:admin_alert] %>
+          <div class="noto-serif-jp-extra-light alert" style="background-color: #000000 !important; font-size: 9px; color: #ffffff;"><%= flash[:admin_alert].html_safe %></div>
+        <% end %>
+
+        <div class="container noto-serif-jp-extra-light mt-4">
+          <%= form_with model: @contact, url: contacts_path, local: true, data: { turbo: false } do |form| %>
+
+            <!-- お名前 -->
+            <div class="mb-3 row">
+              <label class="col-sm-4 col-form-label text-md-end" style="font-size:11px;">お名前（必須）</label>
+              <div class="col-sm-8">
+                <%= form.text_field :name, 
+                      class: "form-control #{'is-invalid' if @contact.errors[:name].any?}", 
+                      placeholder: "佐藤 まよ",
+                      style: "width: 250px"
+                %>
+                <% if @contact.errors[:name].any? %>
+                  <div class="text-danger small mt-1" style="font-size: 1rem">① <%= @contact.errors.full_messages_for(:name).first %></div>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- メールアドレス -->
+            <div class="mb-3 row">
+              <label class="col-sm-4 col-form-label text-md-end" style="font-size:11px;">メールアドレス（必須）</label>
+              <div class="col-sm-8">
+                <%= form.email_field :email, 
+                      class: "form-control #{'is-invalid' if @contact.errors[:email].any?}", 
+                      placeholder: "contact@ariaguma.jp",
+                      style: "width: 250px"
+                %>
+                <% if @contact.errors[:email].any? %>
+                  <div class="text-danger small mt-1" style="font-size: 0.9rem">② <%= @contact.errors.full_messages_for(:email).first %></div>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- メールアドレス確認 -->
+            <div class="mb-3 row">
+              <label class="col-sm-4 col-form-label text-md-end" style="font-size:11px;">メールアドレス 確認用（必須）</label>
+              <div class="col-sm-8">
+                <%= form.email_field :email_confirmation, 
+                      class: "form-control #{'is-invalid' if @contact.errors[:email_confirmation].any?}", 
+                      placeholder: "確認のため、もう一度入力してください",
+                      style: "width: 250px"
+                %>
+                <% if @contact.errors[:email_confirmation].any? %>
+                  <div class="text-danger small mt-1" style="font-size: 0.8rem">③ <%= @contact.errors.full_messages_for(:email_confirmation).first %></div>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- 件名 -->
+            <div class="mb-3 row">
+              <label class="col-sm-4 col-form-label text-md-end" style="font-size:11px;">件名</label>
+              <div class="col-sm-8">
+                <%= form.text_field :subject, 
+                      class: "form-control #{'is-invalid' if @contact.errors[:subject].any?}", 
+                      placeholder: "ご質問・ご要望など" %>
+                <% if @contact.errors[:subject].any? %>
+                  <div class="text-danger small mt-1" style="font-size: 0.8rem">④ <%= @contact.errors.full_messages_for(:subject).first %></div>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- メッセージ -->
+            <div class="mb-1 row">
+              <label class="col-sm-12 col-form-label" style="font-size:11px;">メッセージ（必須）
+                <% if @contact.errors[:message].any? %>
+                  <span class="text-danger small" style="font-size: 0.7rem">⑤ <%= @contact.errors.full_messages_for(:message).first %></span>
+                <% end %>
+              </label>
+            </div>
+            <div class="mb-4 row">
+              <div class="col-sm-12">
+                <%= form.text_area :message, 
+                      rows: 10, 
+                      class: "form-control #{'is-invalid' if @contact.errors[:message].any?}", 
+                      placeholder: "こちらにメッセージをご記入ください。" %>
+              </div>
+            </div>
+
+            <!-- 送信ボタン -->
+            <div class="text-end">
+              <%= form.submit "　送 信　", 
+                  class: "btn btn-sm noto-serif-jp-extra-light btn-hover rounded-pill px-4 py-4 my-button-blue shadow", 
+                  style: "background-color:#001a59; color:#f0eee0; font-size: 10px; width: 150px;" %>
+            </div>
+            <br>
+          <% end %>
+        <br><br><br>
+      </div>
     </div>
   </div>
 </div>

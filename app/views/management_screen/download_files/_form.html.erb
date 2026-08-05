@@ -33,6 +33,18 @@
   </div>
 
   <div class="mb-3">
+    <%= form.label :filename, "保存ファイル名" %>
+
+    <%= form.text_field :filename,
+          class: "form-control",
+          placeholder: "例：genma-tono-shito.pdf" %>
+
+    <small>
+      半角英数字・ハイフン・アンダースコアを使用してください。
+    </small>
+  </div>
+
+  <div class="mb-3">
     <%= form.label :pdf_file,
           download_file.persisted? ?
             "PDFファイルを差し替える" :

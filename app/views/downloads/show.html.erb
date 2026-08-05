@@ -1,188 +1,275 @@
-<!--# app/views/downloads/show.html.erb ファイル-->
+<!-- app/views/downloads/show.html.erb -->
 
 <div class="bg-wrapper"></div>
 
-<br>
-
 <div class="container px-4">
   <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-6" style="background-color: rgba(255, 255, 255, 0.8); padding-right: 20px; padding-left: 20px;">
-      <br>
-      <h4 class="noto-serif-jp-extra-light">
-        <img src="<%= asset_path('diamond.png') %>" alt="" style="height:25px; width: 25px; margin-bottom: 5px;"> Present 電子書籍『死闘の使命』</h4>
+    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px;">
 
-      <div class="noto-serif-jp-extra-light">
+      <div class="container px-2 px-md-5">
+        <div class="container py-4">
 
-        <p><%= @regist.name %> さん、長らくお待たせいたしました。電子書籍『死闘の使命』が完成いたしました。</p>
+          <h4 class="noto-serif-jp-extra-light">
+            <img
+              src="<%= asset_path('diamond.png') %>"
+              alt=""
+              style="
+                height: 25px;
+                width: 25px;
+                margin-bottom: 5px;
+              "
+            >
+            Present 電子書籍『死闘の使命』
+          </h4>
 
-        <% if @regist.downloaded == 0 %>
-          <p>ダウンロードは終わっていません。右下のボタンを押してください。</p>
-        <% elsif @regist.downloaded < 10 %>
-          すでにダウンロード済みです。<br>
-          ダウンロード回数はあと <%= 10 - @regist.downloaded %> 回可能です。<br><br>
-        <% end %>
+          <div class="noto-serif-jp-extra-light">
 
-        <!-- 日本語の書籍のダウンロードボタン START -->
-        <% if @regist.downloaded < 10 %>
-          <div style="text-align:right; margin-bottom: 1rem;">
-            <%= form_with url: download_file_path(@regist.token, filename: "Deadly_Battle_with_the_Phantom_Demon_ja.zip"),
-                          method: :post,
-                          local: true,
-                          html: { id: "download-form-ja", style: "display:inline;" } do %>
-              <%= submit_tag "『死闘の使命』日本語 ZIP FILE",
-                             class: "btn btn-download shadow rounded-pill d-inline-block px-4 py-3 btn-hover",
-                             style: "background-color:#dff7f7; color:black !important;" %>
+            <p>
+              <%= @regist.name %> さん、
+              長らくお待たせいたしました。
+              電子書籍『死闘の使命』が完成いたしました。
+            </p>
+
+            <% if @download_file.present? %>
+              <% download_limit =
+                   @download_file.download_limit.presence || 10 %>
+
+              <% if @regist.download_count.zero? %>
+                <p>
+                  ダウンロードは終わっていません。
+                  右下のボタンを押してください。
+                </p>
+
+              <% elsif @regist.download_count < download_limit %>
+                <p>
+                  すでにダウンロード済みです。<br>
+
+                  ダウンロード回数はあと
+                  <%= download_limit - @regist.download_count %>
+                  回可能です。
+                </p>
+
+              <% else %>
+                <p>
+                  ダウンロード上限に達しました。
+                </p>
+              <% end %>
             <% end %>
-          </div>
-        <% else %>
-          <div style="text-align:right; margin-bottom: 1rem;">
-            <button class="btn btn-download shadow rounded-pill d-inline-block px-4 py-2" style="background-color:#dff7f7; color:black !important;" disabled>ダウンロード上限に達しました。</button>
-          </div>
-        <% end %>
-        <!-- 日本語の書籍のダウンロードボタン END -->
 
-        <!-- 英語の書籍のダウンロードボタン START -->
-        <!--
-        <div style="text-align:right">
-          <%= form_with url: download_file_path(@regist.token, filename: "Deadly_Battle_with_the_Phantom_Demon_en.zip"),
+            <!-- 日本語の書籍のダウンロードボタン START -->
+            <% if @download_file.present? %>
+              <% download_limit =
+                   @download_file.download_limit.presence || 10 %>
+
+              <% if @regist.download_count < download_limit %>
+                <div
+                  style="
+                    text-align: right;
+                    margin-bottom: 1rem;
+                  "
+                >
+                  <%= form_with(
+                        url: download_file_path(
+                          @regist.token,
+                          download_file_id: @download_file.id
+                        ),
                         method: :post,
                         local: true,
-                        html: { id: "download-form-en", style: "display:inline;" } do %>
-            <%= submit_tag "英語 ZIP FILE",
-                           class: "btn btn-download shadow rounded-pill d-inline-block px-4 py-2",
-                           style: "background-color:#dff7f7; color:black !important;" %>
-          <% end %>
-        </div>
-        -->
-        <!-- 英語の書籍のダウンロードボタン END -->
+                        data: {
+                          turbo: false
+                        },
+                        html: {
+                          id: "download-form-ja",
+                          style: "display: inline;"
+                        }
+                      ) do %>
 
-        <br><br>
+                    <%= submit_tag(
+                          "『死闘の使命』日本語 PDF FILE",
+                          class:
+                            "btn btn-download shadow rounded-pill " \
+                            "d-inline-block px-4 py-3 btn-hover",
+                          style:
+                            "background-color: #dff7f7; " \
+                            "color: black !important;"
+                        ) %>
+                  <% end %>
+                </div>
+              <% else %>
+                <div
+                  style="
+                    text-align: right;
+                    margin-bottom: 1rem;
+                  "
+                >
+                  <button
+                    type="button"
+                    class="
+                      btn btn-download shadow rounded-pill
+                      d-inline-block px-4 py-2
+                    "
+                    style="
+                      background-color: #dff7f7;
+                      color: black !important;
+                    "
+                    disabled
+                  >
+                    ダウンロード上限に達しました。
+                  </button>
+                </div>
+              <% end %>
 
-        <!-- ダウンロード後のリロード処理 SATRT -->
-        <script>
-          document.addEventListener("DOMContentLoaded", function() {
-            // 「download-form-」で始まる全てのフォームを対象にする
-            const forms = document.querySelectorAll("form[id^='download-form-']");
-
-            forms.forEach(function(form) {
-              form.addEventListener("submit", function() {
-                setTimeout(function() {
-                  location.reload(); // 2秒後に画面リロード
-                }, 2000);
-              });
-            });
-          });
-        </script>
-        <!-- ダウンロード後のリロード処理 END -->
-
-
-        <h4 class="noto-serif-jp-extra-light">
-          <img src="<%= asset_path('diamond.png') %>" alt="" style="height:25px; width: 25px; margin-bottom: 5px;"> 二冊目の受け取りについて</h4>
-        もしかしたら、『死闘の使命』に続く二冊目の書籍も書くかもしれません。<br>
-        欲しい方はボタンを押すと、完成時にURLをメールに記述してお送りします。<br>
-        不要な方は、ボタンを押さなければ、二冊目の通知をお送りすることはありません。<br>
-        「ON」ボタンを押すと、二冊目が完成した時に、メールにてダウンロード先のURLをお知らせ致します。<br>
-
-        <br>
-        <% if flash[:notice] %>
-          <div class="noto-serif-jp-extra-light alert alert-info">ALERT: <%= flash[:notice] %></div>
-        <% end %>
-
-        <% if flash[:alert] %>
-          <div class="noto-serif-jp-extra-light alert alert-info">ALERT: <%= flash[:alert] %></div>
-        <% end %>
-
-        <div class="w-100 text-end" style="text-align:right; margin-bottom: 1rem;">
-          <%= form_with url: (@regist.subscribed ? unsubscribe_download_path(@regist.token) : subscribe_download_path(@regist.token)),
-                        method: :patch,
-                        local: true,
-                        data: { turbo: false },
-                        style: "display:inline-block;" do %>
-
-            <div class="d-flex justify-content-end" style="padding-right: 20px; align-items:center; gap:8px;">
-              設定
-              <span>OFF</span>
-
-              <div class="form-check form-switch" style="margin:0; padding-left:2.5em;">
-                <%= check_box_tag :subscribed,
-                      "1",
-                      @regist.subscribed,
-                      class: "form-check-input",
-                      id: "subscribed_switch",
-                      onchange: "this.form.submit();" %>
+            <% else %>
+              <div class="alert alert-warning">
+                現在、ダウンロードできるPDFファイルはありません。
               </div>
+            <% end %>
+            <!-- 日本語の書籍のダウンロードボタン END -->
 
-              <span>ON</span>
+            <br>
+            <br>
+
+            <h4 class="noto-serif-jp-extra-light">
+              <img
+                src="<%= asset_path('diamond.png') %>"
+                alt=""
+                style="
+                  height: 25px;
+                  width: 25px;
+                  margin-bottom: 5px;
+                "
+              >
+              二冊目の受け取りについて
+            </h4>
+
+            <p>
+              もしかしたら、『死闘の使命』に続く
+              二冊目の書籍も書くかもしれません。<br>
+
+              欲しい方はボタンを押すと、
+              完成時にURLをメールに記述してお送りします。<br>
+
+              不要な方は、ボタンを押さなければ、
+              二冊目の通知をお送りすることはありません。<br>
+
+              「ON」ボタンを押すと、
+              二冊目が完成した時に、
+              メールにてダウンロード先のURLを
+              お知らせいたします。
+            </p>
+
+            <br>
+
+            <% if flash[:notice] %>
+              <div
+                class="
+                  noto-serif-jp-extra-light
+                  alert alert-info
+                "
+              >
+                <%= flash[:notice] %>
+              </div>
+            <% end %>
+
+            <% if flash[:alert] %>
+              <div
+                class="
+                  noto-serif-jp-extra-light
+                  alert alert-warning
+                "
+              >
+                <%= flash[:alert] %>
+              </div>
+            <% end %>
+
+            <div
+              class="w-100 text-end"
+              style="
+                text-align: right;
+                margin-bottom: 1rem;
+              "
+            >
+              <%= form_with(
+                    url: (
+                      @regist.subscribed ?
+                        unsubscribe_download_path(
+                          @regist.token
+                        ) :
+                        subscribe_download_path(
+                          @regist.token
+                        )
+                    ),
+                    method: :patch,
+                    local: true,
+                    data: {
+                      turbo: false
+                    },
+                    style: "display: inline-block;"
+                  ) do %>
+
+                <div
+                  class="d-flex justify-content-end"
+                  style="
+                    padding-right: 20px;
+                    align-items: center;
+                    gap: 8px;
+                  "
+                >
+                  <span>設定</span>
+                  <span>OFF</span>
+
+                  <div
+                    class="form-check form-switch"
+                    style="
+                      margin: 0;
+                      padding-left: 2.5em;
+                    "
+                  >
+                    <%= check_box_tag(
+                          :subscribed,
+                          "1",
+                          @regist.subscribed,
+                          class: "form-check-input",
+                          id: "subscribed_switch",
+                          onchange: "this.form.submit();"
+                        ) %>
+                  </div>
+
+                  <span>ON</span>
+                </div>
+              <% end %>
             </div>
-
-          <% end %>
+          </div>
         </div>
-        <!-- 「要る」「要らない」ボタン END -->
-
-      <br><br><br><br><br><br>
+      </div>
     </div>
   </div>
 </div>
 
-
-<!--
-      "日本語" => "ja",
-      "英語" => "en",
-      "アラビア語" => "ar",
-      "ヘブライ語" => "he",
-      "ウクライナ語" => "uk",
-      "ロシア語" => "ru",
-      "中国語" => "zh",
-      "韓国語" => "ko",
-      "フランス語" => "fr",
-      "ドイツ語" => "de",
-      "イタリア語" => "it",
-      "スペイン語" => "es",
-      "ポルトガル語" => "pt",
-      "オランダ語" => "nl",
-      "デンマーク語" => "da",
-      "エスペラント語" => "eo"
--->
-
-
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const subscribeBtn = document.getElementById("subscribe-button");
-  const unsubscribeBtn = document.getElementById("unsubscribe-button");
+  document.addEventListener("DOMContentLoaded", function() {
+    const downloadForms =
+      document.querySelectorAll(
+        "form[id^='download-form-']"
+      );
 
-  if (subscribeBtn) {
-    subscribeBtn.addEventListener("click", function() {
-      fetch("<%= subscribe_download_path(@regist.token) %>", {
-        method: "PATCH",
-        headers: {
-          "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({})
-      }).then(response => {
-        if (response.ok) {
-          alert("登録しました");
+    downloadForms.forEach(function(form) {
+      form.addEventListener("submit", function() {
+        const submitButton =
+          form.querySelector(
+            "input[type='submit'], button[type='submit']"
+          );
+
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.value = "ダウンロード準備中です…";
         }
+
+        setTimeout(function() {
+          window.location.reload();
+        }, 3000);
       });
     });
-  }
-
-  if (unsubscribeBtn) {
-    unsubscribeBtn.addEventListener("click", function() {
-      fetch("<%= unsubscribe_download_path(@regist.token) %>", {
-        method: "PATCH",
-        headers: {
-          "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({})
-      }).then(response => {
-        if (response.ok) {
-          alert("登録解除しました");
-        }
-      });
-    });
-  }
-});
-
+  });
 </script>
+

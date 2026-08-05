@@ -130,7 +130,7 @@
                 onclick: "markAsRead(#{regist.id}, 'regists', 'trash', '#{j params[:query]}', #{params[:page] || 1}, #{params[:unread] || 0}); return false;",
                 class: "text-decoration-none",
                 style: "color: #7d7d7d;" do %>
-                <%= regist.downloaded %> FILE
+                <%= regist.download_count %> FILE
               <% end %>
             </td>
             <td style="font-size: 1rem !important;">

@@ -4,7 +4,7 @@
 
 <div class="container px-4">
   <div class="row justify-content-center">
-    <div class="col-md-10 col-lg-8" style="background-color: rgba(255, 255, 255, 0.8);">
+    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px;">
 
       <div class="mypage-layout">
 
@@ -12,36 +12,37 @@
         <% @regists.each do |regist| %>
           <% if regist.created_at.present? %>
             <div class="mypage-left text-start">
-              <h2 class="noto-serif-jp-extra-light" style="padding: 10px; font-size:16px;">MyPAGE</h2>
-              <table style="width:200px;">
-                <tr>
-                  <td>
-                    <div class="text-end mb-4">
-                      <!--
-                      <%= link_to "MyPAGE", mypage_path,
-                          class: "btn shadow rounded-pill px-4 py-3 me-2",
-                          style: "background-color:#001a59; color:#f0eee0;" %>
-                      -->
-                      <button type="button"
-                              class="btn shadow rounded-pill px-4 py-3 me-2"
-                              style="background-color:#001a59; color:#f0eee0; font-size:10px;"
-                              onclick="window.dispatchEvent(new Event('open-profile'))">
-                        Profile再設定
-                      </button>
-                      <button type="button"
-                              class="btn shadow rounded-pill px-4 py-3"
-                              style="background-color:#001a59; color:#f0eee0; font-size:10px;"
-                              onclick="window.dispatchEvent(new Event('firebase-logout'))">
-                        LOGOUT
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+
+              <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap" style="padding: 20px 0px;">
+
+                <div class="mb-0" style="padding: 10px; font-size:16px;">
+                  MyPAGE
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button"
+                          class="btn shadow rounded-pill px-4 py-3"
+                          style="background-color:#001a59; color:#f0eee0; font-size:10px;"
+                          onclick="window.dispatchEvent(new Event('open-profile'))">
+                    Profile再設定
+                  </button>
+
+                  <button type="button"
+                          class="btn shadow rounded-pill px-4 py-3"
+                          style="background-color:#001a59; color:#f0eee0; font-size:10px;"
+                          onclick="window.dispatchEvent(new Event('firebase-logout'))">
+                    LOGOUT
+                  </button>
+                </div>
+
+              </div>
+
+              <table style="width:300px;">
                 <tr>
                   <td class="align-top">
                     <% if regist.created_at.present? %>
                       <div class="d-flex align-items-start" style="margin-bottom: 2px;">
-                        <div style="background-color: #f3f3f3; color: #000000; width: 40px; border-radius: 8px; padding: 5px; display: inline-block;">
+                        <div style="background-color: #f3f3f3; color: #000000; width: 70px; border-radius: 8px; padding: 5px; display: inline-block;">
                           <% if @download_files_by_volume.present? %>
                             公開中
                           <% else %>
@@ -51,7 +52,7 @@
                         <span style="padding: 2px 8px;">
                           <% @download_files_by_volume.each do |volume, download_file| %>
                             <div>
-                              <%= volume %>冊目：<br>
+                              <%= volume %>冊目：
                               <%= download_file.name %><br>
                             </div>
                           <% end %>
@@ -64,7 +65,7 @@
                   <td>
                     <% if regist.created_at.present? %>
                       <div style="margin-bottom: 0px;">
-                        <div style="background-color: #f3f3f3; color: #000000; width: 40px; border-radius: 8px; padding: 5px; display: inline-block;">
+                        <div style="background-color: #f3f3f3; color: #000000; width: 70px; border-radius: 8px; padding: 5px; display: inline-block;">
                           予約日
                         </div>
                         <span style="padding: 2px 8px; display: inline-block;">
@@ -78,25 +79,25 @@
                 <tr>
                   <td>
                     <div style="display: flex; align-items: flex-start;">
-                      <div style="background-color: #f3f3f3; color: #000000; width: 40px; border-radius: 8px; padding: 5px; margin-bottom: 8px;">
+                      <div style="background-color: #f3f3f3; color: #000000; width: 70px; border-radius: 8px; padding: 5px; margin-bottom: 8px;">
                         STATE
                       </div>
 
                       <% first_book = @download_files_by_volume[1] %>
                       <% second_book = @download_files_by_volume[2] %>
                       <div>
-                        <% if first_book.present? && regist.downloaded.to_i.positive? %>
+                        <% if first_book.present? && regist.download_count.to_i.positive? %>
                           <span style="padding: 2px 8px; display: inline-block;">
                             <%= first_book.name %>
-                            <%= regist.downloaded %>回ダウンロード済<br>
+                            <%= regist.download_count %>回ダウンロード済<br>
                           </span>
                         <% end %>
 
-                        <% if second_book.present? && regist.second_download.to_i.positive? %>
+                        <% if second_book.present? && regist.second_download_count.to_i.positive? %>
                           <span style="padding: 2px 8px; display: inline-block;">
                             <%= second_book.name %>
                             <%= second_book.volume %>冊目
-                            <%= regist.second_download %>回ダウンロード済
+                            <%= regist.second_download_count %>回ダウンロード済
                           </span>
                         <% end %>
                       </div>
@@ -113,7 +114,7 @@
                     <% @regists.each do |regist| %>
                       <% if regist.name %>
                         <div style="margin-bottom: 0px;">
-                          <div style="background-color: #f3f3f3; color: #000000; width: 40px; border-radius: 8px; padding: 5px; display: inline-block;">
+                          <div style="background-color: #f3f3f3; color: #000000; width: 70px; border-radius: 8px; padding: 5px; display: inline-block;">
                             お名前
                           </div>
                           <span style="padding: 2px 8px; display: inline-block;">
@@ -141,28 +142,58 @@
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding: 10px;"><!--class noto-serif-jp-extra-light-->
+                  <td class="text-end" style="padding: 20px 0px;">
                     <% @regists.each do |regist| %>
-                      <% if regist.email_sent_01.present? && first_book.present? %>
-                        <% @download_files_by_volume.each do |volume, download_file| %>
-                          <% token = 
-                              case volume
-                              when 1
-                                regist.token
-                              when 2
-                                regist.second_token
-                              end %>
-                          <%= link_to "『#{download_file.name}』をDOWNLOAD",
-                              "/download/#{token}",
-                              class: "btn",
-                              style: "padding: 10px 20px;
-                                      border-radius: 25px;
-                                      background-color: #fffcf4;
-                                      color: #000000;
-                                      margin-bottom: 5px;
-                                      border: 5px solid #000000;" %>
+
+                      <% @download_files_by_volume.each do |volume, download_file| %>
+                        <% case volume.to_i %>
+                        <% when 1 %>
+
+                          <% if regist.email_sent_01.present? && first_book.present? %>
+                            <%= link_to(
+                                  "『#{download_file.name}』をDOWNLOAD",
+                                  download_path(regist.token),
+                                  class: "btn",
+                                  style: "
+                                    padding: 10px 20px;
+                                    border-radius: 25px;
+                                    background-color: #fffcf4;
+                                    color: #000000;
+                                    margin-bottom: 5px;
+                                    border: 5px solid #000000;
+                                  "
+                                ) %>
+                          <% else %>
+                            <span class="text-muted">
+                              <br>1冊目のダウンロードURLは未発行です。
+                            </span>
+                          <% end %>
+
+                        <% when 2 %>
+
+                          <% if regist.email_sent_02.present? && second_book.present? %>
+                            <%= link_to(
+                                  "『#{download_file.name}』をDOWNLOAD",
+                                  second_download_path(regist.second_token),
+                                  class: "btn",
+                                  style: "
+                                    padding: 10px 20px;
+                                    border-radius: 25px;
+                                    background-color: #fffcf4;
+                                    color: #000000;
+                                    margin-bottom: 5px;
+                                    border: 5px solid #000000;
+                                  "
+                                ) %>
+                          <% else %>
+                            <span class="text-muted">
+                              <br>2冊目のダウンロードURLは未発行です。
+                            </span>
+                          <% end %>
+
                         <% end %>
                       <% end %>
+
                     <% end %>
                   </td>
                 </tr>
@@ -180,13 +211,13 @@
             <% if @histories.present? %>
               <% @histories.each do |history| %>
 
-                <div style="margin-bottom: 10px; padding: 15px 10px; background-color: #f3f3f3; width: 350px; border-radius: 8px; margin: 0 auto 25px auto;">
+                <div style="margin-bottom: 10px; padding: 15px 10px; background-color: #f3f3f3; border-radius: 8px; margin: 0 auto 25px auto;" class="col-lg-12">
                   <div style="margin-bottom: 2px;">
 
                     <% if history[:type] == :contact %>
-                      <div style="padding: 10px 10px; background-color: #ffffff; width: 330px; border-radius: 8px;">お問合わせ履歴</div>
+                      <div style="padding: 10px 10px; background-color: #ffffff; border-radius: 8px;" class="col-lg-12">お問合わせ履歴</div>
                     <% elsif history[:type] == :reply %>
-                      <div style="padding: 10px 10px; background-color: #ffffff; width: 330px; border-radius: 8px;">管理者からの返信</div>
+                      <div style="padding: 10px 10px; background-color: #ffffff; border-radius: 8px;" class="col-lg-12">管理者からの返信</div>
                     <% end %>
                   </div>
 

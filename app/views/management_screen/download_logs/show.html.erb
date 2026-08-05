@@ -1,0 +1,128 @@
+<br><br>
+
+<div class="bg-wrapper"></div>
+
+<div class="container px-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 25px;">
+
+      <div class="container px-2 px-md-5">
+        <div class="d-flex
+                    justify-content-between
+                    align-items-center
+                    flex-wrap
+                    gap-2
+                    my-4">
+          <h3 class="mb-4 h4">
+            ダウンロード履歴詳細
+          </h3>
+
+          <dl class="row">
+            <dt class="col-sm-4">
+              ログID
+            </dt>
+
+            <dd class="col-sm-8">
+              <%= @download_log.id %>
+            </dd>
+
+            <dt class="col-sm-4">
+              ダウンロード日時
+            </dt>
+
+            <dd class="col-sm-8">
+              <%= l(
+                    @download_log.downloaded_at,
+                    format: :long
+                  ) %>
+            </dd>
+
+            <dt class="col-sm-4">
+              PDF表示名
+            </dt>
+
+            <dd class="col-sm-8">
+              <%= @download_log.download_file&.name ||
+                    "削除済み" %>
+            </dd>
+
+            <dt class="col-sm-4">
+              元のファイル名
+            </dt>
+
+            <dd class="col-sm-8">
+              <%= @download_log.download_file&.filename ||
+                    "-" %>
+            </dd>
+
+            <dt class="col-sm-4">
+              冊数
+            </dt>
+
+            <dd class="col-sm-8">
+              <% if @download_log.download_file.present? %>
+                <%= @download_log.download_file.volume %>冊目
+              <% else %>
+                -
+              <% end %>
+            </dd>
+
+            <dt class="col-sm-4">
+              予約者ID
+            </dt>
+
+            <dd class="col-sm-8">
+              <%= @download_log.regist_id || "-" %>
+            </dd>
+
+            <dt class="col-sm-4">
+              予約者名
+            </dt>
+
+            <dd class="col-sm-8">
+              <%= @download_log.regist&.name || "-" %>
+            </dd>
+
+            <dt class="col-sm-4">
+              メールアドレス
+            </dt>
+
+            <dd class="col-sm-8">
+              <%= @download_log.regist&.email || "-" %>
+            </dd>
+
+            <dt class="col-sm-4">
+              IPアドレス
+            </dt>
+
+            <dd class="col-sm-8">
+              <%= @download_log.ip_address.presence ||
+                    "-" %>
+            </dd>
+
+            <dt class="col-sm-4">
+              User-Agent
+            </dt>
+
+            <dd
+              class="col-sm-8"
+              style="overflow-wrap:anywhere;"
+            >
+              <%= @download_log.user_agent.presence ||
+                    "-" %>
+            </dd>
+          </dl>
+
+          <%= link_to(
+                "一覧へ戻る",
+                management_screen_download_logs_path,
+                class:
+                  "btn shadow rounded-pill px-5 py-3",
+                style:
+                  "background-color:#dff7f7;"
+              ) %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

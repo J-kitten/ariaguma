@@ -456,8 +456,8 @@ console.log(`marking contact id=${id} as read`);
         rel="noopener noreferrer" 
         style="font-size:18px; margin-left: 15px; display:flex; align-items:center; gap:8px;">
         
-        <img src="<%= asset_path('diamond_square_circle_w266_h271.png') %>" alt="" style="height: 50px; opacity:0.8;">
-        <img src="<%= asset_path('ARIAGUMA_logo.png') %>" style="height:45px;">
+        <img src="<%= asset_path('diamond_square_circle_w266_h271.png') %>" alt="" style="height: 40px; opacity:0.8;">
+        <img src="<%= asset_path('ARIAGUMA_logo.png') %>" style="height: 35px;">
       </a>
 
     <!--add 2025-7-11 ハンバーガーボタンの「✕」Start-->
@@ -486,6 +486,11 @@ console.log(`marking contact id=${id} as read`);
           <li class="nav-item">
             <div class="mb-2" style="text-align: right">
               <%= link_to "お問合せ 一覧", management_screen_contacts_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover mt-1", style: "background-color:#dff7f7; font-size: 0.8rem !important; line-height: 2;" %>
+            </div>
+          </li>&nbsp;
+          <li class="nav-item">
+            <div class="mb-2" style="text-align: right">
+              <%= link_to "ダウンロード履歴", management_screen_download_logs_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover mt-1", style: "background-color:#dff7f7; font-size: 0.8rem !important; line-height: 2;" %>
             </div>
           </li>&nbsp;
           <li class="nav-item">

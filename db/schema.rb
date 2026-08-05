@@ -41,6 +41,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_080845) do
     t.index ["path"], name: "uk_download_files_path", unique: true
   end
 
+  create_table "download_logs", id: { type: :bigint, unsigned: true }, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "download_file_id", null: false, unsigned: true
+    t.bigint "regist_id"
+    t.datetime "downloaded_at", precision: nil, null: false
+    t.string "ip_address", limit: 45
+    t.text "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["download_file_id"], name: "index_download_logs_on_download_file_id"
+    t.index ["downloaded_at"], name: "index_download_logs_on_downloaded_at"
+    t.index ["regist_id"], name: "index_download_logs_on_regist_id"
+  end
+
   create_table "regists", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", limit: 50, null: false
     t.string "email", null: false
@@ -94,4 +107,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_080845) do
     t.index ["email_hash"], name: "email_hash", unique: true
     t.index ["firebase_uid"], name: "uk_users_firebase_uid", unique: true
   end
+
+  add_foreign_key "download_logs", "download_files", name: "fk_download_logs_download_file"
+  add_foreign_key "download_logs", "regists", name: "fk_download_logs_regist"
 end
