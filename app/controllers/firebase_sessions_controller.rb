@@ -47,29 +47,24 @@ class FirebaseSessionsController < ApplicationController
     # メールアドレスを正規化
     email = email.to_s.downcase.strip
 
-    name =
-      decoded_token["name"].presence ||
-      email.split("@").first
+    name = decoded_token["name"].presence ||
+           email.split("@").first
 
-    email_hash =
-      Digest::SHA256.hexdigest(email)
+    email_hash = Digest::SHA256.hexdigest(email)
 
-    user =
-      User.unscoped.find_by(
-        firebase_uid: firebase_uid
-      )
+    user = User.unscoped.find_by(
+             firebase_uid: firebase_uid
+           )
 
-    user ||=
-      User.unscoped.find_by(
-        email: email
-      )
+    user ||= User.unscoped.find_by(
+               email: email
+             )
 
     if user.blank? &&
        User.column_names.include?("email_hash")
-      user =
-        User.unscoped.find_by(
-          email_hash: email_hash
-        )
+      user = User.unscoped.find_by(
+              email_hash: email_hash
+            )
     end
 
     user ||= User.new
@@ -80,8 +75,7 @@ class FirebaseSessionsController < ApplicationController
 
     user.email = email
 
-    if user.respond_to?(:name) &&
-       user.name.blank?
+    if user.respond_to?(:name) && user.name.blank?
       user.name = name
     end
 
@@ -107,9 +101,7 @@ class FirebaseSessionsController < ApplicationController
     # ダウンロードURLから来た場合は元のURLへ戻す
     # 通常ログインの場合はマイページへ遷移
     # ----------------------------------------
-    redirect_url =
-      session.delete(:return_to_after_login).presence ||
-      mypage_path
+    redirect_url = session.delete(:return_to_after_login).presence || mypage_path
 
     Rails.logger.info(
       "===== firebase_login SUCCESS " \
@@ -119,12 +111,7 @@ class FirebaseSessionsController < ApplicationController
 
     render json: {
       success: true,
-      redirect_url: redirect_url,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name
-      }
+      redirect_url: redirect_url
     }
 
   rescue FirebaseIdToken::Exceptions::NoCertificatesError => e

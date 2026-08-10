@@ -1,2 +1,0 @@
-module GoogleAuthHelper
-end
