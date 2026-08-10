@@ -6,7 +6,7 @@
 　WEBシステムです。
 
 - **Backend**: Ruby on Rails 8
-- **Frontend**: React + Vite
+- **Frontend**: React
 - **Authentication**: Firebase Authentication / 独自セッション認証
 - **Infrastructure**: AWS EC2 + Nginx + Puma + MySQL
 
