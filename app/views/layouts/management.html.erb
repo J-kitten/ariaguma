@@ -335,6 +335,38 @@
       }
     </style>
 
+    <style>
+      .title-link{
+        background-color: #ffedf3 !important; 
+        font-size: 9px !important; 
+        white-space: nowrap;
+      }
+
+      /* ダッシュボードの六つの背景 */
+      .dashboard-card {
+        background-color: #f1f3f5;
+        border-radius: 20px;
+        border: none;
+        overflow: hidden;
+      }
+
+      /* テーブルの横線を消す */
+      .dashboard-card .table td,
+      .dashboard-card .table th {
+        border-bottom: none !important;
+      }
+
+      /* テーブルのストライプの色を変更する */
+      .table-striped {
+        --bs-table-striped-bg: #f1f3f5;
+      }
+
+      /* マウスをのせた時の横のフィールドの背景を下記の変える */
+      .table tbody tr:hover {
+        background-color: #f1f3f5 !important;
+      }
+    </style>
+
     <!-- お問合せ・予約登録のリストのURL作成。既読・未読。 -->
     <!-- 上記にこのmarkAsRead を使用するため <%# csrf_meta_tags %> がある -->
     <script>
@@ -479,44 +511,65 @@ console.log(`marking contact id=${id} as read`);
             </div>
           </li>&nbsp;
           <li class="nav-item">
-            <div class="mb-2" style="text-align: right;">
-              <%= link_to "予約希望者 一覧", management_screen_regists_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover mt-1", style: "background-color:#dff7f7; font-size: 0.8rem !important; line-height: 2;" %>
+            <div class="mb-2" style="text-align: right; padding-top: 10px;">
+              <%= link_to "管理ダッシュボード", management_screen_root_path, 
+                  class: "btn shadow rounded-pill px-4 py-3 title-link",
+                  style: "color: #000000; font-size: 10px !important; border:5px solid #000000; font-size: 0.8rem !important;" %>
             </div>
           </li>&nbsp;
           <li class="nav-item">
-            <div class="mb-2" style="text-align: right">
-              <%= link_to "お問合せ 一覧", management_screen_contacts_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover mt-1", style: "background-color:#dff7f7; font-size: 0.8rem !important; line-height: 2;" %>
+            <div class="mb-2" style="text-align: right; padding-top: 10px;">
+              <%= link_to "予約希望者 一覧", management_screen_regists_path, 
+                  class: "btn shadow rounded-pill px-4 py-3 title-link",
+                  style: "color: #000000; font-size: 10px !important; border:5px solid #000000; font-size: 0.8rem !important;" %>
             </div>
           </li>&nbsp;
           <li class="nav-item">
-            <div class="mb-2" style="text-align: right">
-              <%= link_to "ダウンロード履歴", management_screen_download_logs_path, class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover mt-1", style: "background-color:#dff7f7; font-size: 0.8rem !important; line-height: 2;" %>
+            <div class="mb-2" style="text-align: right; padding-top: 10px;">
+              <%= link_to "お問合せ 一覧", management_screen_contacts_path, 
+                  class: "btn shadow rounded-pill px-4 py-3 title-link",
+                  style: "color: #000000; font-size: 10px !important; border:5px solid #000000; font-size: 0.8rem !important;" %>
             </div>
           </li>&nbsp;
           <li class="nav-item">
-            <div class="mb-2" style="text-align: right">
-              <%= link_to "ariaguma.jp", "/", 
-                  class: "btn shadow btn-download rounded-pill px-4 py-2 btn-hover mt-1", 
-                  style: "background-color:#dff7f7; font-size: 0.8rem !important; line-height: 2;",
-                  target: "_blank" %>
+            <div class="d-flex flex-wrap justify-content-end gap-2 mb-3" style="padding-top: 10px;">
+              <%= link_to "ダウンロード履歴",
+                  management_screen_download_logs_path,
+                  class: "btn shadow rounded-pill px-4 py-3 title-link",
+                  style: "color: #000000; font-size: 10px !important; border:5px solid #000000; font-size: 0.8rem !important;" %>
             </div>
           </li>&nbsp;
           <li class="nav-item">
-            <div class="mb-2" style="text-align: right">
-              <%= link_to "ログアウト",
-                  management_screen_logout_path,
-                  method: :delete, 
-                  data: { turbo: false, confirm: "ログアウトしますか？" },
-                  class: "btn shadow btn-download rounded-pill px-4 py-2 mt-1", 
-                  style: "background-color:#001a59; color: #f0eee0; font-size: 0.8rem !important; line-height: 2;" %> <!--btn-hover -->
+            <div class="d-flex flex-wrap justify-content-end gap-2 mb-3" style="padding-top: 10px; font-size: 0.8rem !important;">
+              <%= link_to "登録した電子書籍一覧",
+                  management_screen_download_files_path,
+                  class: "btn shadow rounded-pill px-4 py-3 title-link",
+                  style: "color: #000000; font-size: 10px !important; border:5px solid #000000; font-size: 0.8rem !important;" %>
             </div>
+          </li>&nbsp;
+          <li class="nav-item">
+            <% if current_user %>
+              <div class="mb-2" style="text-align: right; padding-top: 10px;">
+                <%= button_to "ログアウト",
+                    management_screen_logout_path,
+                    method: :delete, 
+                    form: {
+                      data: {
+                        turbo_confirm: "ログアウトしますか？"
+                      },
+                      style: "display:inline;"
+                    },
+                    class: "btn shadow rounded-pill px-4 py-3", 
+                    style: "background-color:#001a59; color: #f0eee0; font-size: 0.8rem !important; line-height: 2; padding-top: 10px; border:2px solid #001a59;" %> <!--btn-hover -->
+              </div>
+            <% end %>
           </li>&nbsp;&nbsp;
-          <li class="nav-item mt-2" style="font-size: 0.8rem">
-            <div class="mb-2" style="text-align: right">
+          <li class="nav-item mt-2" style="font-size: 0.8rem; padding-top: 10px;">
+            <div class="mb-2">
               <% if current_user %>
-                <p>ログイン中: <br><%= current_user.name %></p>
+                ログイン中:<br><%= current_user.name %>
               <% else %>
-                <p>ログアウト中</p>
+                ログアウト中
               <% end %>
             </div>
           </li>&nbsp;

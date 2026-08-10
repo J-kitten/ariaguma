@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception # CSRF（クロスサイトリクエストフォージェリ）対策
   include SessionsHelper
-  include Authentication
   helper_method :current_user
   helper_method :current_user_info
   helper_method :logged_in?

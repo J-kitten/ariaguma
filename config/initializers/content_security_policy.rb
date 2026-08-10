@@ -58,6 +58,7 @@ Rails.application.config.content_security_policy do |policy|
   # --- Ajax / fetch / API í êM ---
   policy.connect_src :self,
                      "https://identitytoolkit.googleapis.com",
+                     "https://securetoken.googleapis.com",
                      "https://www.googleapis.com",
                      "https://firebase.googleapis.com",
                      "https://www.googletagmanager.com",

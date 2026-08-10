@@ -32,7 +32,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_080845) do
     t.integer "volume", limit: 1, null: false, unsigned: true
     t.bigint "file_size", unsigned: true
     t.string "content_type", limit: 100
-    t.integer "download_limit", default: 10, null: false, unsigned: true
+    t.integer "download_limit", default: 0, null: false, unsigned: true
     t.integer "download_count", default: 0, null: false, unsigned: true
     t.boolean "published", default: false, null: false
     t.integer "sort_order", default: 0, null: false
@@ -61,26 +61,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_10_080845) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email_hash", null: false
-    t.integer "downloaded", default: 0
+    t.integer "download_count", default: 0
     t.boolean "subscribed", default: false, null: false
     t.datetime "email_sent_01", precision: nil
     t.datetime "email_sent_02", precision: nil
     t.boolean "unread", default: false, null: false
     t.boolean "trash", default: false, null: false
-    t.integer "second_download", default: 0
+    t.integer "second_download_count", default: 0
     t.string "second_token", limit: 50, null: false
     t.index ["email"], name: "index_regists_on_email", unique: true
     t.index ["email_hash"], name: "index_regists_on_email_hash", unique: true
-  end
-
-  create_table "regists_replies", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name", limit: 50
-    t.string "subject", limit: 50
-    t.string "email_hash"
-    t.text "message"
-    t.integer "regist_id"
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
   end
 
   create_table "replies", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

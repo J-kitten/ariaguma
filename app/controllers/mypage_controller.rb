@@ -13,9 +13,9 @@ class MypageController < ApplicationController
                      .order(created_at: :desc)
     @replies = Reply.where(email_hash: @user.email_hash, trash: false)
 
-    @download_files_by_volume = DownloadFile.where(published: true)
-                                            .order(:sort_order, :id)
-                                            .index_by(&:volume)
+    @download_files_by_volume = 
+               DownloadFile.order(:sort_order, :id)
+                     .index_by { |download_file| download_file.volume.to_i }
 
     @histories =
       @contacts.map do |contact|

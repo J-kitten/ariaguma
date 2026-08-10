@@ -22,16 +22,27 @@
           <% end %>
   -->
           <!-- 日本語の書籍のダウンロードボタン START -->
-  <!--
-          <% if @regist.download_count < 10 %>
+          <% if @regist.second_download_count < 10 %>
             <div style="text-align:right; margin-bottom: 1rem;">
-              <%= form_with url: download_file_path(@regist.token, filename: "Deadly_Battle_with_the_Phantom_Demon_ja.zip"),
+              <%= form_with url: second_download_file_path,
                             method: :post,
                             local: true,
-                            html: { id: "download-form-ja", style: "display:inline;" } do %>
-                <%= submit_tag "『死闘の使命』日本語 ZIP FILE",
-                               class: "btn btn-download shadow rounded-pill d-inline-block px-4 py-2",
-                               style: "background-color:#b2edf7; color:black !important;" %>
+                            html: {
+                              id: "download-form-ja",
+                              style: "display:inline;"
+                            } do %>
+
+                <%= hidden_field_tag(
+                      :download_file_id,
+                      @download_file.id
+                    ) %>
+
+                <%= submit_tag(
+                      "『死闘の使命』日本語 ZIP FILE",
+                      class: "btn btn-download shadow rounded-pill d-inline-block px-4 py-2",
+                      style: "background-color:#b2edf7; color:black !important;"
+                    ) %>
+
               <% end %>
             </div>
           <% else %>
@@ -39,7 +50,6 @@
               <button class="btn btn-download shadow rounded-pill d-inline-block px-4 py-2" style="background-color:#b2edf7; color:black !important;" disabled>ダウンロード上限に達しました。</button>
             </div>
           <% end %>
-  -->
           <!-- 日本語の書籍のダウンロードボタン END -->
           
   <% if flash[:admin_notice] %>

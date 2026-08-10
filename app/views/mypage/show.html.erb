@@ -4,7 +4,7 @@
 
 <div class="container px-4">
   <div class="row justify-content-center">
-    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px;">
+    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px; padding: 0px;">
 
       <div class="mypage-layout">
 
@@ -13,25 +13,25 @@
           <% if regist.created_at.present? %>
             <div class="mypage-left text-start">
 
-              <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap" style="padding: 20px 0px;">
+              <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap" style="padding: 10px 0px;">
 
-                <div class="mb-0" style="padding: 10px; font-size:16px;">
+                <div style="background-color: #f3f3f3; color: #000000; width: 70px; border-radius: 8px; display: inline-block; padding: 10px 4px; font-size:16px;" class="mb-0">
                   MyPAGE
                 </div>
 
                 <div class="d-flex align-items-center gap-2">
                   <button type="button"
                           class="btn shadow rounded-pill px-4 py-3"
-                          style="background-color:#001a59; color:#f0eee0; font-size:10px;"
+                          style="background-color:#001a59; color:#ffffff; font-size:10px;"
                           onclick="window.dispatchEvent(new Event('open-profile'))">
                     Profile再設定
                   </button>
 
                   <button type="button"
                           class="btn shadow rounded-pill px-4 py-3"
-                          style="background-color:#001a59; color:#f0eee0; font-size:10px;"
+                          style="background-color:#001a59; color:#ffffff; font-size:10px;"
                           onclick="window.dispatchEvent(new Event('firebase-logout'))">
-                    LOGOUT
+                    LogOut
                   </button>
                 </div>
 
@@ -88,16 +88,21 @@
                       <div>
                         <% if first_book.present? && regist.download_count.to_i.positive? %>
                           <span style="padding: 2px 8px; display: inline-block;">
-                            <%= first_book.name %>
+                            <%= first_book.volume %>冊目
                             <%= regist.download_count %>回ダウンロード済<br>
-                          </span>
+                          </span><br>
+                          <span style="padding: 2px 8px; display: inline-block;">
+                            <%= first_book.name %>
+                          </span><br>
                         <% end %>
 
                         <% if second_book.present? && regist.second_download_count.to_i.positive? %>
                           <span style="padding: 2px 8px; display: inline-block;">
-                            <%= second_book.name %>
                             <%= second_book.volume %>冊目
                             <%= regist.second_download_count %>回ダウンロード済
+                          </span><br>
+                          <span style="padding: 2px 8px; display: inline-block;">
+                            <%= second_book.name %>
                           </span>
                         <% end %>
                       </div>
@@ -142,22 +147,21 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="text-end" style="padding: 20px 0px;">
+                  <td class="text-end" style="padding: 5px 0px;">
                     <% @regists.each do |regist| %>
 
                       <% @download_files_by_volume.each do |volume, download_file| %>
                         <% case volume.to_i %>
                         <% when 1 %>
 
-                          <% if regist.email_sent_01.present? && first_book.present? %>
+                          <% if regist.email_sent_01.present? && first_book.published? %>
                             <%= link_to(
                                   "『#{download_file.name}』をDOWNLOAD",
-                                  download_path(regist.token),
-                                  class: "btn",
-                                  style: "
+                                    download_path(regist.token),
+                                    class: "btn title-link",
+                                    style: "
                                     padding: 10px 20px;
                                     border-radius: 25px;
-                                    background-color: #fffcf4;
                                     color: #000000;
                                     margin-bottom: 5px;
                                     border: 5px solid #000000;
@@ -171,15 +175,14 @@
 
                         <% when 2 %>
 
-                          <% if regist.email_sent_02.present? && second_book.present? %>
+                          <% if regist.email_sent_02.present? && second_book.published? %>
                             <%= link_to(
                                   "『#{download_file.name}』をDOWNLOAD",
-                                  second_download_path(regist.second_token),
-                                  class: "btn",
-                                  style: "
+                                    second_download_path(regist.second_token),
+                                    class: "btn title-link",
+                                    style: "
                                     padding: 10px 20px;
                                     border-radius: 25px;
-                                    background-color: #fffcf4;
                                     color: #000000;
                                     margin-bottom: 5px;
                                     border: 5px solid #000000;

@@ -1,10 +1,10 @@
-<br><br>
+<br>
 
 <div class="bg-wrapper"></div>
 
 <div class="container px-4">
   <div class="row justify-content-center">
-    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 25px;">
+    <div class="col-md-10 col-lg-11" style="background-color: rgba(255, 255, 255, 0.8); padding: 25px;">
 
       <div class="container px-2 px-md-5">
 
@@ -32,13 +32,13 @@
         <div class="row g-3 mb-4">
 
           <div class="col-12 col-md-6 col-xl-3">
-            <div class="card shadow-sm h-100">
+            <div class="card h-100 dashboard-card">
               <div class="card-body">
-                <div class="text-muted mb-2">
+                <div class="text-muted mb-2" style="padding-left: 10px;">
                   本日のダウンロード数
                 </div>
 
-                <div class="fs-2 fw-bold">
+                <div class="fs-2 fw-bold" style="padding-left: 10px;">
                   <%= number_with_delimiter(
                         @today_count
                       ) %>
@@ -51,13 +51,13 @@
           </div>
 
           <div class="col-12 col-md-6 col-xl-3">
-            <div class="card shadow-sm h-100">
+            <div class="card h-100 dashboard-card">
               <div class="card-body">
-                <div class="text-muted mb-2">
+                <div class="text-muted mb-2" style="padding-left: 10px;">
                   今月のダウンロード数
                 </div>
 
-                <div class="fs-2 fw-bold">
+                <div class="fs-2 fw-bold" style="padding-left: 10px;">
                   <%= number_with_delimiter(
                         @month_count
                       ) %>
@@ -70,13 +70,13 @@
           </div>
 
           <div class="col-12 col-md-6 col-xl-3">
-            <div class="card shadow-sm h-100">
+            <div class="card h-100 dashboard-card">
               <div class="card-body">
-                <div class="text-muted mb-2">
+                <div class="text-muted mb-2" style="padding-left: 10px;">
                   総ダウンロード数
                 </div>
 
-                <div class="fs-2 fw-bold">
+                <div class="fs-2 fw-bold" style="padding-left: 10px;">
                   <%= number_with_delimiter(
                         @total_count
                       ) %>
@@ -89,13 +89,13 @@
           </div>
 
           <div class="col-12 col-md-6 col-xl-3">
-            <div class="card shadow-sm h-100">
+            <div class="card h-100 dashboard-card">
               <div class="card-body">
-                <div class="text-muted mb-2">
+                <div class="text-muted mb-2" style="padding-left: 10px;">
                   ダウンロード人数
                 </div>
 
-                <div class="fs-2 fw-bold">
+                <div class="fs-2 fw-bold" style="padding-left: 10px;">
                   <%= number_with_delimiter(
                         @unique_regist_count
                       ) %>
@@ -110,9 +110,18 @@
         </div>
 
         <!-- 絞り込み -->
-        <div class="card shadow-sm mb-4">
-          <div class="card-header">
-            履歴の絞り込み
+        <div class="card mb-4 dashboard-card" style="padding-left: 15px; padding-right: 15px; padding-top: 10px; padding-bottom: 10px;">
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">
+              履歴の絞り込み
+            </h6>
+            <div class="d-flex gap-2">
+              <%= link_to "条件を解除",
+                          management_screen_download_logs_path,
+                          class: "btn btn-outline-secondary" %>
+              <%= submit_tag "検索",
+                             class: "btn btn-primary" %>
+            </div>
           </div>
 
           <div class="card-body">
@@ -191,20 +200,6 @@
                                      class: "form-control" %>
                 </div>
 
-                <div class="col-12">
-                  <div class="d-flex
-                              justify-content-end
-                              gap-2">
-
-                    <%= link_to "条件を解除",
-                                management_screen_download_logs_path,
-                                class: "btn btn-outline-secondary" %>
-
-                    <%= submit_tag "検索",
-                                   class: "btn btn-primary" %>
-                  </div>
-                </div>
-
               </div>
             <% end %>
           </div>
@@ -218,7 +213,7 @@
             align-items-center
             gap-2
           " 
-          style="padding-top: 30px; padding-bottom: 10px;"
+          style="padding-bottom: 10px;"
         >
           <div class="mb-0">
             <span style="padding-right: 20px;">
@@ -227,15 +222,6 @@
             </span>
           </div>
 
-          <span class="text-muted">
-            <%= link_to(
-                  "PDFファイル一覧へ",
-                  management_screen_download_files_path,
-                  class:
-                    "btn btn-light shadow rounded-pill px-4"
-                ) %>
-          </span>
-
         </div>
 
         <% if @download_logs.present? %>
@@ -243,6 +229,7 @@
             <table
               class="
                 table
+                table-borderless
                 table-striped
                 align-middle
               "

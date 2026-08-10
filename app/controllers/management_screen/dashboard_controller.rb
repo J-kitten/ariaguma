@@ -1,4 +1,5 @@
-class ManagementScreen::DashboardController < ApplicationController
+class ManagementScreen::DashboardController < ManagementScreen::BaseController
+  layout 'management'
 
   def index
     # 予約人数

@@ -6,7 +6,7 @@
 
 <div class="container px-4">
   <div class="row justify-content-center">
-    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 25px;">
+    <div class="col-md-10 col-lg-11" style="background-color: rgba(255, 255, 255, 0.8); padding: 25px;">
 
       <div class="container px-2 px-md-5">
 
@@ -22,13 +22,13 @@
 
             <%= link_to "PDF新規登録", 
                 new_management_screen_download_file_path, 
-                class: "btn rounded-pill px-5 py-3", 
-                style: "background-color: #fffcf4; color: #000000; outline: 5px solid #000000;" %>
+                class: "btn rounded-pill px-5 py-3 shadow", 
+                style: "background-color: #000000; color: #ffffff;" %>
           </div>
 
-          <div class="table-responsive">
+          <div class="table-responsive" style="background-color: #f1f3f5; padding:20px; border-radius: 20px">
             <table class="table
-                          table-bordered
+                          table-borderless
                           table-hover
                           align-middle">
 
@@ -111,15 +111,15 @@
 
                         <%= link_to "詳細", 
                               management_screen_download_file_path(download_file),
-                              class: "btn shadow btn-info rounded-pill px-3 py-3", 
-                              style: "color: #ffffff; line-height: 2;" %>
+                              class: "btn shadow rounded-pill px-3 py-3", 
+                              style: "color: #000000; background-color:#ffffff; font-size: 9px; line-height: 2;" %>
 
                         <%= link_to "編集", 
                               edit_management_screen_download_file_path(
                                     download_file
                                   ),
                               class: "btn shadow btn-download rounded-pill px-3 py-3", 
-                              style: "background-color:#dff7f7; line-height: 2;" %>
+                              style: "background-color:#dff7f7; font-size: 9px; line-height: 2;" %>
 
                         <%= button_to "Destroy",
                               management_screen_download_file_path(
@@ -127,7 +127,7 @@
                               ),
                               method: :delete,
                               class: "btn shadow rounded-pill py-3 px-3",
-                              style: "background-color: #001a59; color: #ffffff; line-height: 2;",
+                              style: "background-color: #001a59; color: #ffffff; font-size: 9px; line-height: 2;",
                               form: {
                                 onsubmit:
                                   "return confirm(" \

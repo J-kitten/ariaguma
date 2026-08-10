@@ -5,11 +5,23 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
-  def me
-    render json: {
-      user: current_user
-    }
-  end
+  #def me
+  #  unless current_user
+  #    render json: {
+  #      logged_in: false
+  #    }, status: :unauthorized
+  #    return
+  #  end
+
+  #  render json: {
+  #    logged_in: true,
+  #    user: {
+  #      id: current_user.id,
+  #      name: current_user.name,
+  #      email: current_user.email
+  #    }
+  #  }
+  #end
 
   def create
     @user = User.new(user_params)

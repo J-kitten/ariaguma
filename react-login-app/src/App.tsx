@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { createPortal } from "react-dom";
 
 import { auth } from "./firebase";
@@ -11,28 +11,64 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [open, setOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
   const profileModalRoot = document.getElementById("profile-modal-root");
 
   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      console.log("Firebase auth state changed =", firebaseUser);
+      setUser(firebaseUser);
+      setAuthChecked(true);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log("App useEffect started");
+    console.log("current URL =", window.location.href);
+    console.log("search =", window.location.search);
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const openLogin = searchParams.get("open_login");
+
+    console.log("open_login =", openLogin);
+
+    if (openLogin === "1") {
+      console.log("ログインモーダルを開きます");
+      setOpen(true);
+    }
+
     const profileHandler = () => {
       setShowProfile(true);
     };
 
     const logoutHandler = async () => {
-      await fetch("/firebase_logout", {
-        method: "DELETE",
-        credentials: "include",
-        headers: {
-          "X-CSRF-Token":
-            document.querySelector<HTMLMetaElement>(
-              'meta[name="csrf-token"]'
-            )?.content || "",
-        },
-      });
+      try {
+        const csrfToken = document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content || "";
 
-      await signOut(auth);
-      window.location.href = "/";
+        const response = await fetch("/firebase_logout", {
+          method: "DELETE",
+          credentials: "same-origin",
+          headers: {
+            "X-CSRF-Token": csrfToken,
+          },
+        });
+
+        if (!response.ok) {
+          console.error("Rails logout failed =", response.status);
+          return;
+        }
+
+        await signOut(auth);
+        setUser(null);
+        window.location.href = "/";
+      } catch (error) {
+        console.error("Firebase logout error =", error);
+      }
     };
 
     window.addEventListener("open-profile", profileHandler);
@@ -44,34 +80,51 @@ export default function App() {
     };
   }, []);
 
+  if (!authChecked) {
+    return null;
+  }
+
   return (
     <div style={{ padding: "20px" }}>
-      {!user && (
-        <>
-          <button
-            onClick={() => setOpen(true)}
-            className="btn shadow rounded-pill px-4 py-3"
-            style={{
-              width: "90px",
-              backgroundColor: "#001a59",
-              color: "#f0eee0",
-              padding: "0px 20px",
-              borderRadius: "999px",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "10px",
-            }}
-          >
-            MyPAGE
-          </button>
-
-          <AuthModal
-            open={open}
-            onClose={() => setOpen(false)}
-            setUser={setUser}
-          />
-        </>
+      {!user ? (
+        <button
+          onClick={() => setOpen(true)}
+          className="btn shadow rounded-pill px-4 py-3"
+          style={{
+            width: "90px",
+            backgroundColor: "#001a59",
+            color: "#ffffff",
+            borderRadius: "999px",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "10px",
+          }}
+        >
+          MyPAGE
+        </button>
+      ) : (
+        <button
+          onClick={() => window.dispatchEvent(new Event("firebase-logout"))}
+          className="btn shadow rounded-pill px-4 py-3"
+          style={{
+            width: "90px",
+            backgroundColor: "#001a59",
+            color: "#ffffff",
+            borderRadius: "999px",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "10px",
+          }}
+        >
+          LogOut
+        </button>
       )}
+
+      <AuthModal
+        open={open}
+        onClose={() => setOpen(false)}
+        setUser={setUser}
+      />
 
       {showProfile &&
         profileModalRoot &&
@@ -109,7 +162,9 @@ export default function App() {
                 />
               </div>
 
-              <h5 className="text-center mb-4">プロフィール再設定</h5>
+              <h5 className="text-center mb-4">
+                プロフィール再設定
+              </h5>
 
               <Profile />
 

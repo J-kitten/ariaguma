@@ -50,22 +50,23 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  database: ariaguma
+  primary:
+    <<: *default
+    database: ariaguma
 
-cache:
-  <<: *default
-  database: ariaguma_cache
+  cache:
+    <<: *default
+    database: ariaguma_cache
+    migrations_paths: db/cache_migrate
 
-queue:
-  <<: *default
-  database: ariaguma_queue
+  queue:
+    <<: *default
+    database: ariaguma_queue
 
 #  primary: &primary_production
 #    <<: *default
 #    database: ariaguma
 #    username: k.sato
-#    password: RacooNariaGuMa122839/.
 #    password: <%= ENV["MYAPP_DATABASE_PASSWORD"] %>
 #  cache:
 #    <<: *primary_production

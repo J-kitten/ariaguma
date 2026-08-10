@@ -1,23 +1,25 @@
 # app/controllers/management_screen/base_controller.rb
+
 module ManagementScreen
   class BaseController < ApplicationController
-    layout 'management'
-    before_action :require_login  # 2025/11/21
-   #before_action :require_management_login
-  end
+    layout "management"
 
-  def not_found
-    redirect_to management_screen_path
-  end
+    before_action :require_login
 
-  private
+    def not_found
+      redirect_to management_screen_login_path
+    end
 
-  def require_login
-    unless session[:user_id] && User.exists?(id: session[:user_id])
-      flash[:notice] = "ログインをしてください"
-      redirect_to login_url
-      #redirect_to management_screen_login_path
+    private
+
+    def require_login
+      return if session[:user_id].present? &&
+                User.exists?(id: session[:user_id])
+
+      reset_session
+
+      redirect_to management_screen_login_path,
+                  alert: "管理画面でログインしてください"
     end
   end
 end
-

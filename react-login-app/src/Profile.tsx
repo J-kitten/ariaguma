@@ -50,8 +50,7 @@ export default function Profile() {
       alert("Rails側の名前変更に失敗しました。");
       return;
     }
-
-    alert("名前を変更しました。");
+    window.location.href = window.location.origin + "/mypage";
   };
 
   const changeEmail = async () => {

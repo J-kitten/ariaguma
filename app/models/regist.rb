@@ -10,10 +10,8 @@ class Regist < ApplicationRecord
 
   encrypts :email
 
-  has_many :regists_replies
-
-  FIRST_DOWNLOAD_LIMIT = 10
-  SECOND_DOWNLOAD_LIMIT = 10
+  FIRST_DOWNLOAD_LIMIT = 50
+  SECOND_DOWNLOAD_LIMIT = 50
 
   validates :name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, length: { maximum: 100 }
@@ -62,7 +60,7 @@ class Regist < ApplicationRecord
   def send_download_email
     RegistMailer.download_email(self).deliver_later
 
-    RegistsReply.create!(
+    Reply.create!(
       name: self.name,
       subject: 'Present『死闘の使命』電子書籍の予約完了通知（自動）',
       email_hash: self.email_hash,
@@ -79,8 +77,7 @@ class Regist < ApplicationRecord
   end
 
   def second_downloadable?
-    second_download_count.to_i <
-      SECOND_DOWNLOAD_LIMIT
+    second_download_count.to_i < SECOND_DOWNLOAD_LIMIT
   end
 
   def first_remaining_download_count

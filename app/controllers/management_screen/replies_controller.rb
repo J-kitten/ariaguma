@@ -8,7 +8,7 @@ module ManagementScreen
     end
 
     #def index
-      # email_hash ‚²‚Æ‚Éˆê”ÔV‚µ‚¢‚¨–â‡‚¹‚¾‚¯æ“¾
+      # email_hash ã”ã¨ã«ä¸€ç•ªæ–°ã—ã„ãŠå•åˆã›ã ã‘å–å¾—
     #  latest_contacts = Contact.select('DISTINCT ON (email_hash) *')
     #                           .order('email_hash, created_at DESC')
 

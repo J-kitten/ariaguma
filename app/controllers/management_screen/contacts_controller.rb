@@ -75,12 +75,25 @@ class ManagementScreen::ContactsController < ManagementScreen::BaseController
   def mark_read
     contact = Contact.find(params[:id])
     contact.unread = true
+    #contact.update(unread: 1)
     if contact.save(validate: false)
-      contact.update(unread: 1)
       head :ok
     else
-      Rails.logger.error "Save failed: #{contact.errors.full_messages.join(', ')}"
-      render json: { error: "更新失敗 #{contact.errors.full_messages}" }, status: :unprocessable_entity
+      Rails.logger.error(
+        "[Contact Mark Read Validation Error] " \
+        "contact_id=#{contact.id}, " \
+        "errors=#{contact.errors.full_messages.join(', ')}"
+      )
+
+      render json: {
+        success: false,
+        error_code: "VALIDATION_ERROR",
+        message: "既読状態を更新できませんでした。",
+        details: {
+          errors:
+            contact.errors.full_messages
+        }
+      }, status: :unprocessable_entity
     end
   end
 

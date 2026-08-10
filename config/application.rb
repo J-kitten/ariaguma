@@ -45,5 +45,7 @@ module Ariaguma
     # ActiveRecord Encryption cache ‚ð–³Œø‰»
     config.active_record.encryption.cache = nil
 
+    config.middleware.use Rack::Attack
+
   end
 end

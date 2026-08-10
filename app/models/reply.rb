@@ -1,14 +1,16 @@
-# app/models/reply.rb
 class Reply < ApplicationRecord
-
-  attribute :email_hash, :string
-
-  # ƒoƒŠƒf[ƒVƒ‡ƒ“
   validates :subject, :email_hash, :message, presence: true
   validates :subject, length: { maximum: 50 }
-  validates :email_hash, length: { maximum: 255 }, confirmation: true
-  validates :message, length: { maximum: 5000 } # •K—v‚É‰ž‚¶‚Ä§ŒÀ
+  validates :email_hash, length: { maximum: 255 }
+  validates :message, length: { maximum: 5000 }
+
+  validate :contact_or_regist_present
 
   private
 
+  def contact_or_regist_present
+    return if contact_id.present? || regist_id.present?
+
+    errors.add(:base, "ãŠå•ã„åˆã‚ã›ã¾ãŸã¯äºˆç´„è€…ã¨ã®é–¢é€£ä»˜ã‘ãŒå¿…è¦ã§ã™")
+  end
 end

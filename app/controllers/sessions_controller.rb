@@ -45,17 +45,12 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    reset_session  # これで session[:email_hash] も含め、すべて消える
-    render json: {
-      success: true
-    }
-    redirect_to logout_path, notice: "ログアウトしました"
-    #redirect_to management_screen_root_path, notice: "ログアウトしました app/controllers/sessions_controller.rb"
-  end
+    reset_session
 
-  def destroy_view
-    # logout 完了ページ（destroy.html.erb）を表示
+    redirect_to(
+      login_path,
+      notice: "ログアウトしました"
+    )
   end
-
 
 end

@@ -1,48 +1,25 @@
 <!-- app/views/management_screen/dashboard/index.html.erb -->
+<br><br>
 
 <div class="bg-wrapper"></div>
 
 <div class="container px-4">
   <div class="row justify-content-center">
-    <div class="col-md-10 col-lg-10" style="background-color: rgba(255, 255, 255, 0.8); padding: 25px;">
+    <div class="col-md-10 col-lg-11" style="background-color: rgba(255, 255, 255, 0.8); padding: 25px;">
 
       <div class="container px-2 px-md-5">
-        <div class="d-flex
-                    justify-content-between
-                    align-items-center
-                    flex-wrap
-                    gap-2
-                    mb-4">
-
-          <div>
-            <h1 class="h3 mb-1">
+        <div class="d-flex justify-content-between align-items-center">
+          <div style="padding-top: 10px; padding-bottom: 10px;">
+            <h1 class="h4 mb-1">
               管理ダッシュボード
             </h1>
+          </div>
 
-            <p class="text-muted mb-0">
-              ARIAGUMAの運営状況を確認できます。
-            </p>
-
+          <div class="text-end text-muted">
             <%= l(
                   Time.current,
                   format: :long
                 ) %>
-          </div>
-
-          <div class="text-muted">
-            <div class="d-flex flex-wrap justify-content-end gap-2 mb-3">
-
-              <%= link_to "ダウンロード履歴",
-                  management_screen_download_logs_path,
-                  class: "btn shadow rounded-pill px-4 py-3 title-link",
-                  style: "color: #000000; font-size: 10px !important; border:5px solid #000000;" %>
-
-              <%= link_to "登録した電子書籍一覧",
-                  management_screen_download_files_path,
-                  class: "btn shadow rounded-pill px-4 py-3 title-link",
-                  style: "color: #000000; font-size: 10px !important; border:5px solid #000000;" %>
-
-            </div>
           </div>
         </div>
 
@@ -52,18 +29,19 @@
           <div class="col-12 col-md-6 col-xl-4">
             <div class="card
                         border-0
-                        shadow-sm
                         h-100
                         dashboard-card">
 
-              <div class="card-body p-4">
+              <div class="card-body p-4" style="color: white; background-color: #d7003a;">
                 <div class="d-flex
                             justify-content-between
                             align-items-start">
 
-                  <div>
+                  <div style="padding-left: 20px;">
                     <p class="text-muted mb-2">
-                      予約人数
+                      <span style="color: white;">
+                        予約人数
+                      </span>
                     </p>
 
                     <p class="display-6
@@ -80,7 +58,7 @@
                     </p>
                   </div>
 
-                  <div class="dashboard-icon">
+                  <div class="dashboard-icon" style="padding-right: 20px;">
                     <i class="bi bi-people"></i>
                   </div>
                 </div>
@@ -92,18 +70,19 @@
           <div class="col-12 col-md-6 col-xl-4">
             <div class="card
                         border-0
-                        shadow-sm
                         h-100
                         dashboard-card">
 
-              <div class="card-body p-4">
+              <div class="card-body p-4" style="color: white; background-color: #d7003a;">
                 <div class="d-flex
                             justify-content-between
                             align-items-start">
 
-                  <div>
+                  <div style="padding-left: 20px;">
                     <p class="text-muted mb-2">
-                      お問い合わせ未返信
+                      <span style="color: white;">
+                        お問い合わせ未返信
+                      </span>
                     </p>
 
                     <p class="display-6
@@ -120,7 +99,7 @@
                     </p>
                   </div>
 
-                  <div class="dashboard-icon">
+                  <div class="dashboard-icon" style="padding-right: 20px;">
                     <i class="bi bi-envelope"></i>
                   </div>
                 </div>
@@ -132,18 +111,19 @@
           <div class="col-12 col-md-6 col-xl-4">
             <div class="card
                         border-0
-                        shadow-sm
                         h-100
                         dashboard-card">
 
-              <div class="card-body p-4">
+              <div class="card-body p-4" style="color: white; background-color: #d7003a;">
                 <div class="d-flex
                             justify-content-between
                             align-items-start">
 
-                  <div>
+                  <div style="padding-left: 20px;">
                     <p class="text-muted mb-2">
-                      公開中電子書籍
+                      <span style="color: white;">
+                        公開中電子書籍
+                      </span>
                     </p>
 
                     <p class="display-6
@@ -160,7 +140,7 @@
                     </p>
                   </div>
 
-                  <div class="dashboard-icon">
+                  <div class="dashboard-icon" style="padding-right: 20px;">
                     <i class="bi bi-book"></i>
                   </div>
                 </div>
@@ -172,18 +152,19 @@
           <div class="col-12 col-md-6 col-xl-4">
             <div class="card
                         border-0
-                        shadow-sm
                         h-100
                         dashboard-card">
 
-              <div class="card-body p-4">
+              <div class="card-body p-4" style="color: white; background-color: #d7003a;">
                 <div class="d-flex
                             justify-content-between
                             align-items-start">
 
-                  <div>
+                  <div style="padding-left: 20px;">
                     <p class="text-muted mb-2">
-                      制作中
+                      <span style="color: white;">
+                        制作中
+                      </span>
                     </p>
 
                     <p class="display-6
@@ -200,7 +181,7 @@
                     </p>
                   </div>
 
-                  <div class="dashboard-icon">
+                  <div class="dashboard-icon" style="padding-right: 20px;">
                     <i class="bi bi-pencil-square"></i>
                   </div>
                 </div>
@@ -212,18 +193,19 @@
           <div class="col-12 col-md-6 col-xl-4">
             <div class="card
                         border-0
-                        shadow-sm
                         h-100
                         dashboard-card">
 
-              <div class="card-body p-4">
+              <div class="card-body p-4" style="color: white; background-color: #d7003a;">
                 <div class="d-flex
                             justify-content-between
                             align-items-start">
 
-                  <div>
+                  <div style="padding-left: 20px;">
                     <p class="text-muted mb-2">
-                      今日のダウンロード
+                      <span style="color: white;">
+                        今日のダウンロード
+                      </span>
                     </p>
 
                     <p class="display-6
@@ -240,7 +222,7 @@
                     </p>
                   </div>
 
-                  <div class="dashboard-icon">
+                  <div class="dashboard-icon" style="padding-right: 20px;">
                     <i class="bi bi-download"></i>
                   </div>
                 </div>
@@ -252,18 +234,19 @@
           <div class="col-12 col-md-6 col-xl-4">
             <div class="card
                         border-0
-                        shadow-sm
                         h-100
                         dashboard-card">
 
-              <div class="card-body p-4">
+              <div class="card-body p-4" style="color: white; background-color: #d7003a;">
                 <div class="d-flex
                             justify-content-between
                             align-items-start">
 
-                  <div>
+                  <div style="padding-left: 20px;">
                     <p class="text-muted mb-2">
-                      今月のダウンロード
+                      <span style="color: white;">
+                        今月のダウンロード
+                      </span>
                     </p>
 
                     <p class="display-6
@@ -280,7 +263,7 @@
                     </p>
                   </div>
 
-                  <div class="dashboard-icon">
+                  <div class="dashboard-icon" style="padding-right: 20px;">
                     <i class="bi bi-calendar-month"></i>
                   </div>
                 </div>
@@ -294,11 +277,10 @@
 
           <!-- 最近の予約 -->
           <div class="col-12 col-lg-6">
-            <div class="card border-0 shadow-sm h-100">
-              <div class="card-header
-                          bg-white
-                          border-0
-                          py-3">
+            <div class="card border-0 dashboard-card h-100">
+              <div class="border-0
+                          py-3"
+                   style="margin-left: 20px; margin-top: 10px;">
 
                 <h2 class="h5 mb-0">
                   最近の予約
@@ -307,13 +289,13 @@
 
               <div class="card-body p-0">
                 <% if @recent_regists.any? %>
-                  <div class="table-responsive">
+                  <div class="table-responsive" style="margin-bottom: 15px; margin-right: 20px; margin-left: 20px;">
                     <table class="table
                                   table-hover
                                   align-middle
                                   mb-0">
 
-                      <thead class="table-light">
+                      <thead>
                         <tr>
                           <th>お名前</th>
                           <th>メールアドレス</th>
@@ -354,11 +336,10 @@
 
           <!-- 最近のお問い合わせ -->
           <div class="col-12 col-lg-6">
-            <div class="card border-0 shadow-sm h-100">
-              <div class="card-header
-                          bg-white
-                          border-0
-                          py-3">
+            <div class="card border-0 h-100 dashboard-card">
+              <div class="border-0
+                          py-3"
+                   style="margin-left: 20px; margin-top: 10px;">
 
                 <h2 class="h5 mb-0">
                   最近のお問い合わせ
@@ -367,7 +348,7 @@
 
               <div class="card-body p-0">
                 <% if @recent_contacts.any? %>
-                  <div class="table-responsive">
+                  <div class="table-responsive" style="margin-bottom: 15px; margin-right: 20px; margin-left: 20px;">
                     <table class="table
                                   table-hover
                                   align-middle
@@ -399,12 +380,13 @@
                             <td>
                               <% if contact.reply_time.present? %>
                                 <span class="badge
-                                             text-bg-secondary">
+                                             text-bg-secondary"
+                                      style="background-color: #000000; color: #ffffff;">
                                   返信済
                                 </span>
                               <% else %>
-                                <span class="badge
-                                             text-bg-danger">
+                                <span class="badge"
+                                      style="background-color: #d7003a; color: #ffffff;">
                                   未返信
                                 </span>
                               <% end %>
@@ -426,11 +408,11 @@
                     お問い合わせはありません。
                   </p>
                 <% end %>
-                <br><br><br><br><br><br><br><br>
               </div>
             </div>
           </div>
         </div>
+        <br>
       </div>
     </div>
   </div>

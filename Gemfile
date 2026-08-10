@@ -66,4 +66,6 @@ gem 'googleauth'
 
 gem "firebase_id_token"
 
+gem "rack-attack"
+
 

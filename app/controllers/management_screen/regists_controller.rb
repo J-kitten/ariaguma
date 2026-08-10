@@ -470,7 +470,7 @@ class ManagementScreen::RegistsController < ManagementScreen::BaseController
         本メールをお送りさせて頂きました。
         
         下記のURLからダウンロードなさってくだいませ。
-        https://ariaguma.jp/download/#{@regist.token}
+        <a href="https://ariaguma.jp/download/#{@regist.token}">https://ariaguma.jp/download/#{@regist.token}</a>
       TEXT
 
       @regist.reply_body = "#{quoted_message} さま\n\n#{from_ariaguma}"
@@ -507,11 +507,14 @@ class ManagementScreen::RegistsController < ManagementScreen::BaseController
       Rails.logger.error("メール送信エラー: #{e.message}")
     end
 
-    RegistsReply.create!(
+    Reply.create!(
       name: @regist.name,
       subject: "Present『死闘の使命』DOWNLOAD ARIAGUMA",
       email_hash: @regist.email_hash,
-      regist_id: @regist.id
+      message: "電子書籍のダウンロードURLを記載したメールを送信しました。",
+      regist_id: @regist.id,
+      unread: false,
+      trash: false
     )
 
     redirect_to management_screen_regist_path(@regist), notice: "ダウンロードURLを記載したメールを送信しました"
@@ -525,15 +528,17 @@ class ManagementScreen::RegistsController < ManagementScreen::BaseController
 
     RegistMailer.second_download_email(@regist).deliver_now
 
-    RegistsReply.create!(
+    Reply.create!(
       name: @regist.name,
       subject: 'ARIAGUMA 2冊目の電子書籍のDOWNLOAD のご通知です',
       email_hash: @regist.email_hash,
-      regist_id: @regist.id
+      message: "電子書籍のダウンロードURLを記載したメールを送信しました。",
+      regist_id: @regist.id,
+      unread: false,
+      trash: false
     )
 
     @regist.update(email_sent_02: Time.current)
-    @regist.update(subscribed: 1)
 
     redirect_to management_screen_regist_path(@regist), notice: '2冊目のメールを送信しました。'
   end

@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default function AuthModal({ open, onClose, setUser }: Props) {
-  console.log("AUTHMODAL VERSION 2026-08-01");
+  console.log("AUTHMODAL VERSION 2026-08-06-1945");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -139,6 +139,7 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
   /* ログイン */
   const login = async () => {
     console.log("LOGINED");
+    console.log("AUTHMODAL VERSION 2026-08-06-1945");
 
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -151,44 +152,74 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
       await loginToRails(userCredential.user);
 
     } catch (error: unknown) {
-      console.log("LOGIN ERROR =", error);
-
-      const firebaseError = error as FirebaseError;
-
-      console.log("ERROR CODE =", firebaseError.code);
+      console.error("GOOGLE LOGIN ERROR =", error);
 
       if (error instanceof FirebaseError) {
+        console.error("GOOGLE ERROR CODE =", error.code);
+        console.error("GOOGLE ERROR MESSAGE =", error.message);
 
-        switch (firebaseError.code) {
-
-          case "auth/missing-password":
-            alert("パスワードが正しくありません。再入力してください。");
+        switch (error.code) {
+          case "auth/popup-closed-by-user":
+            alert(
+              "Googleログイン画面が閉じられました。再試行してください。"
+            );
             break;
 
-          case "auth/invalid-email":
-            alert("メールアドレスが無効です。");
+          case "auth/popup-blocked":
+            alert(
+              "Googleログイン画面がブラウザにブロックされました。" +
+              "ariaguma.jpのポップアップを許可してください。"
+            );
             break;
 
-          case "auth/wrong-password":
-            alert("パスワードが正しくありません。再入力してください。");
+          case "auth/cancelled-popup-request":
+            alert(
+              "Googleログインが複数回実行されました。" +
+              "少し待ってから、ボタンを1回だけ押してください。"
+            );
             break;
 
-          case "auth/invalid-credential":
-            alert("メールアドレスまたはパスワードが正しくありません。");
+          case "auth/unauthorized-domain":
+            alert(
+              "ariaguma.jpがFirebaseの承認済みドメインに" +
+              "登録されていません。"
+            );
             break;
 
-          case "auth/user-not-found":
-            alert("このメールアドレスは登録されていません。");
+          case "auth/operation-not-allowed":
+            alert(
+              "Firebase AuthenticationでGoogleログインが" +
+              "有効になっていません。"
+            );
+            break;
+
+          case "auth/network-request-failed":
+            alert(
+              "Googleとの通信に失敗しました。" +
+              "インターネット接続やブラウザ設定を確認してください。"
+            );
             break;
 
           case "auth/too-many-requests":
-            alert("試行回数が多すぎます。しばらく時間を置いて再試行してください。");
+            alert(
+              "試行回数が多すぎます。" +
+              "しばらく時間を置いて再試行してください。"
+            );
             break;
 
           default:
-            alert("ログインに失敗しました。");
+            alert(
+              `Googleログインに失敗しました。\n` +
+              `エラーコード: ${error.code}\n` +
+              `内容: ${error.message}`
+            );
         }
+      } else if (error instanceof Error) {
+        console.error("Google / Rails login error:", error);
 
+        alert(
+          `ログイン処理に失敗しました。\n${error.message}`
+        );
       } else {
         alert("予期しないエラーが発生しました。");
       }
@@ -229,7 +260,9 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
     }
   };
 
-  const loginToRails = async (firebaseUser: User): Promise<void> => {
+  const loginToRails = async (
+    firebaseUser: User
+  ): Promise<void> => {
     console.log("LOGIN TO RAILS START");
 
     try {
@@ -240,11 +273,13 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
 
       if (!csrfToken) {
         throw new Error(
-          "CSRFトークンを取得できませんでした。csrf_meta_tagsを確認してください。"
+          "CSRFトークンを取得できませんでした。" +
+          "csrf_meta_tagsを確認してください。"
         );
       }
 
-      const idToken = await firebaseUser.getIdToken(true);
+      const idToken =
+        await firebaseUser.getIdToken(true);
 
       const response = await fetch("/firebase_login", {
         method: "POST",
@@ -258,37 +293,69 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
         }),
       });
 
-      console.log("Rails login status:", response.status);
+      console.log(
+        "Rails login status:",
+        response.status
+      );
 
       if (!response.ok) {
-        let errorMessage = "Railsログインに失敗しました。";
+        let errorMessage =
+          "Railsログインに失敗しました。";
 
         try {
-          const errorData = await response.json();
+          const errorData: {
+            error?: string | string[];
+          } = await response.json();
 
-          if (typeof errorData.error === "string") {
-            errorMessage = errorData.error;
+          if (Array.isArray(errorData.error)) {
+            errorMessage =
+              errorData.error.join("、");
+          } else if (
+            typeof errorData.error === "string"
+          ) {
+            errorMessage =
+              errorData.error;
           }
         } catch {
-          // レスポンスがJSONでない場合は既定メッセージを使用
+          // JSONではない場合は既定文言を使う
         }
 
         throw new Error(
-          `${errorMessage} ステータスコード: ${response.status}`
+          `${errorMessage} ` +
+          `ステータスコード: ${response.status}`
         );
       }
 
+      const data: {
+        success?: boolean;
+        redirect_url?: string;
+      } = await response.json();
+
+      console.log(
+        "Rails redirect URL:",
+        data.redirect_url
+      );
+
       setUser(firebaseUser);
       onClose();
-      window.location.href = "/mypage";
+
+      // Railsから返された元のURLへ移動する
+      window.location.href =
+        data.redirect_url || "/mypage";
 
     } catch (error: unknown) {
-      console.error("LOGIN TO RAILS ERROR =", error);
+      console.error(
+        "LOGIN TO RAILS ERROR =",
+        error
+      );
 
       if (error instanceof Error) {
         alert(error.message);
       } else {
-        alert("Railsログイン中に予期しないエラーが発生しました。");
+        alert(
+          "Railsログイン中に" +
+          "予期しないエラーが発生しました。"
+        );
       }
 
       throw error;
@@ -313,7 +380,6 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
           width: 400,
           margin: "70px auto",
           borderRadius: 8,
-          boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
           textAlign: "center"
         }}
       >
@@ -360,7 +426,7 @@ export default function AuthModal({ open, onClose, setUser }: Props) {
               style={{
                 opacity: 0.7,
                 display: "block",
-                height: "50px",
+                height: "30px",
               }}
             />
           </button>

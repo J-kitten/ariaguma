@@ -675,14 +675,13 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow noto-serif-jp-extra-light py-0">
   <div class="container">
 
-
-    <a class="navbar-brand btn btn-white mt-3" 
+    <a class="navbar-brand btn btn-white" 
         href="https://ariaguma.jp/" 
         target="_self" 
         rel="noopener noreferrer" 
         style="font-size:18px; margin-left: 15px; display:flex; align-items:center; gap:8px;">
-        <img src="<%= asset_path('diamond_square_circle_w266_h271.png') %>" alt="" style="height: 40px; opacity:0.8;">
-        <img src="<%= asset_path('ARIAGUMA_logo.png') %>" style="height: 35px;">
+      <img src="<%= asset_path('diamond_square_circle_w266_h271.png') %>" alt="" style="height: 40px; opacity:0.8;">
+      <img src="<%= asset_path('ARIAGUMA_logo.png') %>" style="height: 35px;">
     </a>
 
     <!--add 2025-7-11 ハンバーガーボタンの「✕」Start-->
@@ -694,7 +693,7 @@
     <!--add 2025-7-11 ハンバーガーボタンの「✕」End-->
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <div class="d-flex align-items-center flex-wrap gap-1">
+      <div class="d-flex align-items-center flex-wrap">
         <%= link_to "Present『死闘の死闘』電子書籍DOWNLOAD予約登録",
             root_path,
             class: "btn shadow rounded-pill px-4 py-3",
@@ -714,11 +713,16 @@
 
         <%= link_to "文字SIZE", "#",
             class: "btn shadow rounded-pill px-4 py-3",
-            style: "background-color:#001a59; color:#f0eee0; font-size: 10px !important;",
+            style: "background-color:#001a59; color:#ffffff; font-size: 10px !important;",
             onclick: "toggleFontSizePanel(); return false;" %>
 
         <div id="login-root" style="text-align: right;" class="text-end"></div>
         <script src="/react-assets/index-app.js"></script>
+        <% if current_user %>
+          <span style="font-size: 7px;">ログイン中: <br><%= current_user.name %></span>
+        <% else %>
+          <span style="font-size: 7px;">ログアウト中</span>
+        <% end %>
       </div>
     </div>
   </div>
