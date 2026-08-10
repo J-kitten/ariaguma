@@ -47,8 +47,13 @@ module ManagementScreen
     end
 
     def destroy
-      reset_session  # これで session[:email_hash] も含め、すべて消える
-      redirect_to management_screen_login_path, notice: "ログアウトしました"
+      # 管理画面のセッション情報をすべて削除
+      reset_session
+
+      #redirect_to management_screen_login_path, notice: "ログアウトしました"
+      # 管理画面ログイン画面へ戻る
+      redirect_to login_path,
+                  notice: "ログアウトしました"
     end
 
     def destroy_view

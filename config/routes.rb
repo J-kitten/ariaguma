@@ -77,7 +77,7 @@ Rails.application.routes.draw do
   # ****************************************
 
   get "management_screen/login", to: "sessions#new", as: :login
-  post "management_screen/login", to: "sessions#create"
+  post "management_screen/login", to: "sessions#create", as: :management_screen_login
 
   get "management_screen/signup", to: "users#new", as: :management_screen_signup
   post "management_screen/create", to: "users#create", as: :management_screen_create
