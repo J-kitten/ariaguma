@@ -5,6 +5,52 @@
 　ARIAGUMAは電子書籍の配布・管理を目的としたRailsで開発した
 　WEBシステムです。
 
+◆画面イメージ
+○ユーザー画面 TOP
+　<p align="left"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/1.png"> </p>
+
+○ユーザー画面 マイページ|モーダル
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/2.png"> </p>
+
+○ユーザー画面 マイページ
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/3.png"> </p>
+
+○ユーザー画面 マイページ ダウンロード
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/4.png"> </p>
+
+○ユーザー画面 マイページ プロフィール再設定
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/5.png"> </p>
+
+○管理画面 ログイン
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/6.png"> </p>
+
+○管理画面 ダッシュボード
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/7.png"> </p>
+
+○管理画面 予約希望者
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/8.png"> </p>
+
+○管理画面 お問合せ
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/9.png"> </p>
+
+○管理画面 ダウンロード履歴
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/10.png"> </p>
+
+○管理画面 ダウンロード履歴詳細
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/11.png"> </p>
+
+○管理画面 PDFファイル管理
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/12.png"> </p>
+
+○管理画面 PDFファイル新規登録
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/13.png"> </p>
+
+○管理画面 PDFファイル編集
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/14.png"> </p>
+
+○AWS構成図
+　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/15.png"> </p>
+
 - **Backend**: Ruby on Rails 8
 - **Frontend**: React
 - **Authentication**: Firebase Authentication / 独自セッション認証
@@ -232,50 +278,4 @@
 ・Cookie認証によりログイン状態を維持
 ・管理画面とユーザー画面で認証方式を分離
 ・AWS上へ本番環境を構築
-
-◆画面イメージ
-○ユーザー画面 TOP
-　<p align="left"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/1.png"> </p>
-
-○ユーザー画面 マイページ|モーダル
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/2.png"> </p>
-
-○ユーザー画面 マイページ
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/3.png"> </p>
-
-○ユーザー画面 マイページ ダウンロード
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/4.png"> </p>
-
-○ユーザー画面 マイページ プロフィール再設定
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/5.png"> </p>
-
-○管理画面 ログイン
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/6.png"> </p>
-
-○管理画面 ダッシュボード
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/7.png"> </p>
-
-○管理画面 予約希望者
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/8.png"> </p>
-
-○管理画面 お問合せ
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/9.png"> </p>
-
-○管理画面 ダウンロード履歴
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/10.png"> </p>
-
-○管理画面 ダウンロード履歴詳細
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/11.png"> </p>
-
-○管理画面 PDFファイル管理
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/12.png"> </p>
-
-○管理画面 PDFファイル新規登録
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/13.png"> </p>
-
-○管理画面 PDFファイル編集
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/14.png"> </p>
-
-○AWS構成図
-　<p align="center"> <img src="https://github.com/J-kitten/ariaguma/blob/main/my-images/15.png"> </p>
 
