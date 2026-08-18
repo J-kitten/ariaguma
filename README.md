@@ -18,7 +18,7 @@
 　・ユーザー管理
 　・電子書籍管理
 　・メール返信
-　・ダウンロード管理
+　・ダウンロードファイル管理
 　などを行えます。
 
 　さらに React + Firebase Authentication を利用したGoogleログ
@@ -42,17 +42,23 @@
 　JavaScript
 　HTML | CSS
 　Bootstrap
-　[管理画面]
+[管理画面]
 　・独自セッション認証
-　[ユーザー画面]
+[ユーザー画面]
 　・Firebase Authenticationログイン認証（12.14.0）
 　・Google OAuth
 ○インフラ
-　AWS EC2
-　Let's Encrypt SSL
+・クラウド：AWS
+・サーバー：Amazon EC2（Ubuntu）
+・Webサーバー：Nginx
+・アプリケーションサーバー：Puma
+・アプリケーション：Ruby on Rails / React
+・データベース：MySQL
+・メール配信：Amazon SES
+・DNS：Amazon Route 53
+・固定IP：Elastic IP
 ○バージョン管理
-　Git
-　GitHub
+　Git / GitHub
 
 ◆システム構成
 　[Google]
